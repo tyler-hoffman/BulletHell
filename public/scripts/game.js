@@ -1,9 +1,9 @@
 define([
     'd2/utils/shaderCompiler',
-    'd2/utils/vector',
+    'd2/utils/rectangle',
     'text!shaders/vertex-shader.vert',
     'text!shaders/fragment-shader.frag'
-  ], function(ShaderCompiler, Vector, vertexShader, fragmentShader) {
+  ], function(ShaderCompiler, Rectangle, vertexShader, fragmentShader) {
 
     var Game = function(canvas) {
       this.canvas = canvas;
@@ -13,6 +13,7 @@ define([
       this.shaderProgram = shaderCompiler.compileProgram(
         this.gl, vertexShader, fragmentShader
       );
+
     };
 
     return Game;
