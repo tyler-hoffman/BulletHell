@@ -3,7 +3,7 @@
 define(function() {
 
   var Rectangle = function(x, y, width, height) {
-    this.float32Array = new Float32Array();
+    this.float32Array = new Float32Array(12);
     this.set(x, y, width, height);
   };
 

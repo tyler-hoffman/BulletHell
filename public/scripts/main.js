@@ -3,10 +3,12 @@ config({
   baseUrl: 'scripts',
   paths: {
     d2: './d2',
-    shaders: './d2/defaultShaders'
+    shaders: './d2/defaultShaders',
+    images: './images'
   },
   plugins: {
-    text: './lib/requirator-text/lib/requirator-text'
+    text: './lib/requirator-text/lib/requirator-text',
+    image: './lib/requirator-image/lib/requirator-image'
   }
 });
 

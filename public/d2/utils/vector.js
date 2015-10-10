@@ -42,6 +42,6 @@ define(function() {
       this.y *= amount;
       return this;
     }
-
+  
   return Vector;
 });
