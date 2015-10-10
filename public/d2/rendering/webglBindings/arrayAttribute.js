@@ -8,10 +8,14 @@ define(function() {
     this.gl = gl;
     this.location = location;
     this.buffer = gl.createBuffer();
+    this.data = new Float32Array();
   };
 
   ArrayAttribute.prototype.clear = function(numberComponents) {
-    this.data = new Float32Array(numberComponents * VERTICES_PER_COMPONENT * 2);
+    var neededLength = numberComponents * VERTICES_PER_COMPONENT * 2;
+    if (this.data.length < neededLength) {
+      this.data = new Float32Array(neededLength);
+    }
     this.numData = 0;
   };
 

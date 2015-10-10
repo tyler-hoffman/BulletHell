@@ -5,6 +5,7 @@ define([
     'd2/utils/animator',
     'd2/utils/rectangle',
     'd2/utils/vector',
+    'emitters/circleEmitter',
     'bullets/RedBullet',
     'd2/rendering/defaultRenderer',
     'd2/rendering/textureRegion',
@@ -12,34 +13,41 @@ define([
     'text!shaders/vertex-shader.vert',
     'text!shaders/fragment-shader.frag'
   ], function(ActorManager, DefaultActorRenderer, ShaderCompiler, Animator, Rectangle,
-        Vector, RedBullet, DefaultRenderer, TextureRegion,
+        Vector, CircleEmitter, RedBullet, DefaultRenderer, TextureRegion,
         image, vertexShader, fragmentShader) {
 
     var Game = function(canvas) {
       this.canvas = canvas;
+      this.width = canvas.width;
+      this.height = canvas.height;
       this.gl = canvas.getContext('webgl');
       this.actorManager = new ActorManager();
       this.defaultActorRenderer = new DefaultActorRenderer();
-      var shaderCompiler = new ShaderCompiler();
-      this.shaderProgram = shaderCompiler.compileProgram(
+      this.shaderProgram = new ShaderCompiler().compileProgram(
         this.gl, vertexShader, fragmentShader
       );
 
-      for (var i = 0; i < 1000; i++) {
-        var bullet = new RedBullet(
-          new Vector(Math.random() * 600, Math.random() * 600),
-          new Vector(Math.random(), Math.random()).scale(200)
-        );
-
-        this.actorManager.addActor(bullet);
-      }
-
       this.gameState = {
-        worldBounds: new Rectangle(0, 0, 800, 800)
+        worldBounds: new Rectangle(0, 0, this.width, this.height)
       };
 
+      this.emitters = [];
+      var actorManager = this.actorManager;
+      var gameState = this.gameState;
+      this.emitters.push(new CircleEmitter(
+        function(position, velocity, fromTime) {
+          var newBullet = new RedBullet(
+            position, velocity.scale(100)
+          );
+          newBullet.update(fromTime, gameState);
+          newBullet.magnification = 4;
+          actorManager.addActor(newBullet);
+        }, new Vector(this.width / 2, this.height / 2),
+        16, 0.1, 0.14
+      ));
+
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);
-      this.renderer.setResolution(800, 800);
+      this.renderer.setResolution(this.width, this.height);
       this.frame = 0;
       this.animator = new Animator(this.onFrame, this);
 
@@ -52,25 +60,24 @@ define([
         this.animator.stop();
       };
 
-      this.render(deltaTime);
-    };
-
-    Game.prototype.render = function(deltaTime) {
-      this.renderer.clear(this.actorManager.size());
-
       this.updateAll(deltaTime, this.gameState);
       this.removeDeadActors();
+
+
+      this.renderer.clear(this.actorManager.size());
       this.renderAll();
 
       this.renderer.draw(this.actorManager.size());
-
-      console.log(this.actorManager.size());
     };
 
     Game.prototype.updateAll = function(deltaTime, gameState) {
       this.actorManager.forEach(function(actor) {
         actor.update(deltaTime, gameState);
       });
+
+      for (var i = 0; i < this.emitters.length; i++) {
+        this.emitters[i].update(deltaTime);
+      }
     };
 
     Game.prototype.removeDeadActors = function() {

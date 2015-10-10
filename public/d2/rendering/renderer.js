@@ -22,20 +22,20 @@ define(function() {
 
   Renderer.prototype.clear = function(numArrayAttributes) {
     numArrayAttributes = numArrayAttributes || 0;
-
-    var gl = this.gl;
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
     for (var i = 0; i < this.arrayAttributes.length; i++) {
       this.arrayAttributes[i].clear(numArrayAttributes);
     }
   };
 
   Renderer.prototype.draw = function(numAttributes) {
+    var gl = this.gl;
+
     this.bindUniforms();
     this.bindArrayAttributes();
 
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6 * numAttributes);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 6 * numAttributes);
   };
 
   Renderer.prototype.initialize = function(gl, program) {
