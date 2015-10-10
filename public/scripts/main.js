@@ -2,7 +2,8 @@ config({
   ajax: ajaxer,
   baseUrl: 'scripts',
   paths: {
-
+    d2: './d2',
+    shaders: './d2/defaultShaders'
   },
   plugins: {
     text: './lib/requirator-text/lib/requirator-text'
