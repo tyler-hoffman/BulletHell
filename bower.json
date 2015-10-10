@@ -1,0 +1,10 @@
+{
+  "name": "bullet-hell",
+  "version": "0.0.1",
+  "dependencies": {
+    "ajaxer": "https://github.com/power-cosmic/ajaxer.git#master",
+    "requirator": "https://github.com/power-cosmic/requirator.git#master",
+    "requirator-image": "https://github.com/power-cosmic/requirator-image.git#master",
+    "requirator-text": "https://github.com/power-cosmic/requirator-text.git#master"
+  }
+}
