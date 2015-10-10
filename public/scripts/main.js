@@ -4,7 +4,8 @@ config({
   paths: {
     d2: './d2',
     shaders: './d2/defaultShaders',
-    images: './images'
+    images: './images',
+    keyManager: './lib/key-manager/src'
   },
   plugins: {
     text: './lib/requirator-text/lib/requirator-text',

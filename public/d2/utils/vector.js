@@ -38,10 +38,23 @@ define(function() {
   };
 
   Vector.prototype.scale = function(amount) {
-      this.x *= amount;
-      this.y *= amount;
-      return this;
+    this.x *= amount;
+    this.y *= amount;
+    return this;
+  };
+
+  Vector.prototype.normalize = function() {
+    if (this.x || this.y) {
+      var length = this.length();
+      this.x /= length;
+      this.y /= length;
     }
-  
+    return this;
+  };
+
+  Vector.prototype.length = function() {
+    return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+  };
+
   return Vector;
 });

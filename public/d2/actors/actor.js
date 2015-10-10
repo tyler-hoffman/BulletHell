@@ -21,6 +21,9 @@ define([
       if (velocity) {
         this.setVelocity(velocity);
       }
+      if (view) {
+        this.updateBounds();
+      }
     };
 
     Actor.prototype.update = function(deltaTime) {

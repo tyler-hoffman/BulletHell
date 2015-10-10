@@ -20,6 +20,5 @@ define([
 
     Ship.prototype = new Actor();
 
-
     return Ship;
 });

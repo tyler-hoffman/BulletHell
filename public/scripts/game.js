@@ -6,15 +6,23 @@ define([
     'd2/utils/rectangle',
     'd2/utils/vector',
     'emitters/circleEmitter',
+    'ships/ship',
     'bullets/RedBullet',
     'd2/rendering/defaultRenderer',
     'd2/rendering/textureRegion',
+    'keyManager/keyManager',
     'image!images/bullets.png',
     'text!shaders/vertex-shader.vert',
     'text!shaders/fragment-shader.frag'
   ], function(ActorManager, DefaultActorRenderer, ShaderCompiler, Animator, Rectangle,
-        Vector, CircleEmitter, RedBullet, DefaultRenderer, TextureRegion,
-        image, vertexShader, fragmentShader) {
+        Vector, CircleEmitter, Ship, RedBullet, DefaultRenderer, TextureRegion,
+        KeyManager, image, vertexShader, fragmentShader) {
+
+    const LEFT        = 37;
+    const UP          = 38;
+    const RIGHT       = 39;
+    const DOWN        = 40;
+    const SHIP_SPEED  = 100;
 
     var Game = function(canvas) {
       this.canvas = canvas;
@@ -31,25 +39,41 @@ define([
         worldBounds: new Rectangle(0, 0, this.width, this.height)
       };
 
+      this.ship = new Ship(new Vector(this.width / 2, this.height * 0.75));
+      this.actorManager.addActor(this.ship);
+      this.ship.magnification = 2;
+
       this.emitters = [];
       var actorManager = this.actorManager;
       var gameState = this.gameState;
       this.emitters.push(new CircleEmitter(
         function(position, velocity, fromTime) {
           var newBullet = new RedBullet(
-            position, velocity.scale(100)
+            position, velocity.scale(20)
           );
           newBullet.update(fromTime, gameState);
-          newBullet.magnification = 4;
+          newBullet.magnification = 2;
           actorManager.addActor(newBullet);
         }, new Vector(this.width / 2, this.height / 2),
-        16, 0.1, 0.14
+        10, 0.1, 0.14
       ));
 
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);
       this.renderer.setResolution(this.width, this.height);
       this.frame = 0;
       this.animator = new Animator(this.onFrame, this);
+
+      var keyManager = new KeyManager();
+      this.keyManager = keyManager;
+      keyManager.registerAction(LEFT);
+      keyManager.registerAction(UP);
+      keyManager.registerAction(RIGHT);
+      keyManager.registerAction(DOWN);
+
+      keyManager.registerKey(LEFT, LEFT);
+      keyManager.registerKey(UP, UP);
+      keyManager.registerKey(RIGHT, RIGHT);
+      keyManager.registerKey(DOWN, DOWN);
 
       this.animator.start();
     };
@@ -60,14 +84,16 @@ define([
         this.animator.stop();
       };
 
+      this.handleInput(deltaTime);
       this.updateAll(deltaTime, this.gameState);
       this.removeDeadActors();
 
 
-      this.renderer.clear(this.actorManager.size());
       this.renderAll();
 
       this.renderer.draw(this.actorManager.size());
+
+      //console.log(this.actorManager.size())
     };
 
     Game.prototype.updateAll = function(deltaTime, gameState) {
@@ -78,6 +104,28 @@ define([
       for (var i = 0; i < this.emitters.length; i++) {
         this.emitters[i].update(deltaTime);
       }
+    }
+
+    Game.prototype.handleInput = function(deltaTime) {
+      var x = 0,
+          y = 0;
+
+      if (this.keyManager.isDown(LEFT)) {
+        x -= 1;
+      }
+      if (this.keyManager.isDown(RIGHT)) {
+        x += 1;
+      }
+      if (this.keyManager.isDown(UP)) {
+        y -= 1;
+      }
+      if (this.keyManager.isDown(DOWN)) {
+        y += 1;
+      }
+
+      this.ship.velocity.set(x, y)
+          .normalize()
+          .scale(SHIP_SPEED);
     };
 
     Game.prototype.removeDeadActors = function() {
@@ -87,10 +135,13 @@ define([
     };
 
     Game.prototype.renderAll = function() {
+      this.renderer.clear(this.actorManager.size());
+
       var defaultActorRenderer = this.defaultActorRenderer;
       var renderer = this.renderer;
+      var ship = this.ship;
       this.actorManager.forEach(function(actor) {
-        defaultActorRenderer.render(actor, renderer);
+        defaultActorRenderer.render(actor, renderer, actor == ship);
       });
     };
 

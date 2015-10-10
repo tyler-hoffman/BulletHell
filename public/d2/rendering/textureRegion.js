@@ -14,8 +14,8 @@ define([
       this.textureCoordinates = new Rectangle(
         imageBox.x / image.width,
         imageBox.y / image.height,
-        (imageBox.x + imageBox.width) / image.width,
-        (imageBox.y + imageBox.height) / image.height
+        imageBox.width / image.width,
+        imageBox.height / image.height
       );
     };
 
