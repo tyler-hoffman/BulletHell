@@ -8,6 +8,7 @@ define([
     'emitters/circleEmitter',
     'ships/ship',
     'bullets/RedBullet',
+    'd2/utils/quadTree',
     'd2/rendering/defaultRenderer',
     'd2/rendering/textureRegion',
     'keyManager/keyManager',
@@ -15,14 +16,16 @@ define([
     'text!shaders/vertex-shader.vert',
     'text!shaders/fragment-shader.frag'
   ], function(ActorManager, DefaultActorRenderer, ShaderCompiler, Animator, Rectangle,
-        Vector, CircleEmitter, Ship, RedBullet, DefaultRenderer, TextureRegion,
+        Vector, CircleEmitter, Ship, RedBullet, QuadTree,
+        DefaultRenderer, TextureRegion,
         KeyManager, image, vertexShader, fragmentShader) {
 
-    const LEFT        = 37;
-    const UP          = 38;
-    const RIGHT       = 39;
-    const DOWN        = 40;
-    const SHIP_SPEED  = 100;
+    const LEFT          = 37;
+    const UP            = 38;
+    const RIGHT         = 39;
+    const DOWN          = 40;
+    const SHIP_SPEED    = 200;
+    const BULLET_SPEED  = 100;
 
     var Game = function(canvas) {
       this.canvas = canvas;
@@ -35,8 +38,11 @@ define([
         this.gl, vertexShader, fragmentShader
       );
 
+      var worldBounds = new Rectangle(0, 0, this.width, this.height);
+      this.quadTree = new QuadTree(worldBounds, 10, 10);
+
       this.gameState = {
-        worldBounds: new Rectangle(0, 0, this.width, this.height)
+        worldBounds: worldBounds
       };
 
       this.ship = new Ship(new Vector(this.width / 2, this.height * 0.75));
@@ -49,13 +55,13 @@ define([
       this.emitters.push(new CircleEmitter(
         function(position, velocity, fromTime) {
           var newBullet = new RedBullet(
-            position, velocity.scale(20)
+            position, velocity.scale(BULLET_SPEED)
           );
           newBullet.update(fromTime, gameState);
-          newBullet.magnification = 2;
+          newBullet.magnification = 1;
           actorManager.addActor(newBullet);
         }, new Vector(this.width / 2, this.height / 2),
-        10, 0.1, 0.14
+        60, 0.04, 0.1
       ));
 
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);
@@ -85,7 +91,9 @@ define([
       };
 
       this.handleInput(deltaTime);
-      this.updateAll(deltaTime, this.gameState);
+      this.updateActors(deltaTime, this.gameState);
+      this.updateEmitters(deltaTime);
+      this.handleCollisions();
       this.removeDeadActors();
 
 
@@ -93,18 +101,42 @@ define([
 
       this.renderer.draw(this.actorManager.size());
 
-      //console.log(this.actorManager.size())
+      // stat loggin every 10 frames
+      if (!(this.frame % 10)) {
+        var fps = Math.round(1 / deltaTime);
+        console.log(this.actorManager.size()
+            + ' things rendered at '
+            + fps + ' fps');
+      }
     };
 
-    Game.prototype.updateAll = function(deltaTime, gameState) {
+    Game.prototype.updateActors = function(deltaTime, gameState) {
       this.actorManager.forEach(function(actor) {
         actor.update(deltaTime, gameState);
       });
+    };
 
+    Game.prototype.handleCollisions = function() {
+      var quadTree = this.quadTree;
+      var ship = this.ship;
+
+      this.actorManager.forEach(function(actor) {
+        quadTree.insert(actor);
+      });
+
+      var collisions = quadTree.getCollisions(this.ship.bounds);
+      for (var i = 0; i < collisions.length; i++) {
+        if (collisions[i] !== ship) {
+          collisions[i].isAlive = false;
+        }
+      }
+    };
+
+    Game.prototype.updateEmitters = function(deltaTime) {
       for (var i = 0; i < this.emitters.length; i++) {
         this.emitters[i].update(deltaTime);
       }
-    }
+    };
 
     Game.prototype.handleInput = function(deltaTime) {
       var x = 0,
