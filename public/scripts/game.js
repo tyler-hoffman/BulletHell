@@ -35,7 +35,7 @@ define([
       this.width = canvas.width;
       this.height = canvas.height;
       this.font = new MonoFont();
-      this.font.addLetters(6, 8, 10, 7, 32, fontImage);
+      this.font.addLetters(6, 8, 10, 9, 32, fontImage);
 
       this.gl = canvas.getContext('webgl');
       this.actorManager = new ActorManager();
@@ -56,7 +56,7 @@ define([
       this.ship.magnification = 2;
 
       var actorManager = this.actorManager;
-      this.textField = new TextField(this.font, 'BLAST INFERNO', 8, function(letters) {
+      this.textField = new TextField(this.font, '[Blast Inferno]', 8, function(letters) {
         for (var i = 0; i < letters.length; i++) {
           actorManager.addActor(letters[i]);
         }
