@@ -20,6 +20,11 @@ define(function() {
     }
   };
 
+  Renderer.prototype.erase = function() {
+    var gl = this.gl;
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  };
+
   Renderer.prototype.clear = function(numArrayAttributes) {
     numArrayAttributes = numArrayAttributes || 0;
     for (var i = 0; i < this.arrayAttributes.length; i++) {
@@ -32,8 +37,6 @@ define(function() {
 
     this.bindUniforms();
     this.bindArrayAttributes();
-
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6 * numAttributes);
   };

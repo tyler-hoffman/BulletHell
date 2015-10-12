@@ -9,8 +9,8 @@ define([
     };
 
 
-    ActorManager.prototype.addActor = function(actor) {
-      var image = actor.getTextureRegion().image;
+    ActorManager.prototype.addActor = function(actor, text) {
+      var image = actor.getTextureRegion().image.src;
 
       if (!this.actors[image]) {
         this.actors[image] = new LinkedList();
@@ -56,7 +56,21 @@ define([
           delete this.actors[property];
         }
       }
-    }
+    };
+
+    ActorManager.prototype.renderAll = function(renderer, actorRenderer) {
+      renderer.erase();
+      for (var key in this.actors) {
+        var size = this.actors[key].size;
+        renderer.clear(size);
+
+        this.forEachInList(function(actor) {
+          actorRenderer.render(actor, renderer);
+        }, key);
+
+        renderer.draw(size);
+      }
+    };
 
     ActorManager.prototype.updateAll = function(deltaTime, gameState, renderState) {
       this.forEach(function(actor) {

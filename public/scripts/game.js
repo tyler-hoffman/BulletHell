@@ -7,18 +7,21 @@ define([
     'd2/utils/vector',
     'emitters/circleEmitter',
     'ships/ship',
+    'd2/text/monoFont',
+    'd2/text/textField',
     'bullets/RedBullet',
     'd2/utils/quadTree',
     'd2/rendering/defaultRenderer',
     'd2/rendering/textureRegion',
     'keyManager/keyManager',
     'image!images/bullets.png',
+    'image!images/letters.png',
     'text!shaders/vertex-shader.vert',
     'text!shaders/fragment-shader.frag'
   ], function(ActorManager, DefaultActorRenderer, ShaderCompiler, Animator, Rectangle,
-        Vector, CircleEmitter, Ship, RedBullet, QuadTree,
+        Vector, CircleEmitter, Ship, MonoFont, TextField, RedBullet, QuadTree,
         DefaultRenderer, TextureRegion,
-        KeyManager, image, vertexShader, fragmentShader) {
+        KeyManager, image, fontImage, vertexShader, fragmentShader) {
 
     const LEFT          = 37;
     const UP            = 38;
@@ -31,6 +34,9 @@ define([
       this.canvas = canvas;
       this.width = canvas.width;
       this.height = canvas.height;
+      this.font = new MonoFont();
+      this.font.addLetters(6, 8, 10, 7, 32, fontImage);
+
       this.gl = canvas.getContext('webgl');
       this.actorManager = new ActorManager();
       this.defaultActorRenderer = new DefaultActorRenderer();
@@ -49,8 +55,14 @@ define([
       this.actorManager.addActor(this.ship);
       this.ship.magnification = 2;
 
-      this.emitters = [];
       var actorManager = this.actorManager;
+      this.textField = new TextField(this.font, 'BLAST INFERNO', 8, function(letters) {
+        for (var i = 0; i < letters.length; i++) {
+          actorManager.addActor(letters[i]);
+        }
+      });
+
+      this.emitters = [];
       var gameState = this.gameState;
       this.emitters.push(new CircleEmitter(
         function(position, velocity, fromTime) {
@@ -61,7 +73,7 @@ define([
           newBullet.magnification = 1;
           actorManager.addActor(newBullet);
         }, new Vector(this.width / 2, this.height / 2),
-        60, 0.04, 0.1
+        60, 0.04, 0.4
       ));
 
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);
@@ -99,10 +111,9 @@ define([
 
       this.renderAll();
 
-      this.renderer.draw(this.actorManager.size());
 
       // stat loggin every 10 frames
-      if (!(this.frame % 10)) {
+      if (!(this.frame % 100000)) {
         var fps = Math.round(1 / deltaTime);
         console.log(this.actorManager.size()
             + ' things rendered at '
@@ -167,14 +178,10 @@ define([
     };
 
     Game.prototype.renderAll = function() {
-      this.renderer.clear(this.actorManager.size());
 
       var defaultActorRenderer = this.defaultActorRenderer;
       var renderer = this.renderer;
-      var ship = this.ship;
-      this.actorManager.forEach(function(actor) {
-        defaultActorRenderer.render(actor, renderer, actor == ship);
-      });
+      this.actorManager.renderAll(renderer, defaultActorRenderer);
     };
 
     return Game;

@@ -26,6 +26,7 @@ define([
     };
 
     Actor.prototype.update = function(deltaTime) {
+      deltaTime = deltaTime || 0;
       temp.set(this.velocity)
           .scale(deltaTime);
 
@@ -40,23 +41,24 @@ define([
     };
 
     Actor.prototype.updateBounds = function() {
-      this.bounds.set(
-        this.position.x - this.view.center.x * this.magnification,
-        this.position.y - this.view.center.y * this.magnification,
-        this.view.width * this.magnification,
-        this.view.height * this.magnification
-      );
+      if (this.view) {
+        this.bounds.set(
+          this.position.x - this.view.center.x * this.magnification,
+          this.position.y - this.view.center.y * this.magnification,
+          this.view.width * this.magnification,
+          this.view.height * this.magnification
+        );
+      }
     };
 
     Actor.prototype.setView = function(view) {
       this.view = view;
-      if (this.view) {
-        this.updateBounds();
-      }
+      this.updateBounds();
     };
 
     Actor.prototype.setPosition = function(x, y) {
       this.position.set(x, y);
+      this.updateBounds();
     };
 
     Actor.prototype.setVelocity = function(x, y) {
