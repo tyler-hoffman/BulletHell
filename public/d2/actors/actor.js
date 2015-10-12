@@ -12,6 +12,7 @@ define([
       this.bounds = new Rectangle();
       this.position = new Vector();
       this.velocity = new Vector();
+      this.children = [];
       this.magnification = 1;
       this.isAlive = true;
 
@@ -21,9 +22,7 @@ define([
       if (velocity) {
         this.setVelocity(velocity);
       }
-      if (view) {
-        this.updateBounds();
-      }
+      this.setView(view);
     };
 
     Actor.prototype.update = function(deltaTime) {
@@ -47,6 +46,13 @@ define([
         this.view.width * this.magnification,
         this.view.height * this.magnification
       );
+    };
+
+    Actor.prototype.setView = function(view) {
+      this.view = view;
+      if (this.view) {
+        this.updateBounds();
+      }
     };
 
     Actor.prototype.setPosition = function(x, y) {
