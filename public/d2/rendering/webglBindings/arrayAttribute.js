@@ -4,15 +4,18 @@ define(function() {
 
   const VERTICES_PER_COMPONENT = 6;
 
-  var ArrayAttribute = function(gl, location) {
+  var ArrayAttribute = function(gl, location, componentsPerPoint) {
     this.gl = gl;
     this.location = location;
+    this.componentsPerPoint = componentsPerPoint;
     this.buffer = gl.createBuffer();
     this.data = new Float32Array();
   };
 
   ArrayAttribute.prototype.clear = function(numberComponents) {
-    var neededLength = numberComponents * VERTICES_PER_COMPONENT * 2;
+    var neededLength = numberComponents
+        * VERTICES_PER_COMPONENT
+        * this.componentsPerPoint;
     if (this.data.length < neededLength) {
       this.data = new Float32Array(neededLength);
     }
@@ -27,11 +30,10 @@ define(function() {
 
   ArrayAttribute.prototype.bind = function(renderState) {
     var gl = this.gl;
-
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
     gl.enableVertexAttribArray(this.location);
     gl.vertexAttribPointer(
-      this.location, 2, gl.FLOAT, false, 0, 0
+      this.location, this.componentsPerPoint, gl.FLOAT, false, 0, 0
     );
     gl.bufferData(gl.ARRAY_BUFFER, this.data, gl.STATIC_DRAW);
 

@@ -14,6 +14,7 @@ define([
       this.velocity = new Vector();
       this.children = [];
       this.magnification = 1;
+      this.depth = 0.5;
       this.isAlive = true;
 
       if (position) {
