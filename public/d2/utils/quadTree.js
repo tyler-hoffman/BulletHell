@@ -4,6 +4,8 @@ define([
     'd2/utils/Rectangle'
   ], function(Rectangle) {
 
+    var tempBounds = new Rectangle();
+
     /**
      * Create a new QuadTree
      * @param {Rectangle} bounds bounds of the QuadTree
@@ -26,10 +28,6 @@ define([
           for (var i = 0; i < 4; i++) {
             this.children[i].clear();
           }
-          // this.topLeft = null;
-          // this.topRight = null;
-          // this.bottomLeft = null;
-          // this.bottomRight = null;
           this.hasChildren = false;
         }
     };
@@ -50,7 +48,7 @@ define([
      * @return {Boolean} Wether or not the element could be inserted
      */
     QuadTree.prototype.insert = function(element, bounds) {
-      bounds = bounds || element.bounds;
+      bounds = bounds || element.getBoundingBox();
 
       if (!this.contains(bounds)) {
         return false;
@@ -79,12 +77,13 @@ define([
      * Get all elements whose bounding box intersects the provided bounds
      * @param {Rectangle} bounds Bounds to check against elements
      */
-    QuadTree.prototype.getCollisions = function(bounds) {
+    QuadTree.prototype.getCollisions = function(actor, bounds) {
+      bounds = bounds || actor.getBoundingBox();
       var collisions = [];
 
       // check elements
       for (var i = 0; i < this.elements.length; i++) {
-        if (bounds.intersectsRectangle(this.elements[i].bounds)) {
+        if (bounds.intersectsRectangle(this.elements[i].getBoundingBox())) {
           collisions.push(this.elements[i]);
         }
       }
@@ -92,7 +91,7 @@ define([
       if (this.hasChildren) {
         var child = this.getChild(bounds);
         if (child) {
-          collisions = collisions.concat(child.getCollisions(bounds));
+          collisions = collisions.concat(child.getCollisions(actor, bounds));
         }
       }
 

@@ -10,10 +10,12 @@ define([
     var Actor = function(view, position, velocity) {
       this.view = view;
       this.bounds = new Rectangle();
+      this.boundingBox = new Rectangle();
       this.position = new Vector();
       this.velocity = new Vector();
       this.children = [];
       this.magnification = 1;
+      this.rotation = 0;
       this.depth = 0.5;
       this.isAlive = true;
 
@@ -43,13 +45,22 @@ define([
 
     Actor.prototype.updateBounds = function() {
       if (this.view) {
+
+        // set bounding rectangle
         this.bounds.set(
           this.position.x - this.view.center.x * this.magnification,
           this.position.y - this.view.center.y * this.magnification,
           this.view.width * this.magnification,
           this.view.height * this.magnification
         );
+
+        this.boundingBox.set(this.bounds)
+          .boundingBox(this.rotation, this.position);
       }
+    };
+
+    Actor.prototype.getBoundingBox = function() {
+      return this.boundingBox;
     };
 
     Actor.prototype.setView = function(view) {

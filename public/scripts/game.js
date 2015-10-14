@@ -53,7 +53,9 @@ define([
 
       this.ship = new Ship(new Vector(this.width / 2, this.height * 0.75));
       this.actorManager.addActor(this.ship);
-      this.ship.magnification = 2;
+      this.ship.magnification = 4;
+      this.ship.rotation = - Math.PI / 4;
+      this.ship.updateBounds();
 
       var actorManager = this.actorManager;
       this.textField = new TextField(this.font, '[Blast Inferno]', 8, function(letters) {
@@ -101,7 +103,7 @@ define([
       if (this.frame > 900) {
         this.animator.stop();
       };
-
+      this.ship.rotation += 0.01
       this.handleInput(deltaTime);
       this.updateActors(deltaTime, this.gameState);
       this.updateEmitters(deltaTime);
@@ -135,7 +137,7 @@ define([
         quadTree.insert(actor);
       });
 
-      var collisions = quadTree.getCollisions(this.ship.bounds);
+      var collisions = quadTree.getCollisions(this.ship);
       for (var i = 0; i < collisions.length; i++) {
         if (collisions[i] !== ship) {
           collisions[i].isAlive = false;

@@ -7,6 +7,8 @@ define(function() {
     this.y = y || 0;
   };
 
+  var temp = new Vector();
+
   Vector.prototype.set = function(x, y) {
     if (typeof x === 'number') {
       this.x = x;
@@ -28,6 +30,21 @@ define(function() {
       this.x += x.x;
       this.y += x.y;
     }
+    return this;
+  };
+
+  Vector.prototype.subtract = function(x, y) {
+    if (typeof x === 'number') {
+      this.add(-x, -y);
+    } else {
+      this.add(temp.set(x).negative());
+    }
+    return this;
+  };
+
+  Vector.prototype.negative = function() {
+    this.x = -this.x;
+    this.y = -this.y;
     return this;
   };
 
@@ -54,6 +71,18 @@ define(function() {
 
   Vector.prototype.length = function() {
     return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+  };
+
+  Vector.prototype.rotate = function(theta) {
+    var cosTheta = Math.cos(theta);
+    var sinTheta = Math.sin(theta);
+
+    var xTemp = this.x * cosTheta + this.y * sinTheta;
+    this.y = - this.x * sinTheta + this.y * cosTheta;
+
+    this.x = xTemp;
+
+    return this;
   };
 
   return Vector;
