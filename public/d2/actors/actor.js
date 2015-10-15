@@ -2,15 +2,16 @@
 
 define([
     'd2/utils/rectangle',
+    'd2/utils/SimpleRectangle',
     'd2/utils/vector'
-  ], function(Rectangle, Vector) {
+  ], function(Rectangle, SimpleRectangle, Vector) {
 
     var temp = new Vector();
 
     var Actor = function(view, position, velocity) {
       this.view = view;
       this.bounds = new Rectangle();
-      this.boundingBox = new Rectangle();
+      //this.boundingBox = new Rectangle();
       this.position = new Vector();
       this.velocity = new Vector();
       this.children = [];
@@ -54,14 +55,14 @@ define([
           this.view.height * this.magnification
         );
 
-        this.boundingBox.set(this.bounds)
-          .boundingBox(this.rotation, this.position);
+        // this.boundingBox.set(this.bounds)
+        //   .boundingBox(this.rotation, this.position);
       }
     };
 
-    Actor.prototype.getBoundingBox = function() {
-      return this.boundingBox;
-    };
+    // Actor.prototype.getBoundingBox = function() {
+    //   return this.boundingBox;
+    // };
 
     Actor.prototype.setView = function(view) {
       this.view = view;

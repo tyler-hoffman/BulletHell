@@ -1,7 +1,7 @@
 "use strict";
 
 define([
-    'd2/utils/Rectangle'
+    'd2/utils/simpleRectangle'
   ], function(Rectangle) {
 
     var tempBounds = new Rectangle();
@@ -48,7 +48,7 @@ define([
      * @return {Boolean} Wether or not the element could be inserted
      */
     QuadTree.prototype.insert = function(element, bounds) {
-      bounds = bounds || element.getBoundingBox();
+      bounds = bounds || element.bounds;
 
       if (!this.contains(bounds)) {
         return false;
@@ -78,12 +78,12 @@ define([
      * @param {Rectangle} bounds Bounds to check against elements
      */
     QuadTree.prototype.getCollisions = function(actor, bounds) {
-      bounds = bounds || actor.getBoundingBox();
+      bounds = bounds || actor.bounds;
       var collisions = [];
 
       // check elements
       for (var i = 0; i < this.elements.length; i++) {
-        if (bounds.intersectsRectangle(this.elements[i].getBoundingBox())) {
+        if (bounds.intersectsRectangle(this.elements[i].bounds)) {
           collisions.push(this.elements[i]);
         }
       }

@@ -31,9 +31,11 @@ define(['d2/utils/vector'], function(Vector) {
   };
 
   Rectangle.prototype.set = function(x, y, width, height) {
+    x = x || 0;
+    y = y || 0;
+    width = width || 0;
+    height = height || 0;
     if (typeof x === 'number') {
-
-
 
         // correct so width and height are non-negative
         if (width < 0) {
