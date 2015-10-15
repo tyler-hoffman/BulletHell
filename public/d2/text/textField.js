@@ -1,8 +1,9 @@
 "use strict";
 
 define([
-    'd2/actors/actor'
-  ], function(Actor) {
+    'd2/actors/actor',
+    'd2/utils/vector'
+  ], function(Actor, Vector) {
 
     var CharacterField = function(view, position, velocity) {
       Actor.call(this, view, position, velocity);
@@ -14,7 +15,7 @@ define([
       Actor.call(this);
       this.font = font;
       this.onChange = onChange;
-      this.magnification = magnification;
+      this.scale = new Vector(magnification, magnification);
 
       if (text) {
         this.setText(text);
@@ -40,9 +41,9 @@ define([
         for (var i = 0; i < text.length; i++) {
           var textureRegion = this.font.getImage(text[i]);
           var character = new CharacterField(textureRegion);
-          character.magnification = this.magnification;
+          character.setScale(this.scale);
           character.setPosition(x, y);
-          x += character.bounds.width;
+          x += character.boundingBox.width;
           this.children.push(character);
         }
       }
