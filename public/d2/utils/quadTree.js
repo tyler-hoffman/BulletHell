@@ -48,7 +48,7 @@ define([
      * @return {Boolean} Wether or not the element could be inserted
      */
     QuadTree.prototype.insert = function(element, bounds) {
-      bounds = bounds || element.bounds;
+      bounds = bounds || element.boundingBox;
 
       if (!this.contains(bounds)) {
         return false;
@@ -78,12 +78,12 @@ define([
      * @param {Rectangle} bounds Bounds to check against elements
      */
     QuadTree.prototype.getCollisions = function(actor, bounds) {
-      bounds = bounds || actor.bounds;
+      bounds = bounds || actor.boundingBox;
       var collisions = [];
 
       // check elements
       for (var i = 0; i < this.elements.length; i++) {
-        if (bounds.intersectsRectangle(this.elements[i].bounds)) {
+        if (bounds.intersectsRectangle(this.elements[i].boundingBox)) {
           collisions.push(this.elements[i]);
         }
       }
