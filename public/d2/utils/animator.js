@@ -2,11 +2,12 @@
 
 define(function() {
 
-  var Animator = function(callback, context) {
-    this.isPlaying = false;
-    this.previousTime = 0;
+  var Animator = function(callback, context, pauseAfter) {
     this.callback = callback;
     this.context = context;
+    this.pauseAfter = pauseAfter || 1;
+    this.isPlaying = false;
+    this.previousTime = 0;
   };
 
   Animator.prototype.start = function() {
@@ -31,6 +32,11 @@ define(function() {
     var deltaTime = 0;
     if (timeStamp != null && this.startTime != null) {
       deltaTime = (timeStamp - this.startTime) / 1000;
+
+      // if deltaTime is huge, assume it was paused and set to 0
+      if (deltaTime >= this.pauseAfter) {
+        deltaTime = 0;
+      }
     }
     this.startTime = timeStamp;
     this.callback.call(this.context, deltaTime);
