@@ -85,5 +85,9 @@ define(function() {
     return this;
   };
 
+  Vector.prototype.toArray = function() {
+    return [this.x, this.y];
+  };
+
   return Vector;
 });

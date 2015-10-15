@@ -11,8 +11,10 @@ define([
     var Actor = function(view, position, velocity) {
       this.view = view;
       this.bounds = new Rectangle();
+
       //this.boundingBox = new Rectangle();
       this.position = new Vector();
+      this.scale = new Vector(1, 1);
       this.velocity = new Vector();
       this.children = [];
       this.magnification = 1;
@@ -27,6 +29,7 @@ define([
         this.setVelocity(velocity);
       }
       this.setView(view);
+      this.updateBounds();
     };
 
     Actor.prototype.update = function(deltaTime) {
@@ -35,7 +38,7 @@ define([
           .scale(deltaTime);
 
       this.position.add(temp);
-      this.updateBounds();
+      //this.updateBounds();
 
       if (this.view) {
         if (this.view.update) {
@@ -49,8 +52,8 @@ define([
 
         // set bounding rectangle
         this.bounds.set(
-          this.position.x - this.view.center.x * this.magnification,
-          this.position.y - this.view.center.y * this.magnification,
+          - this.view.center.x * this.magnification,
+          - this.view.center.y * this.magnification,
           this.view.width * this.magnification,
           this.view.height * this.magnification
         );

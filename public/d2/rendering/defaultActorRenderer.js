@@ -20,8 +20,15 @@ define(['d2/utils/plane'], function(Plane) {
       actor.depth
     );
 
+    var position = actor.position.toArray();
+
     webglBridge.setImage(textureRegion.image);
-    webglBridge.a_position.addData(planeBuffer.points);
+    webglBridge.a_vertex.addData(planeBuffer.points);
+
+    for (var i = 0; i < 6; i++) {
+      webglBridge.a_position.addData(position);
+    }
+
     webglBridge.a_texCoord.addData(textureRegion.textureCoordinates.float32Array);
   };
 
