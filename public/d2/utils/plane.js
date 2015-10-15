@@ -5,11 +5,7 @@ define(function() {
     this.setRectangle(x, y, height, width, depth);
   };
 
-  Plane.prototype.setRectangle = function(x, y, height, width, depth) {
-    x = x || 0;
-    y = y || 0;
-    width = width || 0;
-    height = height || 0;
+  Plane.prototype.setRectangle = function(x, y, width, height, depth) {
     depth = depth || 0;
 
     var x1 = x,
