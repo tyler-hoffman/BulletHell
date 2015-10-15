@@ -21,12 +21,14 @@ define(['d2/utils/plane'], function(Plane) {
     );
 
     var position = actor.position.toArray();
+    var scale = actor.scale.toArray();
 
     webglBridge.setImage(textureRegion.image);
     webglBridge.a_vertex.addData(planeBuffer.points);
 
     for (var i = 0; i < 6; i++) {
       webglBridge.a_position.addData(position);
+      webglBridge.a_scale.addData(scale);
     }
 
     webglBridge.a_texCoord.addData(textureRegion.textureCoordinates.float32Array);

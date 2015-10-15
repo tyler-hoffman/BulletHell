@@ -13,7 +13,7 @@ define([
     Bullet.prototype.update = function(deltaTime, gameState) {
       Actor.prototype.update.call(this, deltaTime, gameState);
 
-      if (!gameState.worldBounds.intersectsRectangle(this.bounds)) {
+      if (!gameState.worldBounds.intersectsRectangle(this.boundingBox)) {
         this.isAlive = false;
       }
     };

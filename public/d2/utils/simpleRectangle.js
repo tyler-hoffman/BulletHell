@@ -17,16 +17,36 @@ define(function() {
       this.width = x.width;
       this.height = x.height;
     }
+    return this;
+  };
+
+  SimpleRectangle.prototype.scale = function(amount) {
+    this.x *= amount;
+    this.y *= amount;
+    this.width *= amount;
+    this.height *= amount;
+
+    return this;
+  };
+
+  SimpleRectangle.prototype.translate = function(x, y) {
+    this.x += x;
+    this.y += y;
+    
+    return this;
   };
 
   SimpleRectangle.prototype.position = function(x, y) {
     this.x = x;
     this.y = y;
+
+    return this;
   };
 
   SimpleRectangle.prototype.size = function(width, height) {
     this.width = width;
     this.height = height;
+    return this;
   };
 
 

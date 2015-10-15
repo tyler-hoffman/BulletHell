@@ -4,12 +4,13 @@ define([
     'd2/utils/shaderCompiler',
     'd2/utils/animator',
     'd2/utils/rectangle',
+    'd2/utils/simpleRectangle',
     'd2/utils/vector',
     'emitters/circleEmitter',
     'ships/ship',
     'd2/text/monoFont',
     'd2/text/textField',
-    'bullets/RedBullet',
+    'bullets/redBullet',
     'd2/utils/quadTree',
     'd2/rendering/defaultRenderer',
     'd2/rendering/textureRegion',
@@ -18,7 +19,8 @@ define([
     'image!images/letters.png',
     'text!shaders/vertex-shader.vert',
     'text!shaders/fragment-shader.frag'
-  ], function(ActorManager, DefaultActorRenderer, ShaderCompiler, Animator, Rectangle,
+  ], function(ActorManager, DefaultActorRenderer, ShaderCompiler, Animator,
+        Rectangle, SimpleRectangle,
         Vector, CircleEmitter, Ship, MonoFont, TextField, RedBullet, QuadTree,
         DefaultRenderer, TextureRegion,
         KeyManager, image, fontImage, vertexShader, fragmentShader) {
@@ -44,7 +46,7 @@ define([
         this.gl, vertexShader, fragmentShader
       );
 
-      var worldBounds = new Rectangle(0, 0, this.width, this.height);
+      var worldBounds = new SimpleRectangle(0, 0, this.width, this.height);
       this.quadTree = new QuadTree(worldBounds, 10, 10);
 
       this.gameState = {
@@ -53,8 +55,7 @@ define([
 
       this.ship = new Ship(new Vector(this.width / 2, this.height * 0.75));
       this.actorManager.addActor(this.ship);
-      this.ship.magnification = 4;
-      this.ship.rotation = - Math.PI / 4;
+      this.ship.setScale(4);
       this.ship.updateBounds();
 
       var actorManager = this.actorManager;
@@ -100,7 +101,7 @@ define([
 
     Game.prototype.onFrame = function(deltaTime) {
       this.frame++;
-      if (this.frame > 900) {
+      if (this.frame > 9000) {
         this.animator.stop();
       };
       this.ship.rotation += 0.01
@@ -109,13 +110,11 @@ define([
       this.updateEmitters(deltaTime);
       this.handleCollisions();
       this.removeDeadActors();
-
-
       this.renderAll();
 
 
       // stat loggin every 10 frames
-      if (!(this.frame % 100000)) {
+      if (!(this.frame % 100)) {
         var fps = Math.round(1 / deltaTime);
         console.log(this.actorManager.size()
             + ' things rendered at '

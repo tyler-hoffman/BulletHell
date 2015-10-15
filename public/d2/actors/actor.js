@@ -1,18 +1,17 @@
 "use strict";
 
 define([
-    'd2/utils/rectangle',
     'd2/utils/SimpleRectangle',
     'd2/utils/vector'
-  ], function(Rectangle, SimpleRectangle, Vector) {
+  ], function(SimpleRectangle, Vector) {
 
     var temp = new Vector();
 
     var Actor = function(view, position, velocity) {
       this.view = view;
-      this.bounds = new Rectangle();
+      this.bounds = new SimpleRectangle();
 
-      //this.boundingBox = new Rectangle();
+      this.boundingBox = new SimpleRectangle();
       this.position = new Vector();
       this.scale = new Vector(1, 1);
       this.velocity = new Vector();
@@ -32,13 +31,17 @@ define([
       this.updateBounds();
     };
 
+    Actor.prototype.setScale = function(x, y) {
+      this.scale.set(x, y | x);
+    };
+
     Actor.prototype.update = function(deltaTime) {
       deltaTime = deltaTime || 0;
       temp.set(this.velocity)
           .scale(deltaTime);
 
       this.position.add(temp);
-      //this.updateBounds();
+      this.updateBounds();
 
       if (this.view) {
         if (this.view.update) {
@@ -54,18 +57,19 @@ define([
         this.bounds.set(
           - this.view.center.x * this.magnification,
           - this.view.center.y * this.magnification,
-          this.view.width * this.magnification,
-          this.view.height * this.magnification
+          this.view.width,
+          this.view.height
         );
 
-        // this.boundingBox.set(this.bounds)
-        //   .boundingBox(this.rotation, this.position);
+        this.boundingBox.set(this.bounds)
+            .scale(this.scale.x, this.scale.y)
+            .translate(this.position.x, this.position.y);
       }
     };
 
-    // Actor.prototype.getBoundingBox = function() {
-    //   return this.boundingBox;
-    // };
+    Actor.prototype.getBoundingBox = function() {
+      return this.boundingBox;
+    };
 
     Actor.prototype.setView = function(view) {
       this.view = view;
