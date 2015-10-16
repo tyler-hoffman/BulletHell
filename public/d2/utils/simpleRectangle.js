@@ -67,6 +67,22 @@ define(function() {
     return this.width == 0 || this.height == 0;
   };
 
+  SimpleRectangle.prototype.x1 = function() {
+    return this.x;
+  };
+
+  SimpleRectangle.prototype.y1 = function() {
+    return this.y;
+  };
+
+  SimpleRectangle.prototype.x2 = function() {
+    return this.x + this.width;
+  };
+
+  SimpleRectangle.prototype.y2 = function() {
+    return this.y + this.height;
+  };
+
   SimpleRectangle.prototype.getIntersection = function(other, dest) {
     dest = dest || new SimpleRectangle;
 
