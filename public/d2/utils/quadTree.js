@@ -42,6 +42,10 @@ define([
       return this.bounds.containsRectangle(bounds);
     };
 
+    QuadTree.prototype.intersects = function(bounds) {
+      return this.bounds.intersectsRectangle(bounds);
+    };
+
     /**
      * Insert an element into the QuadTree
      * @param {Actor} element element to insert
@@ -89,22 +93,47 @@ define([
       }
 
       if (this.hasChildren) {
-        var child = this.getChild(bounds);
-        if (child) {
-          collisions = collisions.concat(child.getCollisions(actor, bounds));
+        var children = this.getChildren(bounds);
+        for (var child in children) {
+          if (children[child].intersects(bounds)) {
+            collisions = collisions.concat(
+              children[child].getCollisions(actor, bounds)
+            );
+          }
         }
       }
 
       return collisions;
     };
 
+    QuadTree.prototype.size = function() {
+      var size = this.elements.length;
+
+      if (this.hasChildren) {
+        for (var child in this.children) {
+          size += this.children[child].size();
+        }
+      }
+      return size;
+    };
+
     QuadTree.prototype.getChild = function(bounds) {
-      for (var i = 0; i < 4; i++) {
-        if (this.children[i].contains(bounds)) {
-          return this.children[i];
+      for (var child in children) {
+        if (children[child].contains(bounds)) {
+          return children[child];
         }
       }
       return null;
+    };
+
+    QuadTree.prototype.getChildren = function(bounds) {
+      var output = [];
+      for (var i = 0; i < 4; i++) {
+        if (this.children[i].intersects(bounds)) {
+          output.push(this.children[i]);
+        }
+      }
+      return output;
     };
 
     /**
