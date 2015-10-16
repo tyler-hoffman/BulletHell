@@ -32,7 +32,7 @@ define(function() {
   SimpleRectangle.prototype.translate = function(x, y) {
     this.x += x;
     this.y += y;
-    
+
     return this;
   };
 
@@ -49,8 +49,6 @@ define(function() {
     return this;
   };
 
-
-
   SimpleRectangle.prototype.containsRectangle = function(other) {
     return other.x >= this.x
         && other.x + other.width <= this.x + this.width
@@ -63,6 +61,27 @@ define(function() {
         && other.x <= this.x + this.width
         && other.y + other.height >= this.y
         && other.y <= this.y + this.height;
+  };
+
+  SimpleRectangle.prototype.isEmpty = function() {
+    return this.width == 0 || this.height == 0;
+  };
+
+  SimpleRectangle.prototype.getIntersection = function(other, dest) {
+    dest = dest || new SimpleRectangle;
+
+    var x1 = Math.max(this.x, other.x),
+        x2 = Math.min(this.x + this.width, other.x + other.width),
+        y1 = Math.max(this.y, other.y),
+        y2 = Math.min(this.y + this.height, other.y + other.height);
+
+    if (x1 <= x2 && y1 <= y2) {
+      dest.set (x1, y1, x2 - x1, y2 - y1);
+    } else {
+      dest.set(0, 0, 0, 0);
+    }
+
+    return dest;
   };
 
   return SimpleRectangle;
