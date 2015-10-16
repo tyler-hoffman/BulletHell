@@ -16,10 +16,11 @@ define([
       this.scale = new Vector(1, 1);
       this.velocity = new Vector();
       this.children = [];
-      this.magnification = 1;
       this.rotation = 0;
       this.depth = 0.5;
       this.isAlive = true;
+
+      this.collisionBits = 1;
 
       if (position) {
         this.setPosition(position);
@@ -41,7 +42,7 @@ define([
           .scale(deltaTime);
 
       this.position.add(temp);
-      this.updateBounds();
+      this.updateBoundingBox();
 
       if (this.view) {
         if (this.view.update) {
@@ -55,12 +56,18 @@ define([
 
         // set bounding rectangle
         this.bounds.set(
-          - this.view.center.x * this.magnification,
-          - this.view.center.y * this.magnification,
+          - this.view.center.x,
+          - this.view.center.y,
           this.view.width,
           this.view.height
         );
 
+        this.updateBoundingBox();
+      }
+    };
+
+    Actor.prototype.updateBoundingBox = function() {
+      if (this.view) {
         this.boundingBox.set(this.bounds)
             .scale(this.scale.x, this.scale.y)
             .translate(this.position.x, this.position.y);

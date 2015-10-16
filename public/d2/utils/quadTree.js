@@ -87,7 +87,8 @@ define([
 
       // check elements
       for (var i = 0; i < this.elements.length; i++) {
-        if (bounds.intersectsRectangle(this.elements[i].boundingBox)) {
+        if ((actor.collisionBits & this.elements[i].collisionBits)
+          && bounds.intersectsRectangle(this.elements[i].boundingBox)) {
           collisions.push(this.elements[i]);
         }
       }

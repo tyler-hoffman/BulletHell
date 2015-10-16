@@ -41,6 +41,7 @@ define([
         for (var i = 0; i < text.length; i++) {
           var textureRegion = this.font.getImage(text[i]);
           var character = new CharacterField(textureRegion);
+          character.collisionBits = 0;
           character.setScale(this.scale);
           character.setPosition(x, y);
           x += character.boundingBox.width;
