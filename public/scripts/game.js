@@ -30,9 +30,9 @@ define([
     const UP            = 38;
     const RIGHT         = 39;
     const DOWN          = 40;
-    const SHIP_SPEED    = 200;
-    const BULLET_SPEED  = 120;
-    const MAGNIFICATION = 4;
+    const SHIP_SPEED    = 300;
+    const BULLET_SPEED  = 200;
+    const MAGNIFICATION = 2;
 
 
     var Game = function(canvas) {
@@ -79,7 +79,7 @@ define([
           newBullet.setScale(MAGNIFICATION / 2);
           actorManager.addActor(newBullet);
         }, new Vector(this.width / 2, this.height / 2),
-        10, 0.02, 1
+        80, 0.02, 1
       ));
 
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);
@@ -116,9 +116,8 @@ define([
       this.removeDeadActors();
       this.renderAll();
 
-
       // stat loggin every 10 frames
-      if (!(this.frame % 10000)) {
+      if (!(this.frame % 100)) {
         var fps = Math.round(1 / deltaTime);
         console.log(this.actorManager.size()
             + ' things rendered at '
@@ -143,14 +142,10 @@ define([
       var collisions = quadTree.getCollisions(this.ship);
       for (var i = 0; i < collisions.length; i++) {
         if (collisions[i] !== ship) {
-          //collisions[i].isAlive = false;
           if (this.detector) {
-            var intersection = this.detector.getIntersection(ship, collisions[i])
+            var intersection = this.detector.getIntersection(ship, collisions[i]);
             if (!intersection.isEmpty()) {
-              //console.log('!')
-              //console.log(intersection)
               collisions[i].isAlive = false;
-              //this.detector = null;
             }
           }
         }

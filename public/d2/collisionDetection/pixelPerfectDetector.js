@@ -17,16 +17,18 @@ define([
 
       dest = dest || new Rectangle();
 
-      var intersection = this.intersection,
-          textureRegionA = actorA.getTextureRegion(),
+      var intersectionA = this.rectA,
+          intersectionB = this.rectB;
+
+      var textureRegionA = actorA.getTextureRegion(),
           textureRegionB = actorB.getTextureRegion(),
           imageA = textureRegionA.image,
           imageB = textureRegionB.image,
           boundsA = actorA.getBoundingBox(),
           boundsB = actorB.getBoundingBox();
 
-      boundsA.getIntersection(boundsB, intersection);
-      if (intersection.isEmpty()) {
+      boundsA.getIntersection(boundsB, intersectionA);
+      if (intersectionA.isEmpty()) {
 
         dest.set(0, 0, 0, 0);
 
@@ -35,40 +37,30 @@ define([
         this.registerImage(imageA);
         this.registerImage(imageB);
 
-        this.rectA.set(intersection)
-            .translate(-boundsA.x, -boundsA.y)
-            .scale(1 / actorA.scale.x)
-            .snap();
-
-        this.rectB.set(intersection)
+        intersectionB.set(intersectionA)
             .translate(-boundsB.x, -boundsB.y)
             .scale(1 / actorB.scale.x)
             .snap();
 
-        intersection
+        intersectionA
             .translate(-boundsA.x, -boundsA.y)
             .scale(1 / actorA.scale.x)
             .snap();
 
-        var xMin = intersection.width,
-            xMax = intersection.x,
-            yMin = intersection.height,
-            yMax = intersection.y;
+        var xMin = intersectionA.width,
+            xMax = intersectionA.x,
+            yMin = intersectionA.height,
+            yMax = intersectionA.y;
 
         var imageGridA = this.images[imageA],
             imageGridB = this.images[imageB];
 
-        var xOffsetB = Math.floor(boundsB.x - boundsA.x),
-            yOffsetB = Math.floor(boundsB.y - boundsA.y);
-
-        
-
-        for (var row = 0; row < intersection.height; row++) {
-          for (var col = 0; col < intersection.width; col++) {
-            var rowA = this.rectA.y + row + textureRegionA.y,
-                colA = this.rectA.x + col + textureRegionA.x,
-                rowB = this.rectB.y + row + textureRegionB.y,
-                colB = this.rectB.x + col + textureRegionB.x;
+        for (var row = 0; row < intersectionA.height; row++) {
+          for (var col = 0; col < intersectionA.width; col++) {
+            var rowA = intersectionA.y + row + textureRegionA.y,
+                colA = intersectionA.x + col + textureRegionA.x,
+                rowB = intersectionB.y + row + textureRegionB.y,
+                colB = intersectionB.x + col + textureRegionB.x;
 
             if (imageGridA[rowA][colA] > ALPHA_THRESHOLD &&
                 imageGridB[rowB][colB] > ALPHA_THRESHOLD) {
