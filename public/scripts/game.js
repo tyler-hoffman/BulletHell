@@ -29,8 +29,8 @@ define([
     const UP            = 38;
     const RIGHT         = 39;
     const DOWN          = 40;
-    const SHIP_SPEED    = 200;
-    const BULLET_SPEED  = 100;
+    const SHIP_SPEED    = 300;
+    const BULLET_SPEED  = 200;
 
     var Game = function(canvas) {
       this.canvas = canvas;
@@ -55,7 +55,7 @@ define([
 
       this.ship = new Ship(new Vector(this.width / 2, this.height * 0.75));
       this.actorManager.addActor(this.ship);
-      this.ship.setScale(4);
+      this.ship.setScale(8);
       this.ship.updateBounds();
 
       var actorManager = this.actorManager;
@@ -73,10 +73,10 @@ define([
             position, velocity.scale(BULLET_SPEED)
           );
           newBullet.update(fromTime, gameState);
-          newBullet.magnification = 1;
+          newBullet.setScale(1);
           actorManager.addActor(newBullet);
         }, new Vector(this.width / 2, this.height / 2),
-        60, 0.04, 0.4
+        60, 0.02, 0.1
       ));
 
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);
@@ -104,7 +104,8 @@ define([
       if (this.frame > 9000) {
         this.animator.stop();
       };
-      this.ship.rotation += 0.01
+
+      this.quadTree.clear();
       this.handleInput(deltaTime);
       this.updateActors(deltaTime, this.gameState);
       this.updateEmitters(deltaTime);
