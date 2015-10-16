@@ -8,6 +8,8 @@ define([
       this.image = image;
       this.center = center;
 
+      this.x = imageBox.x;
+      this.y = imageBox.y;
       this.width = imageBox.width;
       this.height = imageBox.height;
 

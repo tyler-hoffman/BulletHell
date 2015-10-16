@@ -100,5 +100,14 @@ define(function() {
     return dest;
   };
 
+  SimpleRectangle.prototype.snap = function() {
+    this.x = Math.floor(this.x);
+    this.y = Math.floor(this.y);
+    this.width = Math.ceil(this.width);
+    this.height = Math.ceil(this.height);
+
+    return this;
+  };
+
   return SimpleRectangle;
 });

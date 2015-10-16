@@ -11,10 +11,15 @@ define([
   ],
   function(Bullet, Vector, Rectangle, TextureRegion, image) {
 
+    var imageX = 0,
+        imageY = 10,
+        imageWidth = 7,
+        imageHeight = 7;
+
     var view = new TextureRegion(
       image,
-      new Rectangle(0, 0, 10, 10),
-      new Vector(5, 5)
+      new Rectangle(imageX, imageY, imageWidth, imageHeight),
+      new Vector(imageWidth / 2, imageHeight / 2)
     );
 
     var RedBullet = function(position, velocity) {

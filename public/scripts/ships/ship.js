@@ -8,10 +8,13 @@ define([
     'image!images/bullets.png'
 ], function(Actor, Vector, Rectangle, TextureRegion, image) {
 
+    var shipWidth = 17,
+        shipHeight = 14;
+
     var view = new TextureRegion(
       image,
-      new Rectangle(0, 10, 10, 10),
-      new Vector(5, 5)
+      new Rectangle(10, 0, shipWidth, shipHeight),
+      new Vector(shipWidth / 2, shipHeight / 2)
     );
 
     var Ship = function(position) {
