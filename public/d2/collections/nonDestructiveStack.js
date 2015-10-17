@@ -13,9 +13,9 @@ define(function() {
     }
   };
 
-  Stack.prototype.push = function() {
+  Stack.prototype.push = function(data) {
     if (this.currentIndex === this.elements.length) {
-      this.elements.push(this.factory());
+      this.elements.push(this.factory? this.factory(data) : data);
     }
     return this.elements[this.currentIndex++];
   };
