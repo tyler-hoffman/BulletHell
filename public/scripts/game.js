@@ -8,7 +8,7 @@ define([
     'd2/utils/vector',
     'd2/collisionDetection/PixelPerfectDetector',
     'emitters/circleEmitter',
-    'ships/ship',
+    'ships/dragonWing',
     'd2/text/monoFont',
     'd2/text/textField',
     'bullets/redBullet',
@@ -22,7 +22,7 @@ define([
     'text!shaders/fragment-shader.frag'
   ], function(ActorManager, DefaultActorRenderer, ShaderCompiler, Animator,
         Rectangle, SimpleRectangle, Vector, Detector,
-        CircleEmitter, Ship, MonoFont, TextField, RedBullet, QuadTree,
+        CircleEmitter, DragonWing, MonoFont, TextField, RedBullet, QuadTree,
         DefaultRenderer, TextureRegion,
         KeyManager, image, fontImage, vertexShader, fragmentShader) {
 
@@ -32,7 +32,7 @@ define([
     const DOWN          = 40;
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
-    const MAGNIFICATION = 2;
+    const MAGNIFICATION = 4;
 
 
     var Game = function(canvas) {
@@ -56,7 +56,8 @@ define([
         worldBounds: worldBounds
       };
 
-      this.ship = new Ship(new Vector(this.width / 2, this.height * 0.75));
+      this.ship = new DragonWing(new Vector(this.width / 2, this.height * 0.75));
+      //console.log(this.ship.view)
       this.actorManager.addActor(this.ship);
       this.ship.setScale(MAGNIFICATION);
       this.ship.updateBounds();
@@ -76,10 +77,10 @@ define([
             position, velocity.scale(BULLET_SPEED)
           );
           newBullet.update(fromTime, gameState);
-          newBullet.setScale(MAGNIFICATION / 2);
+          newBullet.setScale(MAGNIFICATION);
           actorManager.addActor(newBullet);
         }, new Vector(this.width / 2, this.height / 2),
-        80, 0.02, 1
+        80, 0.2, 1
       ));
 
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);

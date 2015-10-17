@@ -1,27 +1,25 @@
 "use strict";
 
 define([
-    'd2/actors/actor',
-    'd2/utils/vector',
-    'd2/utils/rectangle',
-    'd2/rendering/textureRegion',
-    'image!images/bullets.png'
-], function(Actor, Vector, Rectangle, TextureRegion, image) {
+    'd2/actors/actor'
+  ], function(Actor) {
 
-    var shipWidth = 17,
-        shipHeight = 14;
-
-    var view = new TextureRegion(
-      image,
-      new Rectangle(10, 0, shipWidth, shipHeight),
-      new Vector(shipWidth / 2, shipHeight / 2)
-    );
-
-    var Ship = function(position) {
+    var Ship = function(view, position, emitters, controller) {
       Actor.call(this, view, position);
+      this.emitters = emitters || [];
+      this.controller = controller;
     };
 
     Ship.prototype = new Actor();
+
+    Ship.prototype.update = function(deltaTime) {
+      deltaTime = deltaTime || 0;
+      Actor.prototype.update.call(this, deltaTime);
+
+      this.emitters.forEach(function(emitter) {
+        emitter.update(deltaTime);
+      });
+    };
 
     return Ship;
 });
