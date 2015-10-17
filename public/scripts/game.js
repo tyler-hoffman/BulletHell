@@ -7,7 +7,6 @@ define([
     'd2/utils/simpleRectangle',
     'd2/utils/vector',
     'd2/collisionDetection/PixelPerfectDetector',
-    'emitters/circleEmitter',
     'ships/dragonWing',
     'd2/text/monoFont',
     'd2/text/textField',
@@ -25,7 +24,7 @@ define([
     'text!shaders/fragment-shader.frag'
   ], function(ActorManager, DefaultActorRenderer, ShaderCompiler, Animator,
         Rectangle, SimpleRectangle, Vector, Detector,
-        CircleEmitter, DragonWing, MonoFont, TextField, RedBullet, QuadTree,
+        DragonWing, MonoFont, TextField, RedBullet, QuadTree,
         DefaultRenderer, TextureRegion, Emitter, Rotator, Spreader,
         KeyManager, image, fontImage, vertexShader, fragmentShader) {
 
