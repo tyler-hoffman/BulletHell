@@ -15,6 +15,9 @@ define([
     'd2/utils/quadTree',
     'd2/rendering/defaultRenderer',
     'd2/rendering/textureRegion',
+    'emitters/emitter',
+    'emitters/rotator',
+    'emitters/spreader',
     'keyManager/keyManager',
     'image!images/bullets.png',
     'image!images/letters.png',
@@ -23,7 +26,7 @@ define([
   ], function(ActorManager, DefaultActorRenderer, ShaderCompiler, Animator,
         Rectangle, SimpleRectangle, Vector, Detector,
         CircleEmitter, DragonWing, MonoFont, TextField, RedBullet, QuadTree,
-        DefaultRenderer, TextureRegion,
+        DefaultRenderer, TextureRegion, Emitter, Rotator, Spreader,
         KeyManager, image, fontImage, vertexShader, fragmentShader) {
 
     const LEFT          = 37;
@@ -41,6 +44,7 @@ define([
       this.height = canvas.height;
       this.font = new MonoFont();
       this.font.addLetters(6, 8, 10, 9, 32, fontImage);
+
 
       this.gl = canvas.getContext('webgl');
       this.actorManager = new ActorManager();
@@ -71,17 +75,23 @@ define([
 
       this.emitters = [];
       var gameState = this.gameState;
-      this.emitters.push(new CircleEmitter(
-        function(position, velocity, fromTime) {
-          var newBullet = new RedBullet(
-            position, velocity.scale(BULLET_SPEED)
-          );
-          newBullet.update(fromTime, gameState);
-          newBullet.setScale(MAGNIFICATION);
-          actorManager.addActor(newBullet);
-        }, new Vector(this.width / 2, this.height / 2),
-        80, 0.2, 1
-      ));
+
+      var emitter = new Emitter(
+          new Vector(this.width / 2, this.height / 2),
+          .11, 0.2,
+          function(position, velocity, fromTime) {
+
+            var newBullet = new RedBullet(
+              position, velocity.scale(BULLET_SPEED)
+            );
+            newBullet.update(fromTime, gameState);
+            newBullet.setScale(MAGNIFICATION);
+            actorManager.addActor(newBullet);
+          }
+      );
+      emitter.addDecorator(new Spreader(300));
+      emitter.addDecorator(new Rotator(0.1));
+      this.emitters.push(emitter);
 
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);
       this.renderer.setResolution(this.width, this.height);
@@ -118,7 +128,7 @@ define([
       this.renderAll();
 
       // stat loggin every 10 frames
-      if (!(this.frame % 100)) {
+      if (!(this.frame % 10)) {
         var fps = Math.round(1 / deltaTime);
         console.log(this.actorManager.size()
             + ' things rendered at '
