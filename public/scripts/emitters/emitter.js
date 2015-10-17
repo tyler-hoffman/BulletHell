@@ -2,22 +2,13 @@
 
 define([
     'd2/utils/vector',
-    'd2/collections/nonDestructiveStack',
     'emitters/emission'
-  ], function(Vector, NonDestructiveStack, Emission) {
+  ], function(Vector, Emission) {
 
     var tempVector = new Vector();
 
     var Emitter = function(position, emitRate, angle, factory, decorators) {
-
-      //this.emissionStack = [];
-      // new NonDestructiveStack(function(emission) {
-      //   return emission.deepCopy();
-      // });
-
       this.emission = new Emission(angle);
-      //this.emissionStack.push(this.emission);
-      this.cumulativeEmission = new Emission();
       this.position = new Vector();
       this.emissionDecorators = [];
       this.time = 0;
@@ -36,17 +27,18 @@ define([
     };
 
     Emitter.prototype.update = function(deltaTime) {
+      var emitRate = this.emitRate;
       this.time += deltaTime;
 
       while (this.time >= this.emitRate) {
-        this.time -= this.emitRate;
+
         var emission = new Emission();
+        this.time -= this.emitRate;
+
         this.decorateAll(emission);
-        //console.log(emission)
         this.emitAll(emission, this.time);
 
         // update decorators and decorate the emission
-        var emitRate = this.emitRate;
         this.emissionDecorators.forEach(function(decorator) {
 
           // I like this, but you probably don't
@@ -57,12 +49,9 @@ define([
     };
 
     Emitter.prototype.decorateAll = function(emissionGroup) {
-
-      //this.emission.angle = this.angle;
       this.emissionDecorators.forEach(function(decorator) {
         decorator.decorate(emissionGroup);
       });
-
     };
 
     Emitter.prototype.emitAll = function(emission, fromTime) {
