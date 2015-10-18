@@ -19,7 +19,6 @@ define([
 
     var DragonWing = function(position) {
       Ship.call(this, view, position);
-      this.rotation = Math.PI;
     };
 
     DragonWing.prototype = new Ship();
