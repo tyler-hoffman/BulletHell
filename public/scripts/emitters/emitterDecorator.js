@@ -15,7 +15,7 @@ define(['emitters/emission'], function(Emission) {
 
     // copy smission's children and let subclass handle them
     if (this.decorateChildren) {
-      emission.children = this.decorateChildren(emission.children);
+      emission.children = this.decorateChildren(emission.children, emission);
     }
 
   };

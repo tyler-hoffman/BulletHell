@@ -21,7 +21,7 @@ define([
     };
 
     SoftSwinger.prototype.decorateEmission = function(emission) {
-      emission.angle += this.angle;
+      emission.angle += this.angle * this.spread / 2;
     };
 
     return SoftSwinger;
