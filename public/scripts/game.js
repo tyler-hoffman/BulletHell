@@ -61,7 +61,6 @@ define([
       };
 
       this.ship = new DragonWing(new Vector(this.width / 2, this.height * 0.75));
-      //console.log(this.ship.view)
       this.actorManager.addActor(this.ship);
       this.ship.setScale(MAGNIFICATION);
       this.ship.updateBounds();
@@ -112,10 +111,10 @@ define([
 
       var that = this;
       this.renderInfo = new RenderInfo(1, function(fps) {
-        console.log(this.actorManager.size()
+        console.log(that.actorManager.size()
             + ' items rendered at '
             + fps + ' fps');
-      }, this);
+      });
 
       this.animator.start();
     };
