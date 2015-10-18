@@ -7,6 +7,7 @@ define([
 
     var CharacterField = function(view, position, velocity) {
       Actor.call(this, view, position, velocity);
+      this.depth = 0;
     };
 
     CharacterField.prototype = new Actor();

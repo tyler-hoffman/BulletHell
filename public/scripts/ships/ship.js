@@ -17,6 +17,7 @@ define([
       Actor.prototype.update.call(this, deltaTime);
 
       this.emitters.forEach(function(emitter) {
+        emitter.setAngle(this.rotation);
         emitter.update(deltaTime);
       });
     };

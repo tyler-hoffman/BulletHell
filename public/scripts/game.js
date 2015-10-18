@@ -16,7 +16,10 @@ define([
     'd2/rendering/textureRegion',
     'emitters/emitter',
     'emitters/rotator',
-    'emitters/spreader',
+    'emitters/splitter',
+    'emitters/cycler',
+    'emitters/mirrorer',
+    'emitters/softSwinger',
     'keyManager/keyManager',
     'utils/renderInfo',
     'image!images/bullets.png',
@@ -26,7 +29,7 @@ define([
   ], function(ActorManager, DefaultActorRenderer, ShaderCompiler, Animator,
         Rectangle, SimpleRectangle, Vector, Detector,
         DragonWing, MonoFont, TextField, RedBullet, QuadTree,
-        DefaultRenderer, TextureRegion, Emitter, Rotator, Spreader,
+        DefaultRenderer, TextureRegion, Emitter, Rotator, Splitter, Cycler, Mirrorer, Swinger,
         KeyManager, RenderInfo, image, fontImage, vertexShader, fragmentShader) {
 
     const LEFT          = 37;
@@ -76,8 +79,7 @@ define([
       var gameState = this.gameState;
 
       var emitter = new Emitter(
-          new Vector(this.width / 2, this.height / 2),
-          .11, 0.2,
+          new Vector(this.width / 2, this.height / 2), 0.1, 0,
           function(position, velocity, fromTime) {
 
             var newBullet = new RedBullet(
@@ -85,10 +87,12 @@ define([
             );
             newBullet.update(fromTime, gameState);
             newBullet.setScale(MAGNIFICATION);
+            newBullet.depth = 0.55;
             actorManager.addActor(newBullet);
           }
       );
-      emitter.addDecorator(new Spreader(300));
+
+      emitter.addDecorator(new Splitter(100));
       emitter.addDecorator(new Rotator(0.1));
       this.emitters.push(emitter);
 

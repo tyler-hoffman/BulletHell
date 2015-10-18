@@ -20,8 +20,9 @@ define(['d2/utils/plane'], function(Plane) {
       actor.depth
     );
 
-    var position = actor.position.toArray();
-    var scale = actor.scale.toArray();
+    var position = actor.position.toArray(),
+        scale = actor.scale.toArray(),
+        rotation = [Math.cos(actor.rotation), Math.sin(actor.rotation)];
 
     webglBridge.setImage(textureRegion.image);
     webglBridge.a_vertex.addData(planeBuffer.points);
@@ -29,6 +30,7 @@ define(['d2/utils/plane'], function(Plane) {
     for (var i = 0; i < 6; i++) {
       webglBridge.a_position.addData(position);
       webglBridge.a_scale.addData(scale);
+      webglBridge.a_rotation.addData(rotation);
     }
 
     webglBridge.a_texCoord.addData(textureRegion.textureCoordinates.float32Array);

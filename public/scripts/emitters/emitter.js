@@ -81,6 +81,10 @@ define([
       return this.position.set(x, y);
     };
 
+    Emitter.prototype.setAngle = function(angle) {
+      this.angle = angle;
+    };
+
     Emitter.prototype.addDecorator = function(decorator) {
       this.emissionDecorators.push(decorator);
     };
