@@ -18,6 +18,7 @@ define([
     'emitters/rotator',
     'emitters/spreader',
     'keyManager/keyManager',
+    'utils/renderInfo',
     'image!images/bullets.png',
     'image!images/letters.png',
     'text!shaders/vertex-shader.vert',
@@ -26,7 +27,7 @@ define([
         Rectangle, SimpleRectangle, Vector, Detector,
         DragonWing, MonoFont, TextField, RedBullet, QuadTree,
         DefaultRenderer, TextureRegion, Emitter, Rotator, Spreader,
-        KeyManager, image, fontImage, vertexShader, fragmentShader) {
+        KeyManager, RenderInfo, image, fontImage, vertexShader, fragmentShader) {
 
     const LEFT          = 37;
     const UP            = 38;
@@ -109,6 +110,13 @@ define([
       keyManager.registerKey(RIGHT, RIGHT);
       keyManager.registerKey(DOWN, DOWN);
 
+      var that = this;
+      this.renderInfo = new RenderInfo(1, function(fps) {
+        console.log(this.actorManager.size()
+            + ' items rendered at '
+            + fps + ' fps');
+      }, this);
+
       this.animator.start();
     };
 
@@ -118,6 +126,7 @@ define([
         this.animator.stop();
       };
 
+      this.renderInfo.update(deltaTime)
       this.quadTree.clear();
       this.handleInput(deltaTime);
       this.updateActors(deltaTime, this.gameState);
@@ -125,14 +134,6 @@ define([
       this.handleCollisions();
       this.removeDeadActors();
       this.renderAll();
-
-      // stat loggin every 10 frames
-      if (!(this.frame % 10)) {
-        var fps = Math.round(1 / deltaTime);
-        console.log(this.actorManager.size()
-            + ' things rendered at '
-            + fps + ' fps');
-      }
     };
 
     Game.prototype.updateActors = function(deltaTime, gameState) {
