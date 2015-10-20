@@ -32,7 +32,6 @@ define([
         var mountPoint = this.mountPoints[mountPoint];
         if (emitter && mountPoint) {
           emitter.setAngle(this.rotation - Math.PI / 2);
-
           emitter.setPosition(tempVector
               .set(mountPoint)
               .subtract(this.bounds.x, this.bounds.y)

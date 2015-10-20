@@ -36,7 +36,7 @@ define([
 
       while (this.time >= this.emitRate) {
 
-        var emission = new Emission();
+        var emission = new Emission(this.angle);
         this.time -= this.emitRate;
 
         this.decorateAll(emission);
