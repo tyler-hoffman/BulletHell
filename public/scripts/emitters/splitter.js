@@ -10,7 +10,7 @@ define([
       return delta * numBullets;
     };
 
-    var Spreader = function(numBullets, spreadAngle) {
+    var Splitter = function(numBullets, spreadAngle) {
       EmitterDecorator.call(this);
 
       this.numBullets = numBullets;
@@ -30,9 +30,9 @@ define([
 
     };
 
-    Spreader.prototype = new EmitterDecorator();
+    Splitter.prototype = new EmitterDecorator();
 
-    Spreader.prototype.decorateChildren = function(children) {
+    Splitter.prototype.decorateChildren = function(children) {
       var start = this.baseAngle - this.spreadAngle / 2,
           delta = this.spreadAngle / (this.numBullets - 1),
           end = start + this.spreadAngle + delta / 2;
@@ -44,5 +44,5 @@ define([
       return output;
     };
 
-    return Spreader;
+    return Splitter;
 });

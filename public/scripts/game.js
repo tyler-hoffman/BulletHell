@@ -37,7 +37,7 @@ define([
     const RIGHT         = 39;
     const DOWN          = 40;
     const SHIP_SPEED    = 300;
-    const BULLET_SPEED  = 60;
+    const BULLET_SPEED  = 200;
     const MAGNIFICATION = 4;
 
 
@@ -69,7 +69,7 @@ define([
       this.ship.updateBounds();
 
       var actorManager = this.actorManager;
-      this.textField = new TextField(this.font, '[Blast Inferno]', 8, function(letters) {
+      this.textField = new TextField(this.font, '[Demo]', 8, function(letters) {
         for (var i = 0; i < letters.length; i++) {
           actorManager.addActor(letters[i]);
         }
@@ -78,22 +78,28 @@ define([
       this.emitters = [];
       var gameState = this.gameState;
 
-      var emitter = new Emitter(
-          new Vector(this.width / 2, this.height / 2), 0.1, 0,
-          function(position, velocity, fromTime) {
+      var emitter = new Emitter(.1, function(position, velocity, fromTime) {
 
-            var newBullet = new RedBullet(
-              position, velocity.scale(BULLET_SPEED)
-            );
-            newBullet.update(fromTime, gameState);
-            newBullet.setScale(MAGNIFICATION);
-            newBullet.depth = 0.55;
-            actorManager.addActor(newBullet);
-          }
-      );
+        var newBullet = new RedBullet(
+          position, velocity.scale(BULLET_SPEED)
+        );
+        newBullet.update(fromTime, gameState);
+        newBullet.setScale(MAGNIFICATION);
+        newBullet.depth = 0.55;
+        actorManager.addActor(newBullet);
 
-      emitter.addDecorator(new Splitter(100));
-      emitter.addDecorator(new Rotator(0.1));
+      });
+
+      emitter.setPosition(new Vector(this.width / 2, this.height / 2));
+
+      // emitter.addDecorator(new Swinger(4, Math.PI / 2));
+      // emitter.addDecorator(new Splitter(2, Math.PI / 2));
+      //
+      // emitter.addDecorator(new Mirrorer(Math.PI));
+      emitter.addDecorator(new Swinger(1, 0.4));
+      emitter.addDecorator(new Splitter(10));
+      //emitter.addDecorator(new Mirrorer(Math.PI / 2));
+
       this.emitters.push(emitter);
 
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);
@@ -120,6 +126,7 @@ define([
             + fps + ' fps');
       });
 
+      //this.addShip(this.ship);
       this.animator.start();
     };
 
@@ -137,6 +144,16 @@ define([
       this.handleCollisions();
       this.removeDeadActors();
       this.renderAll();
+    };
+
+    Game.prototype.notify = function(emitEvent) {
+
+      emitEvent.emitted.setScale(MAGNIFICATION);
+      this.actorManager.addActor(emitEvent.emitted);
+    };
+
+    Game.prototype.addShip = function(ship) {
+      ship.addObserver(this);
     };
 
     Game.prototype.updateActors = function(deltaTime, gameState) {

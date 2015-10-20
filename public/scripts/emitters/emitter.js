@@ -1,21 +1,23 @@
 "use strict"
 
 define([
+    'd2/actors/observable',
     'd2/utils/vector',
     'emitters/emission'
-  ], function(Vector, Emission) {
+  ], function(Observable, Vector, Emission) {
 
     var tempVector = new Vector();
 
-    var Emitter = function(position, emitRate, angle, factory, decorators) {
-      this.emission = new Emission(angle);
+    var Emitter = function(emitRate, factory, decorators) {
+      Observable.call(this);
+
+      this.emission = new Emission();
       this.position = new Vector();
       this.emissionDecorators = [];
       this.time = 0;
 
-      this.setPosition(position);
       this.emitRate = emitRate || 0;
-      this.angle = angle || 0;
+      this.angle = 0;
       this.factory = factory;
 
       if (decorators) {
@@ -25,6 +27,8 @@ define([
         });
       }
     };
+
+    Emitter.prototype = new Observable();
 
     Emitter.prototype.update = function(deltaTime) {
       var emitRate = this.emitRate;

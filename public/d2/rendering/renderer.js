@@ -47,8 +47,9 @@ define(function() {
     this.texture = gl.createTexture();
 
     // blending
-    gl.enable(gl.BLEND);
+    gl.enable(gl.BLEND || gl.DEPTH_TEST);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.depthFunc(gl.LESS);
 
     // Set the parameters so we can render any size image.
     gl.bindTexture(gl.TEXTURE_2D, this.texture);
@@ -59,9 +60,8 @@ define(function() {
 
     gl.useProgram(program);
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LEQUAL);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    this.erase();
 
   };
 

@@ -60,7 +60,9 @@ define([
 
     ActorManager.prototype.renderAll = function(renderer, actorRenderer) {
       renderer.erase();
+      var numImages = 0;
       for (var key in this.actors) {
+        numImages++;
         var size = this.actors[key].size;
         renderer.clear(size);
 

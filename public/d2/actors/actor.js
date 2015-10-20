@@ -1,13 +1,16 @@
 "use strict";
 
 define([
+    'd2/actors/observable',
     'd2/utils/SimpleRectangle',
     'd2/utils/vector'
-  ], function(SimpleRectangle, Vector) {
+  ], function(Observable, SimpleRectangle, Vector) {
 
     var temp = new Vector();
 
     var Actor = function(view, position, velocity) {
+      Observable.call(this);
+
       this.view = view;
       this.bounds = new SimpleRectangle();
 
@@ -31,6 +34,8 @@ define([
       this.setView(view);
       this.updateBounds();
     };
+
+    Actor.prototype = new Observable();
 
     Actor.prototype.setScale = function(x, y) {
       this.scale.set(x, y | x);
