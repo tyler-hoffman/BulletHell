@@ -9,7 +9,6 @@ define([
       EmitterDecorator.call(this);
 
       this.angle = angle || 0;
-      console.log(this.angle)
     };
 
     Mirrorer.prototype = new EmitterDecorator();

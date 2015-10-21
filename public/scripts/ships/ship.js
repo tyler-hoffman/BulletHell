@@ -34,7 +34,7 @@ define([
           emitter.setAngle(this.rotation - Math.PI / 2);
           emitter.setPosition(tempVector
               .set(mountPoint)
-              .subtract(this.bounds.x, this.bounds.y)
+              .add(this.bounds.x, this.bounds.y)
               .scale(this.scale.x)
               .add(this.position));
 

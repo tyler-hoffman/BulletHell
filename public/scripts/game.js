@@ -37,7 +37,7 @@ define([
     const RIGHT         = 39;
     const DOWN          = 40;
     const SHIP_SPEED    = 300;
-    const BULLET_SPEED  = 200;
+    const BULLET_SPEED  = 20;
     const MAGNIFICATION = 4;
 
 
@@ -126,7 +126,7 @@ define([
             + fps + ' fps');
       });
 
-      //this.addShip(this.ship);
+      this.addShip(this.ship);
       this.animator.start();
     };
 

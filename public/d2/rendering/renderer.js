@@ -47,8 +47,7 @@ define(function() {
     this.texture = gl.createTexture();
 
     // blending
-    gl.enable(gl.BLEND || gl.DEPTH_TEST);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LESS);
 
     // Set the parameters so we can render any size image.
@@ -68,14 +67,7 @@ define(function() {
   Renderer.prototype.bindArrayAttributes = function() {
     var gl = this.gl;
     for (var i = 0; i < this.arrayAttributes.length; i++) {
-      // var arrayAttribute = this.arrayAttributes[i];
-      // gl.bindBuffer(gl.ARRAY_BUFFER, arrayAttribute.buffer);
-      // gl.enableVertexAttribArray(arrayAttribute.location);
-      // gl.vertexAttribPointer(
-      //   arrayAttribute.location, 2, gl.FLOAT, false, 0, 0
-      // );
       this.arrayAttributes[i].bind(this);
-      //gl.bufferData(gl.ARRAY_BUFFER, arrayAttribute.data, gl.STATIC_DRAW);
     }
   };
 
