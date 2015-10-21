@@ -2,10 +2,12 @@
 
 define([
     'emitters/emitter',
+    'emitters/splitter',
+    'emitters/rotator',
     'emitters/emitEvent',
     'ships/ship',
     'bullets/redBullet'
-  ], function(Emitter, EmitEvent, Ship, RedBullet) {
+  ], function(Emitter, Splitter, Rotator, EmitEvent, Ship, RedBullet) {
 
     const EMIT_RATE     = 0.1;
     const BULLET_SPEED  = 600;
@@ -20,12 +22,14 @@ define([
       this.notifyObservers(new EmitEvent(bullet));
     };
 
-    var BasicGunFactory = function() {
+    var DualSprayGunFactory = function() {
 
     };
 
-    BasicGunFactory.prototype.generateEmitter = function() {
+    DualSprayGunFactory.prototype.generateEmitter = function(offset) {
       var emitter = new Emitter(EMIT_RATE, bulletFactory);
+      emitter.addDecorator(new Splitter(2, Math.PI / 8));
+      emitter.addDecorator(new Rotator(0, offset));
       return emitter;
     };
 
@@ -35,12 +39,12 @@ define([
         RIGHT_MID_MOUNT   = Ship.prototype.RIGHT_MID_MOUNT,
         RIGHT_WING_MOUNT  = Ship.prototype.RIGHT_WING_MOUNT;
 
-    BasicGunFactory.prototype.generateGunSet = function() {
+    DualSprayGunFactory.prototype.generateGunSet = function() {
       return {
-        LEFT_WING_MOUNT: this.generateEmitter(),
-        RIGHT_WING_MOUNT: this.generateEmitter()
+        LEFT_WING_MOUNT: this.generateEmitter(- Math.PI / 16),
+        RIGHT_WING_MOUNT: this.generateEmitter(Math.PI / 16)
       }
     };
 
-    return BasicGunFactory;
+    return DualSprayGunFactory;
 });
