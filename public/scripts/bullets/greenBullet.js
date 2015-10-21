@@ -12,9 +12,9 @@ define([
   function(Bullet, Vector, Rectangle, TextureRegion, image) {
 
     var imageX = 0,
-        imageY = 0,
-        imageWidth = 10,
-        imageHeight = 10;
+        imageY = 10,
+        imageWidth = 7,
+        imageHeight = 7;
 
     var view = new TextureRegion(
       image,
@@ -22,11 +22,11 @@ define([
       new Vector(imageWidth / 2, imageHeight / 2)
     );
 
-    var BlueBullet = function(position, velocity) {
+    var RedBullet = function(position, velocity) {
       Bullet.call(this, view, position, velocity);
     };
 
-    BlueBullet.prototype = new Bullet();
+    RedBullet.prototype = new Bullet();
 
-    return BlueBullet;
+    return RedBullet;
 });

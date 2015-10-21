@@ -12,9 +12,9 @@ define([
   function(Bullet, Vector, Rectangle, TextureRegion, image) {
 
     var imageX = 0,
-        imageY = 0,
-        imageWidth = 10,
-        imageHeight = 10;
+        imageY = 17,
+        imageWidth = 4,
+        imageHeight = 4;
 
     var view = new TextureRegion(
       image,
