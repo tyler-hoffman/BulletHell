@@ -2,8 +2,9 @@
 
 define([
     'd2/actors/actor',
+    'd2/actors/actorEvent',
     'd2/utils/vector'
-  ], function(Actor, Vector) {
+  ], function(Actor, ActorEvent, Vector) {
 
     var tempVector = new Vector();
 
@@ -50,9 +51,16 @@ define([
       this.hp -= damage;
 
       if (this.hp < 0) {
+        this.die();
+      }
+    };
+
+    Ship.prototype.die = function() {
         this.hp = 0;
         this.isAlive = false;
-      }
+
+        // notify listeners
+        this.notifyObservers(ActorEvent.createDestroyEvent(this));
     };
 
     Ship.prototype.resetHealth = function() {

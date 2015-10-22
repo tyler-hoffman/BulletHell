@@ -1,6 +1,7 @@
 define([
     'd2/collections/actorManager',
     'd2/rendering/defaultActorRenderer',
+    'd2/actors/actorEvent',
     'd2/utils/shaderCompiler',
     'd2/utils/animator',
     'd2/utils/rectangle',
@@ -20,16 +21,18 @@ define([
     'emitters/cycler',
     'emitters/mirrorer',
     'emitters/softSwinger',
+    'emitters/emitEvent',
     'keyManager/keyManager',
     'utils/renderInfo',
     'image!images/bullets.png',
     'image!images/letters.png',
     'text!shaders/vertex-shader.vert',
     'text!shaders/fragment-shader.frag'
-  ], function(ActorManager, DefaultActorRenderer, ShaderCompiler, Animator,
+  ], function(ActorManager, DefaultActorRenderer, ActorEvent, ShaderCompiler, Animator,
         Rectangle, SimpleRectangle, Vector, Detector,
         DragonWing, MonoFont, TextField, RedBullet, QuadTree,
         DefaultRenderer, TextureRegion, Emitter, Rotator, Splitter, Cycler, Mirrorer, Swinger,
+        EmitEvent,
         KeyManager, RenderInfo, image, fontImage, vertexShader, fragmentShader) {
 
     const LEFT          = 37;
@@ -146,14 +149,28 @@ define([
       this.renderAll();
     };
 
-    Game.prototype.notify = function(emitEvent) {
+    Game.prototype.notify = function(event) {
 
-      emitEvent.emitted.setScale(MAGNIFICATION);
-      this.actorManager.addActor(emitEvent.emitted);
+      switch (event.name) {
+
+        case ActorEvent.DESTROY:
+          this.unregisterShip(event.actor);
+          console.log('you died!')
+          break;
+
+        case 'emit':
+          event.emitted.setScale(MAGNIFICATION);
+          this.actorManager.addActor(event.emitted);
+          break;
+      }
     };
 
     Game.prototype.addShip = function(ship) {
       ship.addObserver(this);
+    };
+
+    Game.prototype.unregisterShip = function(ship) {
+      ship.removeObserver(this);
     };
 
     Game.prototype.updateActors = function(deltaTime, gameState) {
