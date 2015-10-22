@@ -151,14 +151,17 @@ define([
 
     Game.prototype.notify = function(event) {
 
-      switch (event.name) {
+      switch (event.type) {
 
         case ActorEvent.DESTROY:
           this.unregisterShip(event.actor);
-          console.log('you died!')
+          if (event.actor === this.ship) {
+            console.log('you died!')
+            this.ship = null;
+          }
           break;
 
-        case 'emit':
+        case EmitEvent.EMIT:
           event.emitted.setScale(MAGNIFICATION);
           this.actorManager.addActor(event.emitted);
           break;
@@ -187,15 +190,18 @@ define([
         quadTree.insert(actor);
       });
 
-      var collisions = quadTree.getCollisions(this.ship);
-      for (var i = 0; i < collisions.length; i++) {
-        if (collisions[i] !== ship) {
-          if (this.detector) {
-            var intersection = this.detector.getIntersection(ship, collisions[i]);
-            if (!intersection.isEmpty()) {
-              // remove bullet and kill ship
-              collisions[i].isAlive = false;
-              ship.takeDamage(collisions[i].damage || 0);
+
+      if (this.ship) {
+        var collisions = quadTree.getCollisions(this.ship);
+        for (var i = 0; i < collisions.length; i++) {
+          if (collisions[i] !== ship) {
+            if (this.detector) {
+              var intersection = this.detector.getIntersection(ship, collisions[i]);
+              if (!intersection.isEmpty()) {
+                // remove bullet and kill ship
+                collisions[i].isAlive = false;
+                ship.takeDamage(collisions[i].damage || 0);
+              }
             }
           }
         }
@@ -209,25 +215,27 @@ define([
     };
 
     Game.prototype.handleInput = function(deltaTime) {
-      var x = 0,
-          y = 0;
+      if (this.ship) {
+        var x = 0,
+            y = 0;
 
-      if (this.keyManager.isDown(LEFT)) {
-        x -= 1;
-      }
-      if (this.keyManager.isDown(RIGHT)) {
-        x += 1;
-      }
-      if (this.keyManager.isDown(UP)) {
-        y -= 1;
-      }
-      if (this.keyManager.isDown(DOWN)) {
-        y += 1;
-      }
+        if (this.keyManager.isDown(LEFT)) {
+          x -= 1;
+        }
+        if (this.keyManager.isDown(RIGHT)) {
+          x += 1;
+        }
+        if (this.keyManager.isDown(UP)) {
+          y -= 1;
+        }
+        if (this.keyManager.isDown(DOWN)) {
+          y += 1;
+        }
 
-      this.ship.velocity.set(x, y)
-          .normalize()
-          .scale(SHIP_SPEED);
+        this.ship.velocity.set(x, y)
+            .normalize()
+            .scale(SHIP_SPEED);
+      }
     };
 
     Game.prototype.removeDeadActors = function() {

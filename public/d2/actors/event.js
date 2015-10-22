@@ -2,8 +2,8 @@
 
 define(function() {
 
-  var Event = function(name) {
-    this.name = name;
+  var Event = function(type) {
+    this.type = type;
   };
 
   return Event;
