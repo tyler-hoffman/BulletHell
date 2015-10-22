@@ -4,8 +4,9 @@ define([
     'd2/actors/actor'
   ], function(Actor) {
 
-    var Bullet = function(view, position, velocity) {
+    var Bullet = function(view, position, velocity, damage) {
       Actor.call(this, view, position, velocity);
+      this.damage = damage || 1;
     };
 
     Bullet.prototype = new Actor();

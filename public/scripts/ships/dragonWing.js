@@ -9,6 +9,8 @@ define([
     'image!images/bullets.png'
 ], function(Ship, Vector, Rectangle, TextureRegion, GunFactory, image) {
 
+    const MAX_HP = 20;
+
     var shipWidth = 17,
         shipHeight = 14;
 
@@ -34,7 +36,12 @@ define([
     );
 
     var DragonWing = function(position) {
-      Ship.call(this, view, position, mountPoints, gunFactory.generateGunSet());
+      Ship.call(this,
+          view,
+          position,
+          mountPoints,
+          gunFactory.generateGunSet(),
+          MAX_HP);
     };
 
     DragonWing.prototype = new Ship();

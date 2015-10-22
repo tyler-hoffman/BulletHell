@@ -7,11 +7,14 @@ define([
 
     var tempVector = new Vector();
 
-    var Ship = function(view, position, mountPoints, gunSet, controller) {
+    var Ship = function(view, position, mountPoints, gunSet, maxHp, controller) {
       Actor.call(this, view, position);
       this.mountPoints = mountPoints || {};
       this.setGunSet(gunSet || {});
       this.controller = controller;
+      this.maxHp = maxHp || 1;
+
+      this.resetHealth();
     };
 
     Ship.prototype = new Actor();
@@ -41,6 +44,19 @@ define([
           emitter.update(deltaTime);
         }
       }
+    };
+
+    Ship.prototype.takeDamage = function(damage) {
+      this.hp -= damage;
+
+      if (this.hp < 0) {
+        this.hp = 0;
+        this.isAlive = false;
+      }
+    };
+
+    Ship.prototype.resetHealth = function() {
+      this.hp = this.maxHp;
     };
 
     Ship.prototype.notify = function(emitEvent) {

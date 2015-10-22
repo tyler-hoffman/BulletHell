@@ -176,7 +176,9 @@ define([
           if (this.detector) {
             var intersection = this.detector.getIntersection(ship, collisions[i]);
             if (!intersection.isEmpty()) {
+              // remove bullet and kill ship
               collisions[i].isAlive = false;
+              ship.takeDamage(collisions[i].damage || 0);
             }
           }
         }
