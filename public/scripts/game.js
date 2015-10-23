@@ -7,20 +7,18 @@ define([
     'd2/collisionDetection/PixelPerfectDetector',
     'ships/dragonWing',
     'ships/bossShip',
-    'd2/text/monoFont',
-    'd2/text/textField',
+    'text/gameText',
     'd2/utils/quadTree',
     'd2/rendering/defaultRenderer',
     'emitters/emitEvent',
     'keyManager/keyManager',
     'utils/renderInfo',
-    'image!images/letters.png',
     'shaders/defaultShader'
   ], function(ImageBasedActorManager, ActorEvent, Animator,
         SimpleRectangle, Vector, Detector,
-        DragonWing, BossShip, MonoFont, TextField, QuadTree,
+        DragonWing, BossShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
-        KeyManager, RenderInfo, fontImage, DefaultShader) {
+        KeyManager, RenderInfo, DefaultShader) {
 
     const LEFT          = 37;
     const UP            = 38;
@@ -35,8 +33,6 @@ define([
       this.canvas = canvas;
       this.width = canvas.width;
       this.height = canvas.height;
-      this.font = new MonoFont();
-      this.font.addLetters(6, 8, 10, 9, 32, fontImage);
 
 
       this.gl = canvas.getContext('webgl');
@@ -62,7 +58,7 @@ define([
 
 
       var actorManager = this.actorManager;
-      this.textField = new TextField(this.font, '[Demo]', 8, function(letters) {
+      this.textField = new GameText('[Demo]', 8, function(letters) {
         for (var i = 0; i < letters.length; i++) {
           actorManager.addActor(letters[i]);
         }
@@ -70,28 +66,6 @@ define([
 
       this.emitters = [];
       var gameState = this.gameState;
-
-      // var emitter = new Emitter(.1, function(position, velocity, fromTime) {
-      //
-      //   var newBullet = new RedBullet(
-      //     position, velocity.scale(BULLET_SPEED)
-      //   );
-      //   newBullet.update(fromTime, gameState);
-      //   newBullet.setScale(MAGNIFICATION);
-      //   newBullet.depth = 0.55;
-      //   actorManager.addActor(newBullet);
-      //
-      // });
-
-      //emitter.setPosition(new Vector(this.width / 2, this.height / 2));
-
-      // emitter.addDecorator(new Swinger(4, Math.PI / 2));
-      // emitter.addDecorator(new Splitter(2, Math.PI / 2));
-      //
-      //emitter.addDecorator(new Swinger(1, 0.4));
-      //emitter.addDecorator(new Splitter(10));
-      //emitter.addDecorator(new Mirrorer(Math.PI / 2));
-      //this.emitters.push(emitter);
 
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);
       this.renderer.setResolution(this.width, this.height);
