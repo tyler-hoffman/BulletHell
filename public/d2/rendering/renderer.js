@@ -1,6 +1,8 @@
 "use strict";
 
-define(function() {
+define([
+    'd2/rendering/webglBindings/arrayAttribute'
+  ], function(ArrayAttribute) {
 
   var Renderer = function(gl, shaderProgram) {
     this.gl = gl;
@@ -57,6 +59,7 @@ define(function() {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
+    this.shaderProgram = program;
     gl.useProgram(program);
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -87,6 +90,10 @@ define(function() {
     this.uniforms.push(uniform);
   };
 
+  Renderer.prototype.createArrayAttribute = function(gl, locationString, numberComponents) {
+    var location = gl.getAttribLocation(this.shaderProgram, locationString);
+    return new ArrayAttribute(gl, location, numberComponents);
+  };
 
   return Renderer;
 });

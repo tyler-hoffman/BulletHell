@@ -2,21 +2,17 @@
 
 define([
     'd2/rendering/renderer',
-    'd2/rendering/webglBindings/arrayAttribute',
     'd2/rendering/webglBindings/uniform2d'
-  ], function(Renderer, ArrayAttribute, Uniform2d) {
+  ], function(Renderer, Uniform2d) {
 
     var DefaultRenderer = function(gl, shaderProgram, width, height) {
       Renderer.call(this, gl, shaderProgram);
 
-      var vertexLocation = gl.getAttribLocation(shaderProgram, 'a_vertex');
-      var texCoordLocation = gl.getAttribLocation(shaderProgram, 'a_texCoord');
-      var positionLocation = gl.getAttribLocation(shaderProgram, 'a_position');
-      var scaleLocation = gl.getAttribLocation(shaderProgram, 'a_scale');
-      this.a_vertex = new ArrayAttribute(gl, vertexLocation, 3);
-      this.a_texCoord = new ArrayAttribute(gl, texCoordLocation, 2);
-      this.a_position = new ArrayAttribute(gl, positionLocation, 2);
-      this.a_scale = new ArrayAttribute(gl, scaleLocation, 2);
+
+      this.a_vertex = this.createArrayAttribute(gl, 'a_vertex', 3);
+      this.a_texCoord = this.createArrayAttribute(gl, 'a_texCoord', 2);
+      this.a_position = this.createArrayAttribute(gl, 'a_position', 2);
+      this.a_scale = this.createArrayAttribute(gl, 'a_scale', 2);
 
       this.addArrayAttribute(this.a_vertex);
       this.addArrayAttribute(this.a_texCoord);
