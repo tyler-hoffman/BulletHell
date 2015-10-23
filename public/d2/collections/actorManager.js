@@ -59,7 +59,7 @@ define([
       }
     };
 
-    ActorManager.prototype.renderAll = function(renderer, actorRenderer) {
+    ActorManager.prototype.renderAll = function(renderer) {
       renderer.erase();
       var numImages = 0;
       for (var key in this.actors) {
@@ -68,6 +68,7 @@ define([
         renderer.clear(size);
 
         this.forEachInList(function(actor) {
+          var actorRenderer = actor.renderer || renderer.defaultActorRenderer;
           actorRenderer.render(actor, renderer);
         }, key);
 

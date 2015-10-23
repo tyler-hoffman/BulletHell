@@ -1,6 +1,5 @@
 define([
     'd2/collections/imageBasedActorManager',
-    'd2/rendering/defaultActorRenderer',
     'd2/actors/actorEvent',
     'd2/utils/animator',
     'd2/utils/simpleRectangle',
@@ -17,7 +16,7 @@ define([
     'utils/renderInfo',
     'image!images/letters.png',
     'shaders/defaultShader'
-  ], function(ImageBasedActorManager, DefaultActorRenderer, ActorEvent, Animator,
+  ], function(ImageBasedActorManager, ActorEvent, Animator,
         SimpleRectangle, Vector, Detector,
         DragonWing, BossShip, MonoFont, TextField, QuadTree,
         DefaultRenderer, EmitEvent,
@@ -29,7 +28,7 @@ define([
     const DOWN          = 40;
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
-    const MAGNIFICATION = 4;
+    const MAGNIFICATION = 2;
 
 
     var Game = function(canvas) {
@@ -42,7 +41,6 @@ define([
 
       this.gl = canvas.getContext('webgl');
       this.actorManager = new ImageBasedActorManager();
-      this.defaultActorRenderer = new DefaultActorRenderer();
       this.shaderProgram = new DefaultShader(this.gl).getProgram();
       this.detector = new Detector();
       var worldBounds = new SimpleRectangle(0, 0, this.width, this.height);
@@ -240,9 +238,8 @@ define([
 
     Game.prototype.renderAll = function() {
 
-      var defaultActorRenderer = this.defaultActorRenderer;
       var renderer = this.renderer;
-      this.actorManager.renderAll(renderer, defaultActorRenderer);
+      this.actorManager.renderAll(renderer);
     };
 
     return Game;
