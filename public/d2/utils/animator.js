@@ -50,7 +50,11 @@ define(function() {
   };
 
   Animator.prototype.toggle = function() {
-    this.start() || this.stop();
+    if (this.isPlaying) {
+      this.stop();
+    } else {
+      this.start();
+    }
   };
 
 

@@ -11,22 +11,24 @@ define([
     'd2/utils/quadTree',
     'd2/rendering/defaultRenderer',
     'emitters/emitEvent',
-    'keyManager/keyManager',
+    //'keyManager/keyManager',
+    'controls/controller',
     'utils/renderInfo',
     'shaders/defaultShader'
   ], function(ImageBasedActorManager, ActorEvent, Animator,
         SimpleRectangle, Vector, Detector,
         DragonWing, BossShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
-        KeyManager, RenderInfo, DefaultShader) {
+        KeyboardController, RenderInfo, DefaultShader) {
 
     const LEFT          = 37;
     const UP            = 38;
     const RIGHT         = 39;
     const DOWN          = 40;
+    const ENTER         = 13;
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
-    const MAGNIFICATION = 2;
+    const MAGNIFICATION = 4;
 
 
     var Game = function(canvas) {
@@ -72,17 +74,10 @@ define([
       this.frame = 0;
       this.animator = new Animator(this.onFrame, this);
 
-      var keyManager = new KeyManager();
-      this.keyManager = keyManager;
-      keyManager.registerAction(LEFT);
-      keyManager.registerAction(UP);
-      keyManager.registerAction(RIGHT);
-      keyManager.registerAction(DOWN);
-
-      keyManager.registerKey(LEFT, LEFT);
-      keyManager.registerKey(UP, UP);
-      keyManager.registerKey(RIGHT, RIGHT);
-      keyManager.registerKey(DOWN, DOWN);
+      var animator = this.animator;
+      this.keyboard = new KeyboardController(function() {
+        animator.toggle();
+      });
 
       var that = this;
       this.renderInfo = new RenderInfo(1, function(fps) {
@@ -181,27 +176,10 @@ define([
     };
 
     Game.prototype.handleInput = function(deltaTime) {
-      if (this.ship) {
-        var x = 0,
-            y = 0;
+      this.ship.velocity
+          .set(this.keyboard.getVelocity())
+          .scale(SHIP_SPEED);
 
-        if (this.keyManager.isDown(LEFT)) {
-          x -= 1;
-        }
-        if (this.keyManager.isDown(RIGHT)) {
-          x += 1;
-        }
-        if (this.keyManager.isDown(UP)) {
-          y -= 1;
-        }
-        if (this.keyManager.isDown(DOWN)) {
-          y += 1;
-        }
-
-        this.ship.velocity.set(x, y)
-            .normalize()
-            .scale(SHIP_SPEED);
-      }
     };
 
     Game.prototype.removeDeadActors = function() {
