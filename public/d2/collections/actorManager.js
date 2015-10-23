@@ -4,19 +4,20 @@ define([
   'd2/collections/linkedList'
 ], function(LinkedList) {
 
-    var ActorManager = function() {
+    var ActorManager = function(keyGetter) {
+      this.keyGetter = keyGetter;
       this.actors = {};
     };
 
 
-    ActorManager.prototype.addActor = function(actor, text) {
-      var image = actor.getTextureRegion().image.src;
+    ActorManager.prototype.addActor = function(actor) {
+      var key = this.keyGetter(actor);
 
-      if (!this.actors[image]) {
-        this.actors[image] = new LinkedList();
+      if (!this.actors[key]) {
+        this.actors[key] = new LinkedList();
       }
 
-      this.actors[image].add(actor);
+      this.actors[key].add(actor);
     }
 
     ActorManager.prototype.size = function() {
@@ -73,20 +74,6 @@ define([
         renderer.draw(size);
       }
     };
-
-    ActorManager.prototype.updateAll = function(deltaTime, gameState, renderState) {
-      this.forEach(function(actor) {
-        actor.update(deltaTime, gameState);
-      });
-
-      this.removeIf(function(actor) {
-        return actor.remove && actor.remove(gameState);
-      });
-
-      this.forEach(function(actor) {
-        actor.view.render(renderState);
-      });
-    }
 
     return ActorManager;
 });

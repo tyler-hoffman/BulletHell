@@ -1,5 +1,5 @@
 define([
-    'd2/collections/actorManager',
+    'd2/collections/imageBasedActorManager',
     'd2/rendering/defaultActorRenderer',
     'd2/actors/actorEvent',
     'd2/utils/animator',
@@ -17,7 +17,7 @@ define([
     'utils/renderInfo',
     'image!images/letters.png',
     'shaders/defaultShader'
-  ], function(ActorManager, DefaultActorRenderer, ActorEvent, Animator,
+  ], function(ImageBasedActorManager, DefaultActorRenderer, ActorEvent, Animator,
         SimpleRectangle, Vector, Detector,
         DragonWing, BossShip, MonoFont, TextField, QuadTree,
         DefaultRenderer, EmitEvent,
@@ -41,7 +41,7 @@ define([
 
 
       this.gl = canvas.getContext('webgl');
-      this.actorManager = new ActorManager();
+      this.actorManager = new ImageBasedActorManager();
       this.defaultActorRenderer = new DefaultActorRenderer();
       this.shaderProgram = new DefaultShader(this.gl).getProgram();
       this.detector = new Detector();
