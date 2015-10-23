@@ -4,11 +4,11 @@ define([
     'd2/actors/actorEvent',
     'd2/utils/shaderCompiler',
     'd2/utils/animator',
-    'd2/utils/rectangle',
     'd2/utils/simpleRectangle',
     'd2/utils/vector',
     'd2/collisionDetection/PixelPerfectDetector',
     'ships/dragonWing',
+    'ships/bossShip',
     'd2/text/monoFont',
     'd2/text/textField',
     'bullets/redBullet',
@@ -29,8 +29,8 @@ define([
     'text!shaders/vertex-shader.vert',
     'text!shaders/fragment-shader.frag'
   ], function(ActorManager, DefaultActorRenderer, ActorEvent, ShaderCompiler, Animator,
-        Rectangle, SimpleRectangle, Vector, Detector,
-        DragonWing, MonoFont, TextField, RedBullet, QuadTree,
+        SimpleRectangle, Vector, Detector,
+        DragonWing, BossShip, MonoFont, TextField, RedBullet, QuadTree,
         DefaultRenderer, TextureRegion, Emitter, Rotator, Splitter, Cycler, Mirrorer, Swinger,
         EmitEvent,
         KeyManager, RenderInfo, image, fontImage, vertexShader, fragmentShader) {
@@ -70,6 +70,12 @@ define([
       this.actorManager.addActor(this.ship);
       this.ship.setScale(MAGNIFICATION);
       this.ship.updateBounds();
+
+      this.boss = new BossShip(new Vector(this.width / 2, this.height * 0.25));
+      this.actorManager.addActor(this.boss);
+      this.boss.setScale(MAGNIFICATION);
+      this.boss.updateBounds();
+
 
       var actorManager = this.actorManager;
       this.textField = new TextField(this.font, '[Demo]', 8, function(letters) {
@@ -129,7 +135,8 @@ define([
             + fps + ' fps');
       });
 
-      this.addShip(this.ship);
+      this.addShip(this.ship, true);
+      this.addShip(this.boss);
       this.animator.start();
     };
 
@@ -162,14 +169,17 @@ define([
           break;
 
         case EmitEvent.EMIT:
+          //console.log(event);
           event.emitted.setScale(MAGNIFICATION);
           this.actorManager.addActor(event.emitted);
           break;
       }
     };
 
-    Game.prototype.addShip = function(ship) {
+    Game.prototype.addShip = function(ship, isPlayer) {
       ship.addObserver(this);
+
+      ship.rotation = (isPlayer)? 0: Math.PI;
     };
 
     Game.prototype.unregisterShip = function(ship) {

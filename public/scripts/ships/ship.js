@@ -20,13 +20,6 @@ define([
 
     Ship.prototype = new Actor();
 
-    // labels for common mount points
-    Ship.prototype.LEFT_WING_MOUNT   = 0;
-    Ship.prototype.LEFT_MID_MOUNT    = 1;
-    Ship.prototype.CENTER_MOUNT      = 2;
-    Ship.prototype.RIGHT_MID_MOUNT   = 3;
-    Ship.prototype.RIGHT_WING_MOUNT  = 4;
-
     Ship.prototype.update = function(deltaTime) {
       deltaTime = deltaTime || 0;
       Actor.prototype.update.call(this, deltaTime);
@@ -69,6 +62,8 @@ define([
 
     Ship.prototype.notify = function(emitEvent) {
       emitEvent.emitter = this;
+
+
       this.notifyObservers(emitEvent);
     };
 

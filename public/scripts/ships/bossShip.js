@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 
 define([
     'ships/ship',
@@ -9,28 +9,25 @@ define([
     'image!images/bullets.png'
 ], function(Ship, Vector, Rectangle, TextureRegion, GunFactory, image) {
 
-    const MAX_HP = 20;
+    const MAX_HP = 200;
 
-    var shipWidth = 17,
-        shipHeight = 14;
+    var shipWidth = 24,
+        shipHeight = 13;
 
     var gunFactory = new GunFactory();
 
     var mountPoints = {
-      LEFT_WING_MOUNT: new Vector(0, 3),
-      LEFT_MID_MOUNT: new Vector(3, 5),
-      CENTER_MOUNT: new Vector(8, 0),
-      RIGHT_MID_MOUNT: new Vector(13, 5),
-      RIGHT_WING_MOUNT: new Vector(16, 3)
+      LEFT_WING_MOUNT: new Vector(20, 12),
+      RIGHT_WING_MOUNT: new Vector(3, 12)
     };
 
     var view = new TextureRegion(
       image,
-      new Rectangle(10, 0, shipWidth, shipHeight),
+      new Rectangle(9, 19, shipWidth, shipHeight),
       new Vector(shipWidth / 2, shipHeight / 2)
     );
 
-    var DragonWing = function(position) {
+    var BossShip = function(position) {
       Ship.call(this,
           view,
           position,
@@ -39,7 +36,7 @@ define([
           MAX_HP);
     };
 
-    DragonWing.prototype = new Ship();
+    BossShip.prototype = new Ship();
 
-    return DragonWing;
+    return BossShip;
 });
