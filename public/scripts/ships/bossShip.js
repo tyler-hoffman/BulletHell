@@ -11,7 +11,7 @@ define([
 
     const MAX_HP = 200;
 
-    var shipWidth = 24,
+    var shipWidth = 23,
         shipHeight = 13;
 
     var gunFactory = new GunFactory();
