@@ -81,6 +81,11 @@ define([
       );
     };
 
+    Emitter.prototype.setTime = function(time) {
+      this.time = time;
+      return this;
+    };
+
     Emitter.prototype.setPosition = function(x, y) {
       return this.position.set(x, y);
     };

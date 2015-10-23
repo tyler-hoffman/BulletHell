@@ -5,7 +5,7 @@ define([
     'd2/utils/vector',
     'd2/utils/rectangle',
     'd2/rendering/textureRegion',
-    'guns/dualSprayGunFactory',
+    'guns/enemyDualSprayGunFactory',
     'image!images/bullets.png'
 ], function(Ship, Vector, Rectangle, TextureRegion, GunFactory, image) {
 

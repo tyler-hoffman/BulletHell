@@ -2,7 +2,6 @@ define([
     'd2/collections/actorManager',
     'd2/rendering/defaultActorRenderer',
     'd2/actors/actorEvent',
-    'd2/utils/shaderCompiler',
     'd2/utils/animator',
     'd2/utils/simpleRectangle',
     'd2/utils/vector',
@@ -11,29 +10,18 @@ define([
     'ships/bossShip',
     'd2/text/monoFont',
     'd2/text/textField',
-    'bullets/redBullet',
     'd2/utils/quadTree',
     'd2/rendering/defaultRenderer',
-    'd2/rendering/textureRegion',
-    'emitters/emitter',
-    'emitters/rotator',
-    'emitters/splitter',
-    'emitters/cycler',
-    'emitters/mirrorer',
-    'emitters/softSwinger',
     'emitters/emitEvent',
     'keyManager/keyManager',
     'utils/renderInfo',
-    'image!images/bullets.png',
     'image!images/letters.png',
-    'text!shaders/vertex-shader.vert',
-    'text!shaders/fragment-shader.frag'
-  ], function(ActorManager, DefaultActorRenderer, ActorEvent, ShaderCompiler, Animator,
+    'shaders/defaultShader'
+  ], function(ActorManager, DefaultActorRenderer, ActorEvent, Animator,
         SimpleRectangle, Vector, Detector,
-        DragonWing, BossShip, MonoFont, TextField, RedBullet, QuadTree,
-        DefaultRenderer, TextureRegion, Emitter, Rotator, Splitter, Cycler, Mirrorer, Swinger,
-        EmitEvent,
-        KeyManager, RenderInfo, image, fontImage, vertexShader, fragmentShader) {
+        DragonWing, BossShip, MonoFont, TextField, QuadTree,
+        DefaultRenderer, EmitEvent,
+        KeyManager, RenderInfo, fontImage, DefaultShader) {
 
     const LEFT          = 37;
     const UP            = 38;
@@ -55,9 +43,7 @@ define([
       this.gl = canvas.getContext('webgl');
       this.actorManager = new ActorManager();
       this.defaultActorRenderer = new DefaultActorRenderer();
-      this.shaderProgram = new ShaderCompiler().compileProgram(
-        this.gl, vertexShader, fragmentShader
-      );
+      this.shaderProgram = new DefaultShader(this.gl).getProgram();
       this.detector = new Detector();
       var worldBounds = new SimpleRectangle(0, 0, this.width, this.height);
       this.quadTree = new QuadTree(worldBounds, 10, 10);
@@ -87,29 +73,27 @@ define([
       this.emitters = [];
       var gameState = this.gameState;
 
-      var emitter = new Emitter(.1, function(position, velocity, fromTime) {
+      // var emitter = new Emitter(.1, function(position, velocity, fromTime) {
+      //
+      //   var newBullet = new RedBullet(
+      //     position, velocity.scale(BULLET_SPEED)
+      //   );
+      //   newBullet.update(fromTime, gameState);
+      //   newBullet.setScale(MAGNIFICATION);
+      //   newBullet.depth = 0.55;
+      //   actorManager.addActor(newBullet);
+      //
+      // });
 
-        var newBullet = new RedBullet(
-          position, velocity.scale(BULLET_SPEED)
-        );
-        newBullet.update(fromTime, gameState);
-        newBullet.setScale(MAGNIFICATION);
-        newBullet.depth = 0.55;
-        actorManager.addActor(newBullet);
-
-      });
-
-      emitter.setPosition(new Vector(this.width / 2, this.height / 2));
+      //emitter.setPosition(new Vector(this.width / 2, this.height / 2));
 
       // emitter.addDecorator(new Swinger(4, Math.PI / 2));
       // emitter.addDecorator(new Splitter(2, Math.PI / 2));
       //
-      // emitter.addDecorator(new Mirrorer(Math.PI));
-      emitter.addDecorator(new Swinger(1, 0.4));
-      emitter.addDecorator(new Splitter(10));
+      //emitter.addDecorator(new Swinger(1, 0.4));
+      //emitter.addDecorator(new Splitter(10));
       //emitter.addDecorator(new Mirrorer(Math.PI / 2));
-
-      this.emitters.push(emitter);
+      //this.emitters.push(emitter);
 
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);
       this.renderer.setResolution(this.width, this.height);
