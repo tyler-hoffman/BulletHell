@@ -11,7 +11,6 @@ define([
     'd2/utils/quadTree',
     'd2/rendering/defaultRenderer',
     'emitters/emitEvent',
-    //'keyManager/keyManager',
     'controls/controller',
     'utils/renderInfo',
     'shaders/defaultShader'
@@ -21,11 +20,6 @@ define([
         DefaultRenderer, EmitEvent,
         KeyboardController, RenderInfo, DefaultShader) {
 
-    const LEFT          = 37;
-    const UP            = 38;
-    const RIGHT         = 39;
-    const DOWN          = 40;
-    const ENTER         = 13;
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
     const MAGNIFICATION = 4;
@@ -60,7 +54,7 @@ define([
 
 
       var actorManager = this.actorManager;
-      this.textField = new GameText('[Demo]', 8, function(letters) {
+      this.textField = new GameText('[Demo]', 2, function(letters) {
         for (var i = 0; i < letters.length; i++) {
           actorManager.addActor(letters[i]);
         }
@@ -81,6 +75,7 @@ define([
 
       var that = this;
       this.renderInfo = new RenderInfo(1, function(fps) {
+        that.textField.setText('[' + Math.floor(that.renderInfo.totalTime) + ']');
         console.log(that.actorManager.size()
             + ' items rendered at '
             + fps + ' fps');
@@ -189,9 +184,7 @@ define([
     };
 
     Game.prototype.renderAll = function() {
-
-      var renderer = this.renderer;
-      this.actorManager.renderAll(renderer);
+      this.actorManager.renderAll(this.renderer);
     };
 
     return Game;

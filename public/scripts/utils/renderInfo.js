@@ -21,6 +21,7 @@ define(function() {
    * @param {Function} callback function to do the reporting
    */
   var RenderInfo = function(reportFrequency, callback) {
+    this.totalTime = 0;
     this.reportFrequency = reportFrequency || 1;
     this.callback = callback;
 
@@ -36,6 +37,7 @@ define(function() {
    * @param {Number} deltaTime Seconds for most recent frame
    */
   RenderInfo.prototype.update = function(deltaTime) {
+    this.totalTime += deltaTime;
     if (deltaTime) {
 
       var totalTime = this.time + deltaTime;
@@ -68,6 +70,11 @@ define(function() {
   RenderInfo.prototype.reset = function() {
     this.itemsInHistory = 0;
     this.time =  0;
+  };
+
+  RenderInfo.prototype.hardReset = function() {
+    this.reset();
+    this.totalTime = 0;
   };
 
   /**
