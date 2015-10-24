@@ -27,13 +27,14 @@ define([
       new Vector(shipWidth / 2, shipHeight / 2)
     );
 
-    var BossShip = function(position) {
+    var BossShip = function(position, controller) {
       Ship.call(this,
           view,
           position,
           mountPoints,
           gunFactory.generateGunSet(),
-          MAX_HP);
+          MAX_HP,
+          controller);
     };
 
     BossShip.prototype = new Ship();

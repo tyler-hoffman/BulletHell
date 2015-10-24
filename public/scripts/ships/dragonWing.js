@@ -30,13 +30,14 @@ define([
       new Vector(shipWidth / 2, shipHeight / 2)
     );
 
-    var DragonWing = function(position) {
+    var DragonWing = function(position, controller) {
       Ship.call(this,
           view,
           position,
           mountPoints,
           gunFactory.generateGunSet(),
-          MAX_HP);
+          MAX_HP,
+          controller);
     };
 
     DragonWing.prototype = new Ship();

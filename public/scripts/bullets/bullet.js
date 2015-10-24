@@ -1,11 +1,12 @@
 "use strict";
 
 define([
-    'd2/actors/actor'
-  ], function(Actor) {
+    'd2/actors/actor',
+    'd2/actors/controllers/physics/velocityController'
+  ], function(Actor, VelocityController) {
 
     var Bullet = function(view, position, velocity, damage) {
-      Actor.call(this, view, position, velocity);
+      Actor.call(this, view, position, new VelocityController(velocity));
       this.damage = damage || 1;
     };
 

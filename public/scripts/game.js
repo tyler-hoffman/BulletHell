@@ -1,6 +1,9 @@
 define([
     'd2/collections/imageBasedActorManager',
     'd2/actors/actorEvent',
+    'd2/actors/controllers/physics/velocityController',
+    'd2/actors/controllers/paths/path',
+    'd2/actors/controllers/paths/moveTo',
     'd2/utils/animator',
     'd2/utils/simpleRectangle',
     'd2/utils/vector',
@@ -14,7 +17,8 @@ define([
     'controls/controller',
     'utils/renderInfo',
     'shaders/defaultShader'
-  ], function(ImageBasedActorManager, ActorEvent, Animator,
+  ], function(ImageBasedActorManager, ActorEvent, VelocityController,
+        Path, MoveTo, Animator,
         SimpleRectangle, Vector, Detector,
         DragonWing, BossShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
@@ -24,12 +28,10 @@ define([
     const BULLET_SPEED  = 200;
     const MAGNIFICATION = 4;
 
-
     var Game = function(canvas) {
       this.canvas = canvas;
       this.width = canvas.width;
       this.height = canvas.height;
-
 
       this.gl = canvas.getContext('webgl');
       this.actorManager = new ImageBasedActorManager();
@@ -42,19 +44,27 @@ define([
         worldBounds: worldBounds
       };
 
-      this.ship = new DragonWing(new Vector(this.width / 2, this.height * 0.75));
+      this.ship = new DragonWing(
+          new Vector(this.width / 2, this.height * 0.75),
+          new VelocityController());
+
       this.actorManager.addActor(this.ship);
       this.ship.setScale(MAGNIFICATION);
       this.ship.updateBounds();
 
-      this.boss = new BossShip(new Vector(this.width / 2, this.height * 0.25));
+      var bossRoute = new Path(new Vector(200, 200), 80)
+          .addStep(new MoveTo(400, 200))
+          .addStep(new MoveTo(400, 400));
+
+      this.boss = new BossShip(new Vector(this.width / 2, this.height * 0.25), bossRoute);
       this.actorManager.addActor(this.boss);
       this.boss.setScale(MAGNIFICATION);
       this.boss.updateBounds();
 
 
+
       var actorManager = this.actorManager;
-      this.textField = new GameText('[Demo]', 2, function(letters) {
+      this.textField = new GameText('[60 fps]', 2, function(letters) {
         for (var i = 0; i < letters.length; i++) {
           actorManager.addActor(letters[i]);
         }
@@ -75,10 +85,7 @@ define([
 
       var that = this;
       this.renderInfo = new RenderInfo(1, function(fps) {
-        that.textField.setText('[' + Math.floor(that.renderInfo.totalTime) + ']');
-        console.log(that.actorManager.size()
-            + ' items rendered at '
-            + fps + ' fps');
+        that.textField.setText('[' + Math.floor(that.renderInfo.fps) + ' fps]');
       });
 
       this.addShip(this.ship, true);
@@ -171,8 +178,7 @@ define([
     };
 
     Game.prototype.handleInput = function(deltaTime) {
-      this.ship.velocity
-          .set(this.keyboard.getVelocity())
+      this.ship.controller.setVelocity(this.keyboard.getVelocity())
           .scale(SHIP_SPEED);
 
     };

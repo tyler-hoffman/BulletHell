@@ -9,7 +9,8 @@ define([
     var tempVector = new Vector();
 
     var Ship = function(view, position, mountPoints, gunSet, maxHp, controller) {
-      Actor.call(this, view, position);
+      this.isShip = true;
+      Actor.call(this, view, position, controller);
       this.mountPoints = mountPoints || {};
       this.setGunSet(gunSet || {});
       this.controller = controller;

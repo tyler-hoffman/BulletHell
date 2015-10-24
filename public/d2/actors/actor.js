@@ -8,7 +8,7 @@ define([
 
     var temp = new Vector();
 
-    var Actor = function(view, position, velocity) {
+    var Actor = function(view, position, controller) {
       Observable.call(this);
 
       this.view = view;
@@ -17,20 +17,23 @@ define([
       this.boundingBox = new SimpleRectangle();
       this.position = new Vector();
       this.scale = new Vector(1, 1);
-      this.velocity = new Vector();
+      //this.velocity = new Vector();
       this.children = [];
       this.rotation = 0;
       this.depth = 0.5;
       this.isAlive = true;
 
       this.collisionBits = 1;
-
+      this.controller = controller;
+      if (controller) {
+        this.controller.setActor(this);
+      }
       if (position) {
         this.setPosition(position);
       }
-      if (velocity) {
-        this.setVelocity(velocity);
-      }
+      // if (velocity) {
+      //   this.setVelocity(velocity);
+      // }
       this.setView(view);
       this.updateBounds();
     };
@@ -43,11 +46,16 @@ define([
 
     Actor.prototype.update = function(deltaTime) {
       deltaTime = deltaTime || 0;
-      temp.set(this.velocity)
-          .scale(deltaTime);
-
-      this.position.add(temp);
-      this.updateBoundingBox();
+      // temp.set(this.velocity)
+      //     .scale(deltaTime);
+      //
+      // this.position.add(temp);
+      // this.updateBoundingBox();
+      //
+      // this.position.
+      if (this.controller) {
+        this.controller.updateModel(deltaTime);
+      }
 
       if (this.view) {
         if (this.view.update) {
@@ -93,9 +101,9 @@ define([
       this.updateBounds();
     };
 
-    Actor.prototype.setVelocity = function(x, y) {
-      this.velocity.set(x, y);
-    };
+    // Actor.prototype.setVelocity = function(x, y) {
+    //   this.velocity.set(x, y);
+    // };
 
     Actor.prototype.getTextureRegion = function() {
       return this.view.getTextureRegion();
