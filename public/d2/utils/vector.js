@@ -89,5 +89,21 @@ define(function() {
     return [this.x, this.y];
   };
 
+  Vector.prototype.clamp = function(minX, minY, maxX, maxY) {
+    minX = minX || 0;
+    if (typeof minX === 'number') {
+      this.x = Math.max(minX, Math.min(maxX || 0, this.x));
+      this.y = Math.max(minY, Math.min(maxY || 0, this.y))
+    } else {
+      /*
+       * minX should be min x an y
+       * minY should be max x and y
+       */
+      this.x = Math.max(minX.x, Math.min(minY.x, this.x));
+      this.y = Math.max(minX.y, Math.min(minY.y, this.y));
+    }
+    return this;
+  };
+
   return Vector;
 });
