@@ -8,7 +8,8 @@ define(['d2/utils/vector'], function(Vector) {
     this.destination = new Vector().set(x, y);
   }
 
-  MoveTo.prototype.setSettings = function(maxVelocity) {
+  MoveTo.prototype.setSettings = function(actor, maxVelocity) {
+    this.actor = actor;
     this.maxVelocity = maxVelocity;
   };
 

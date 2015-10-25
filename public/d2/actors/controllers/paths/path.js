@@ -5,20 +5,14 @@ define(['d2/utils/vector'], function(Vector) {
   var Path = function(startPosition, maxVelocity) {
     this.steps = [];
     this.currentStepIndex = 0;
-    this.position = new Vector();
     this.velocity = new Vector();
     this.maxVelocity = maxVelocity;
-
-    if (startPosition) {
-      this.position.set(startPosition);
-    }
 
   };
 
   Path.prototype.addStep = function(pathStep) {
-    pathStep.setSettings(this.maxVelocity);
+    pathStep.setSettings(this.actor, this.maxVelocity);
     this.steps.push(pathStep);
-    console.log(this.steps);
     return this;
   };
 
@@ -34,10 +28,22 @@ define(['d2/utils/vector'], function(Vector) {
 
     //return this.position
     this.actor.setPosition(this.position);
+    return deltaTime;
   };
 
   Path.prototype.setActor = function(actor) {
+    this.setSettings(actor, 800);
+  };
+
+  Path.prototype.setSettings = function(actor, maxVelocity) {
     this.actor = actor;
+    this.maxVelocity = maxVelocity;
+    if (actor) {
+      this.position = actor.position;
+    }
+    for (var step in this.steps) {
+      this.steps[step].setSettings(actor, maxVelocity);
+    }
   };
 
   return Path;

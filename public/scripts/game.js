@@ -4,6 +4,7 @@ define([
     'd2/actors/controllers/physics/velocityController',
     'd2/actors/controllers/paths/path',
     'd2/actors/controllers/paths/moveTo',
+    'd2/actors/controllers/paths/repeat',
     'd2/utils/animator',
     'd2/utils/simpleRectangle',
     'd2/utils/vector',
@@ -18,7 +19,7 @@ define([
     'utils/renderInfo',
     'shaders/defaultShader'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
-        Path, MoveTo, Animator,
+        Path, MoveTo, Repeat, Animator,
         SimpleRectangle, Vector, Detector,
         DragonWing, BossShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
@@ -52,9 +53,12 @@ define([
       this.ship.setScale(MAGNIFICATION);
       this.ship.updateBounds();
 
-      var bossRoute = new Path(new Vector(200, 200), 80)
+      var bossRoute = new Path(380)
           .addStep(new MoveTo(400, 200))
-          .addStep(new MoveTo(400, 400));
+          .addStep(new MoveTo(200, 200))
+          .addStep(new Repeat(5)
+            .addStep(new MoveTo(800, 400))
+            .addStep(new MoveTo(400, 200)));
 
       this.boss = new BossShip(new Vector(this.width / 2, this.height * 0.25), bossRoute);
       this.actorManager.addActor(this.boss);
