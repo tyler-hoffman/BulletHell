@@ -2,11 +2,10 @@
 
 define(['d2/utils/vector'], function(Vector) {
 
-  var Path = function(startPosition, maxVelocity) {
+  var Path = function() {
     this.steps = [];
     this.currentStepIndex = 0;
     this.velocity = new Vector();
-    this.maxVelocity = maxVelocity;
 
   };
 
@@ -29,10 +28,6 @@ define(['d2/utils/vector'], function(Vector) {
     //return this.position
     this.actor.setPosition(this.position);
     return deltaTime;
-  };
-
-  Path.prototype.setActor = function(actor) {
-    this.setSettings(actor, 800);
   };
 
   Path.prototype.setSettings = function(actor, maxVelocity) {

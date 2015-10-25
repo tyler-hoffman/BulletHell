@@ -29,7 +29,7 @@ define(['d2/utils/vector'], function(Vector) {
     return this.velocity.set(x, y);
   };
 
-  VelocityController.prototype.setActor = function(actor) {
+  VelocityController.prototype.setSettings = function(actor) {
     this.actor = actor;
   };
 

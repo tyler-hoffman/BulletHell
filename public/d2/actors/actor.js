@@ -26,14 +26,12 @@ define([
       this.collisionBits = 1;
       this.controller = controller;
       if (controller) {
-        this.controller.setActor(this);
+        this.controller.setSettings(this, 100);
       }
       if (position) {
         this.setPosition(position);
       }
-      // if (velocity) {
-      //   this.setVelocity(velocity);
-      // }
+      
       this.setView(view);
       this.updateBounds();
     };

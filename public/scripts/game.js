@@ -53,12 +53,17 @@ define([
       this.ship.setScale(MAGNIFICATION);
       this.ship.updateBounds();
 
-      var bossRoute = new Path(380)
+      var bossRoute = new Path()
           .addStep(new MoveTo(400, 200))
           .addStep(new MoveTo(200, 200))
           .addStep(new Repeat(5)
             .addStep(new MoveTo(800, 400))
-            .addStep(new MoveTo(400, 200)));
+            .addStep(new MoveTo(400, 200))
+            .addStep(new Repeat(4)
+              .addStep(new MoveTo(400, 300))
+              .addStep(new MoveTo(400, 200))
+            )
+          );
 
       this.boss = new BossShip(new Vector(this.width / 2, this.height * 0.25), bossRoute);
       this.actorManager.addActor(this.boss);
