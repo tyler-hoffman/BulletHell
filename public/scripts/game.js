@@ -45,13 +45,15 @@ define([
         worldBounds: worldBounds
       };
 
-      this.ship = new DragonWing(
+      // this.player = new DragonWing(
+      //     new Vector(this.width / 2, this.height * 0.75),
+      //     new VelocityController());
+      this.setPlayer(new DragonWing(
           new Vector(this.width / 2, this.height * 0.75),
-          new VelocityController());
+          new VelocityController()));
 
-      this.actorManager.addActor(this.ship);
-      this.ship.setScale(MAGNIFICATION);
-      this.ship.updateBounds();
+
+      this.enemyShips = [];
 
       var bossRoute = new Path()
           .addStep(new MoveTo(400, 200))
@@ -65,12 +67,7 @@ define([
             )
           );
 
-      this.boss = new BossShip(new Vector(this.width / 2, this.height * 0.25), bossRoute);
-      this.actorManager.addActor(this.boss);
-      this.boss.setScale(MAGNIFICATION);
-      this.boss.updateBounds();
-
-
+      this.addEnemyShip(new BossShip(new Vector(this.width / 2, this.height * 0.25), bossRoute));
 
       var actorManager = this.actorManager;
       this.textField = new GameText('[60 fps]', 2, function(letters) {
@@ -97,8 +94,6 @@ define([
         that.textField.setText('[' + Math.floor(that.renderInfo.fps) + ' fps]');
       });
 
-      this.addShip(this.ship, true);
-      this.addShip(this.boss);
       this.animator.start();
     };
 
@@ -124,24 +119,37 @@ define([
 
         case ActorEvent.DESTROY:
           this.unregisterShip(event.actor);
-          if (event.actor === this.ship) {
+          if (event.actor === this.player) {
             console.log('you died!')
-            this.ship = null;
+            this.player = null;
           }
           break;
 
         case EmitEvent.EMIT:
-          //console.log(event);
           event.emitted.setScale(MAGNIFICATION);
           this.actorManager.addActor(event.emitted);
           break;
       }
     };
 
-    Game.prototype.addShip = function(ship, isPlayer) {
-      ship.addObserver(this);
+    Game.prototype.setPlayer = function(ship) {
+      this.addShip(ship);
+      this.player = ship;
+    };
 
-      ship.rotation = (isPlayer)? 0: Math.PI;
+    Game.prototype.addEnemyShip = function(enemy) {
+      this.addShip(enemy);
+
+      enemy.rotation = Math.PI;
+      this.enemyShips.push(enemy);
+    };
+
+    Game.prototype.addShip = function(ship) {
+      ship.addObserver(this);
+      ship.setScale(MAGNIFICATION);
+      ship.updateBounds();
+
+      this.actorManager.addActor(ship);
     };
 
     Game.prototype.unregisterShip = function(ship) {
@@ -156,15 +164,15 @@ define([
 
     Game.prototype.handleCollisions = function() {
       var quadTree = this.quadTree;
-      var ship = this.ship;
+      var ship = this.player;
 
       this.actorManager.forEach(function(actor) {
         quadTree.insert(actor);
       });
 
 
-      if (this.ship) {
-        var collisions = quadTree.getCollisions(this.ship);
+      if (this.player) {
+        var collisions = quadTree.getCollisions(this.player);
         for (var i = 0; i < collisions.length; i++) {
           if (collisions[i] !== ship) {
             if (this.detector) {
@@ -187,7 +195,7 @@ define([
     };
 
     Game.prototype.handleInput = function(deltaTime) {
-      this.ship.controller.setVelocity(this.keyboard.getVelocity())
+      this.player.controller.setVelocity(this.keyboard.getVelocity())
           .scale(SHIP_SPEED);
 
     };
