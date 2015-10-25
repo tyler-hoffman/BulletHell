@@ -9,7 +9,6 @@ define([
       Path.call(this);
       this.maxRepetitions = repetitions;
       this.reset();
-      this.repeat = true;
     };
 
     Repeat.prototype = new Path();
@@ -31,6 +30,11 @@ define([
           this.repetitionsLeft--;
         }
       }
+
+      if (deltaTime > 0) {
+        this.reset();
+      }
+
       return deltaTime;
     };
 
