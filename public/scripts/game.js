@@ -5,6 +5,7 @@ define([
     'd2/actors/controllers/paths/script',
     'd2/actors/movement/linearMove',
     'd2/actors/controllers/paths/repeat',
+    'd2/actors/controllers/paths/ifElse',
     'd2/utils/animator',
     'd2/utils/simpleRectangle',
     'd2/utils/vector',
@@ -19,7 +20,7 @@ define([
     'utils/renderInfo',
     'shaders/defaultShader'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
-        Script, LinearMove, Repeat, Animator,
+        Script, LinearMove, Repeat, IfElse, Animator,
         SimpleRectangle, Vector, Detector,
         DragonWing, BossShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
@@ -52,11 +53,17 @@ define([
 
 
       this.enemyShips = [];
-      var bossVelocity = 600;
+      var bossVelocity = 200;
       var boss = new BossShip(new Vector(this.width / 2, this.height * 0.25));
       boss.controller = new Script(boss.position)
           .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
           .addStep(new Repeat(5)
+              .addStep(new IfElse(function() {
+                  return player.position.y < boss.position.y;
+                },
+                new LinearMove(new Vector(100, 600), bossVelocity),
+                new LinearMove(new Vector(100, 100), bossVelocity)
+              ))
               .addStep(new LinearMove(new Vector(100, 100), bossVelocity))
               .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
               .addStep(new Repeat(2)
