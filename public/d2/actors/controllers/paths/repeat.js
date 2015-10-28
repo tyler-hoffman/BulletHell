@@ -13,14 +13,6 @@ define([
 
     Repeat.prototype = new Script();
 
-    // Repeat.prototype.setSettings = function(actor, maxVelocity) {
-    //   Script.prototype.setSettings.call(this, actor, maxVelocity);
-    //
-    //   for (var step in this.steps) {
-    //     this.steps[step].setSettings(actor, maxVelocity);
-    //   }
-    // };
-
     Repeat.prototype.update = function(subject, deltaTime) {//, position, velocity) {
       while (deltaTime > 0 && this.repetitionsLeft > 0) {
         deltaTime = Script.prototype.update.call(this, deltaTime, subject);
