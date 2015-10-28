@@ -6,7 +6,8 @@ define([
   ], function(Actor, VelocityController) {
 
     var Bullet = function(view, position, velocity, damage) {
-      Actor.call(this, view, position, new VelocityController(velocity));
+      Actor.call(this, view, position);
+      this.controller = new VelocityController(this.position, velocity);
       this.damage = damage || 1;
     };
 

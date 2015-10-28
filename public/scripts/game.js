@@ -2,8 +2,8 @@ define([
     'd2/collections/imageBasedActorManager',
     'd2/actors/actorEvent',
     'd2/actors/controllers/physics/velocityController',
-    'd2/actors/controllers/paths/path',
-    'd2/actors/controllers/paths/moveTo',
+    'd2/actors/controllers/scripts/script',
+    'd2/actors/movement/linearMove',
     'd2/actors/controllers/paths/repeat',
     'd2/utils/animator',
     'd2/utils/simpleRectangle',
@@ -19,7 +19,7 @@ define([
     'utils/renderInfo',
     'shaders/defaultShader'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
-        Path, MoveTo, Repeat, Animator,
+        Script, LinearMove, Repeat, Animator,
         SimpleRectangle, Vector, Detector,
         DragonWing, BossShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
@@ -48,26 +48,33 @@ define([
       // this.player = new DragonWing(
       //     new Vector(this.width / 2, this.height * 0.75),
       //     new VelocityController());
-      this.setPlayer(new DragonWing(
-          new Vector(this.width / 2, this.height * 0.75),
-          new VelocityController()));
+      var player = new DragonWing(
+          new Vector(this.width / 2, this.height * 0.75));
+      var playerController = new VelocityController(player.position, 100);
+      player.controller = playerController;
+      this.setPlayer(player);
 
 
       this.enemyShips = [];
-
-      var bossRoute = new Path()
-          .addStep(new MoveTo(400, 200))
-          .addStep(new MoveTo(200, 200))
-          .addStep(new Repeat(5)
-            .addStep(new MoveTo(800, 400))
-            .addStep(new MoveTo(400, 200))
-            .addStep(new Repeat(4)
-              .addStep(new MoveTo(400, 300))
-              .addStep(new MoveTo(400, 200))
-            )
-          );
-
-      this.addEnemyShip(new BossShip(new Vector(this.width / 2, this.height * 0.25), bossRoute));
+      var en
+      // var bossRoute = new Path()
+      //     .addStep(new MoveTo(400, 200))
+      //     .addStep(new MoveTo(200, 200))
+      //     .addStep(new Repeat(5)
+      //       .addStep(new MoveTo(800, 400))
+      //       .addStep(new MoveTo(400, 200))
+      //       .addStep(new Repeat(4)
+      //         .addStep(new MoveTo(400, 300))
+      //         .addStep(new MoveTo(400, 200))
+      //       )
+      //     );
+      var boss = new BossShip(new Vector(this.width / 2, this.height * 0.25));
+      var bossScript = new Script(boss.position)
+          .addStep(new LinearMove(new Vector(100, 100), 80))
+          .addStep(new LinearMove(new Vector(700, 100), 80));
+      boss.controller = bossScript;
+      //this.addEnemyShip(new BossShip(new Vector(this.width / 2, this.height * 0.25), bossRoute));
+      this.addEnemyShip(boss);
 
       var actorManager = this.actorManager;
       this.textField = new GameText('[60 fps]', 2, function(letters) {

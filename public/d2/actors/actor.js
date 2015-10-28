@@ -17,7 +17,6 @@ define([
       this.boundingBox = new SimpleRectangle();
       this.position = new Vector();
       this.scale = new Vector(1, 1);
-      //this.velocity = new Vector();
       this.children = [];
       this.rotation = 0;
       this.depth = 0.5;
@@ -25,13 +24,11 @@ define([
 
       this.collisionBits = 1;
       this.controller = controller;
-      if (controller) {
-        this.controller.setSettings(this, 100);
-      }
+
       if (position) {
         this.setPosition(position);
       }
-      
+
       this.setView(view);
       this.updateBounds();
     };
@@ -44,15 +41,9 @@ define([
 
     Actor.prototype.update = function(deltaTime) {
       deltaTime = deltaTime || 0;
-      // temp.set(this.velocity)
-      //     .scale(deltaTime);
-      //
-      // this.position.add(temp);
-      // this.updateBoundingBox();
-      //
-      // this.position.
+
       if (this.controller) {
-        this.controller.updateModel(deltaTime);
+        this.controller.update(deltaTime);
       }
 
       if (this.view) {
@@ -98,10 +89,6 @@ define([
       this.position.set(x, y);
       this.updateBounds();
     };
-
-    // Actor.prototype.setVelocity = function(x, y) {
-    //   this.velocity.set(x, y);
-    // };
 
     Actor.prototype.getTextureRegion = function() {
       return this.view.getTextureRegion();

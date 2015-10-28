@@ -1,11 +1,13 @@
 "use strict"
 
-define(['d2/utils/vector'], function(Vector) {
+define([
+    'd2/utils/vector'
+  ], function(Vector) {
 
   var temp = new Vector();
 
-  var VelocityController = function(velocity, actor) {
-    this.actor = actor || null;
+  var VelocityController = function(position, velocity) {
+    this.position = position;
     this.velocity = new Vector();
 
     if (velocity) {
@@ -14,23 +16,17 @@ define(['d2/utils/vector'], function(Vector) {
 
   };
 
-  VelocityController.prototype.updateModel = function(deltaTime) {
+  VelocityController.prototype.update = function(deltaTime) {
 
     temp.set(this.velocity)
         .scale(deltaTime)
-        .add(this.actor.position);
+        .add(this.position);
 
-    this.actor.setPosition(temp);
-
-    //this.actor.update(deltaTime, gameState);
+    this.position.set(temp);
   };
 
   VelocityController.prototype.setVelocity = function(x, y) {
     return this.velocity.set(x, y);
-  };
-
-  VelocityController.prototype.setSettings = function(actor) {
-    this.actor = actor;
   };
 
   return VelocityController;
