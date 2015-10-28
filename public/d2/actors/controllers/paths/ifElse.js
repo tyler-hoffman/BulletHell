@@ -17,7 +17,7 @@ define(['d2/utils/vector'], function(Vector) {
     }
 
     var action = (this.evaluation)? this.consequent: this.alternative;
-    
+
     if (typeof action === 'function') {
       deltaTime = action(subject, deltaTime);
     } else {
@@ -34,7 +34,6 @@ define(['d2/utils/vector'], function(Vector) {
 
   IfElse.prototype.evaluateCondition = function(subject) {
     this.evaluation = this.condition(subject);
-    console.log(this.evaluation);
     this.evaluatedCondition = true;
   };
 

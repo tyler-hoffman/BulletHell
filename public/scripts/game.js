@@ -3,7 +3,7 @@ define([
     'd2/actors/actorEvent',
     'd2/actors/controllers/physics/velocityController',
     'd2/actors/controllers/paths/script',
-    'd2/actors/movement/linearMove',
+    'd2/actors/controllers/paths/linearMove',
     'd2/actors/controllers/paths/repeat',
     'd2/actors/controllers/paths/ifElse',
     'd2/utils/animator',
