@@ -46,6 +46,8 @@ define([
         this.controller.update(deltaTime);
       }
 
+      this.updateBounds();
+
       if (this.view) {
         if (this.view.update) {
           this.view.update(deltaTime);

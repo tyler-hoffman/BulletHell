@@ -2,7 +2,7 @@ define([
     'd2/collections/imageBasedActorManager',
     'd2/actors/actorEvent',
     'd2/actors/controllers/physics/velocityController',
-    'd2/actors/controllers/scripts/script',
+    'd2/actors/controllers/paths/script',
     'd2/actors/movement/linearMove',
     'd2/actors/controllers/paths/repeat',
     'd2/utils/animator',
@@ -45,35 +45,25 @@ define([
         worldBounds: worldBounds
       };
 
-      // this.player = new DragonWing(
-      //     new Vector(this.width / 2, this.height * 0.75),
-      //     new VelocityController());
       var player = new DragonWing(
           new Vector(this.width / 2, this.height * 0.75));
-      var playerController = new VelocityController(player.position, 100);
-      player.controller = playerController;
+      player.controller = new VelocityController(player.position, 100);
       this.setPlayer(player);
 
 
       this.enemyShips = [];
-      var en
-      // var bossRoute = new Path()
-      //     .addStep(new MoveTo(400, 200))
-      //     .addStep(new MoveTo(200, 200))
-      //     .addStep(new Repeat(5)
-      //       .addStep(new MoveTo(800, 400))
-      //       .addStep(new MoveTo(400, 200))
-      //       .addStep(new Repeat(4)
-      //         .addStep(new MoveTo(400, 300))
-      //         .addStep(new MoveTo(400, 200))
-      //       )
-      //     );
+      var bossVelocity = 600;
       var boss = new BossShip(new Vector(this.width / 2, this.height * 0.25));
-      var bossScript = new Script(boss.position)
-          .addStep(new LinearMove(new Vector(100, 100), 80))
-          .addStep(new LinearMove(new Vector(700, 100), 80));
-      boss.controller = bossScript;
-      //this.addEnemyShip(new BossShip(new Vector(this.width / 2, this.height * 0.25), bossRoute));
+      boss.controller = new Script(boss.position)
+          .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
+          .addStep(new Repeat(5)
+              .addStep(new LinearMove(new Vector(100, 100), bossVelocity))
+              .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
+              .addStep(new Repeat(2)
+                  .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
+                  .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
+              )
+            );
       this.addEnemyShip(boss);
 
       var actorManager = this.actorManager;

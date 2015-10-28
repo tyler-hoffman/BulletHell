@@ -1,29 +1,29 @@
 "use strict"
 
 define([
-    'd2/actors/controllers/paths/path'
+    'd2/actors/controllers/paths/script'
 
-  ], function(Path) {
+  ], function(Script) {
 
     var Repeat = function(repetitions) {
-      Path.call(this);
+      Script.call(this);
       this.maxRepetitions = repetitions;
       this.reset();
     };
 
-    Repeat.prototype = new Path();
+    Repeat.prototype = new Script();
 
-    Repeat.prototype.setSettings = function(actor, maxVelocity) {
-      Path.prototype.setSettings.call(this, actor, maxVelocity);
+    // Repeat.prototype.setSettings = function(actor, maxVelocity) {
+    //   Script.prototype.setSettings.call(this, actor, maxVelocity);
+    //
+    //   for (var step in this.steps) {
+    //     this.steps[step].setSettings(actor, maxVelocity);
+    //   }
+    // };
 
-      for (var step in this.steps) {
-        this.steps[step].setSettings(actor, maxVelocity);
-      }
-    };
-
-    Repeat.prototype.update = function(deltaTime, position, velocity) {
+    Repeat.prototype.update = function(subject, deltaTime) {//, position, velocity) {
       while (deltaTime > 0 && this.repetitionsLeft > 0) {
-        deltaTime = this.updateModel(deltaTime);
+        deltaTime = Script.prototype.update.call(this, deltaTime, subject);
 
         if (deltaTime > 0) {
           this.currentStepIndex = 0;

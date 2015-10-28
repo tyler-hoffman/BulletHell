@@ -13,20 +13,12 @@ define(function() {
     return this;
   };
 
-  Script.prototype.update = function(deltaTime) {
+  Script.prototype.update = function(deltaTime, subject) {
+    subject = subject || this.subject;
     while (deltaTime > 0 && this.currentStepIndex < this.steps.length) {
       var step = this.steps[this.currentStepIndex];
 
-      if (typeof step === 'function') {
-
-        // step is a callback function
-        deltaTime = step(this.subject, deltaTime);
-
-      } else {
-        // step is an object. It'd better have an update function
-        deltaTime = step.update(this.subject, deltaTime);
-      }
-
+      deltaTime = step.update(subject, deltaTime);
 
       if (deltaTime > 0) {
         this.currentStepIndex++;
