@@ -6,7 +6,6 @@ define([
     'd2/actors/controllers/paths/linearMove',
     'd2/actors/controllers/paths/repeat',
     'd2/actors/controllers/paths/ifElse',
-    'd2/utils/animator',
     'd2/utils/simpleRectangle',
     'd2/utils/vector',
     'd2/collisionDetection/PixelPerfectDetector',
@@ -19,26 +18,22 @@ define([
     'controls/controller',
     'utils/renderInfo',
     'shaders/defaultShader',
-    'd2/scenes/sceneManager'
+    'd2/scenes/scene'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
-        Script, LinearMove, Repeat, IfElse, Animator,
+        Script, LinearMove, Repeat, IfElse,
         SimpleRectangle, Vector, Detector,
         DragonWing, BossShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
-        KeyboardController, RenderInfo, DefaultShader, SceneManager) {
+        KeyboardController, RenderInfo, DefaultShader, Scene) {
 
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
     const MAGNIFICATION = 4;
 
-    var Game = function(canvas) {
-      this.canvas = canvas;
-      this.width = canvas.width;
-      this.height = canvas.height;
+    var Game = function(canvas, animator) {
+      Scene.call(this, canvas, animator);
 
 
-
-      this.gl = canvas.getContext('webgl');
       this.actorManager = new ImageBasedActorManager();
       this.shaderProgram = new DefaultShader(this.gl).getProgram();
       this.detector = new Detector();
@@ -88,12 +83,9 @@ define([
 
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);
       this.renderer.setResolution(this.width, this.height);
-      this.frame = 0;
-      this.animator = new Animator(this.onFrame, this);
 
-      var animator = this.animator;
       this.keyboard = new KeyboardController(function() {
-        animator.toggle();
+        this.togglePlaying();
       });
 
       var that = this;
@@ -101,15 +93,12 @@ define([
         that.textField.setText('[' + Math.floor(that.renderInfo.fps) + ' fps]');
       });
 
-      this.animator.start();
+      this.play();
     };
 
-    Game.prototype.onFrame = function(deltaTime) {
-      this.frame++;
-      if (this.frame > 9000) {
-        this.animator.stop();
-      };
+    Game.prototype = new Scene();
 
+    Game.prototype.onFrame = function(deltaTime) {
       this.renderInfo.update(deltaTime)
       this.quadTree.clear();
       this.handleInput(deltaTime);

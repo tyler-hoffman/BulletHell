@@ -10,8 +10,8 @@ define([
     var BulletHell = function(canvas) {
       SceneManager.call(this, canvas);
 
-      this.registerScene(LEVEL, function(canvas) {
-        return new Game(canvas);
+      this.registerScene(LEVEL, function(canvas, animator) {
+        return new Game(canvas, animator);
       });
 
       this.setScene(LEVEL);

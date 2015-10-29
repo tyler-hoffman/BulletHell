@@ -16,7 +16,7 @@ define([
 
   SceneManager.prototype.onFrame = function(deltaTime) {
     if (this.currentScene) {
-      this.currentScene.onFrame(delta);
+      this.currentScene.onFrame(deltaTime);
     }
   };
 
@@ -34,7 +34,7 @@ define([
   };
 
   SceneManager.prototype.setScene = function(id) {
-    this.currentScene = this.sceneGenerators[id](this.canvas);
+    this.currentScene = this.sceneGenerators[id](this.canvas, this.animator);
   };
 
   return SceneManager;
