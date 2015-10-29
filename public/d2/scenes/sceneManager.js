@@ -15,7 +15,7 @@ define([
   };
 
   SceneManager.prototype.onFrame = function(deltaTime) {
-    if (this.currentScene) {
+    if (this.currentScene && this.currentScene.onFrame) {
       this.currentScene.onFrame(deltaTime);
     }
   };
@@ -23,7 +23,6 @@ define([
   SceneManager.prototype.notify = function(event) {
     switch (event.type) {
       case SceneEvent.CHANGE:
-        console.log(event.next);
         this.setScene(event.next);
         break;
     }

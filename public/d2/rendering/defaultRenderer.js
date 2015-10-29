@@ -24,8 +24,10 @@ define([
         scale,
         depth) {
 
-      var position = position.toArray(),
-          scale = scale.toArray();
+      depth = depth || 0.5;
+
+      var positionArray = (position || vectorBuffer.set(0, 0)).toArray(),
+          scaleArray = (scale || vectorBuffer.set(1, 1)).toArray();
 
       webglBridge.setImage(textureRegion.image);
 
@@ -35,8 +37,8 @@ define([
 
       // set position and scaling
       for (var i = 0; i < 6; i++) {
-        webglBridge.a_position.addData(position);
-        webglBridge.a_scale.addData(scale);
+        webglBridge.a_position.addData(positionArray);
+        webglBridge.a_scale.addData(scaleArray);
       }
 
       // set texture coordinates
@@ -61,7 +63,7 @@ define([
     var DefaultRenderer = function(gl, shaderProgram, width, height) {
       Renderer.call(this, gl, shaderProgram);
 
-      this.DefaultImageRenderer = new DefaultImageRenderer();
+      this.defaultImageRenderer = new DefaultImageRenderer();
       this.defaultActorRenderer = new DefaultActorRenderer();
 
       this.a_vertex = this.createArrayAttribute(gl, 'a_vertex', 3);

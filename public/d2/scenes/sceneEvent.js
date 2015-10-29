@@ -13,7 +13,7 @@ define(['d2/actors/event'], function(Event) {
   });
 
   SceneEvent.generateChangeEvent = function(next) {
-    var event = new SceneEvent(SceneEvent.END);
+    var event = new SceneEvent(SceneEvent.CHANGE);
     event.next = next;
     return event;
   };
