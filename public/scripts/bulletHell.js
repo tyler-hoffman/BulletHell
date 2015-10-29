@@ -5,19 +5,24 @@ define([
     'game'
   ], function(SceneManager, Game) {
 
-    const LEVEL = 'LEVEL';
+    const LEVEL = 'LEVEL',
+          SPLASH = 'SPLASH';
 
     var BulletHell = function(canvas) {
       SceneManager.call(this, canvas);
 
-      this.registerScene(LEVEL, function(canvas, animator) {
-        return new Game(canvas, animator);
-      });
+      this.registerSceneGenerators();
 
       this.setScene(LEVEL);
     };
 
     BulletHell.prototype = new SceneManager();
+
+    BulletHell.prototype.registerSceneGenerators = function() {
+      this.registerScene(LEVEL, function(canvas, animator) {
+        return new Game(canvas, animator);
+      });
+    };
 
     return BulletHell;
 });
