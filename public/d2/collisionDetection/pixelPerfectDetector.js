@@ -1,5 +1,5 @@
 define([
-    'd2/utils/simpleRectangle'
+    'd2/utils/rectangle'
   ], function(Rectangle) {
 
     const ALPHA_CHANNEL   = 3;

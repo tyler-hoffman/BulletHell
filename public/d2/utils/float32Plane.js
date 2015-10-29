@@ -7,6 +7,19 @@ define(function() {
 
   Plane.prototype.setRectangle = function(x, y, width, height, depth) {
     depth = depth || 0;
+    x = x || 0;
+
+    if (typeof x !== 'number') {
+      /*
+       * Assume x is a rectangle, and y was given the depth.
+       * Reset variables appropriately before continuing.
+       */
+      depth = y;
+      y = x.y;
+      width = x.width;
+      height = x.height
+      x = x.x;
+    }
 
     var x1 = x,
         x2 = x + width,

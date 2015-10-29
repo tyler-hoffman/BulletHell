@@ -3,10 +3,12 @@
 define([
     'd2/rendering/renderer',
     'd2/rendering/webglBindings/uniform2d',
-    'd2/utils/plane'
-  ], function(Renderer, Uniform2d, Plane) {
+    'd2/utils/float32Rectangle',
+    'd2/utils/float32plane'
+  ], function(Renderer, Uniform2d, Float32Rectangle, Float32Plane) {
 
-    var planeBuffer = new Plane();
+    var rectangleBuffer = new Float32Rectangle();
+    var planeBuffer = new Float32Plane();
 
     var DefaultActorRenderer = function() {
 
@@ -16,18 +18,14 @@ define([
       var textureRegion = actor.getTextureRegion();
 
       var bounds = actor.bounds;
-      planeBuffer.setRectangle(
-        bounds.x,
-        bounds.y,
-        bounds.width,
-        bounds.height,
-        actor.depth
-      );
 
       var position = actor.position.toArray(),
           scale = actor.scale.toArray();
 
       webglBridge.setImage(textureRegion.image);
+
+      // set player bounds
+      planeBuffer.setRectangle(bounds, actor.depth);
       webglBridge.a_vertex.addData(planeBuffer.points);
 
       for (var i = 0; i < 6; i++) {
@@ -35,7 +33,8 @@ define([
         webglBridge.a_scale.addData(scale);
       }
 
-      webglBridge.a_texCoord.addData(textureRegion.textureCoordinates.float32Array);
+      rectangleBuffer.set(textureRegion.textureCoordinates, actor.depth);
+      webglBridge.a_texCoord.addData(rectangleBuffer.points);
     };
 
     var DefaultRenderer = function(gl, shaderProgram, width, height) {

@@ -22,11 +22,11 @@ define([
       new Vector(imageWidth / 2, imageHeight / 2)
     );
 
-    var RedBullet = function(position, velocity) {
+    var GreenBullet = function(position, velocity) {
       Bullet.call(this, view, position, velocity);
     };
 
-    RedBullet.prototype = new Bullet();
+    GreenBullet.prototype = new Bullet();
 
-    return RedBullet;
+    return GreenBullet;
 });

@@ -2,7 +2,7 @@
 
 define([
     'd2/actors/observable',
-    'd2/utils/SimpleRectangle',
+    'd2/utils/rectangle',
     'd2/utils/vector'
   ], function(Observable, SimpleRectangle, Vector) {
 

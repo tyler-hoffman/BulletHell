@@ -6,7 +6,7 @@ define([
     'd2/actors/controllers/paths/linearMove',
     'd2/actors/controllers/paths/repeat',
     'd2/actors/controllers/paths/ifElse',
-    'd2/utils/simpleRectangle',
+    'd2/utils/rectangle',
     'd2/utils/vector',
     'd2/collisionDetection/PixelPerfectDetector',
     'ships/dragonWing',
@@ -84,8 +84,9 @@ define([
       this.renderer = new DefaultRenderer(this.gl, this.shaderProgram);
       this.renderer.setResolution(this.width, this.height);
 
+      var that = this;
       this.keyboard = new KeyboardController(function() {
-        this.togglePlaying();
+        that.togglePlaying();
       });
 
       var that = this;
