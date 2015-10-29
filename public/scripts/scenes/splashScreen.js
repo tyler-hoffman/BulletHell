@@ -18,32 +18,32 @@ define([
       this.renderer = new DefaultRenderer(this.gl, shaderProgram);
       this.renderer.setResolution(this.width, this.height);
 
-      var productionTeamTextBounds = new Rectangle(0, 0, 230, 28);
-      var blastInfernoBounds = new Rectangle(0, 0, 160, 28);
-
       var productionTeamText = new TextureRegion(
         textImage,
-        productionTeamTextBounds
+        new Rectangle(0, 0, 222, 28),
+        new Vector(111, 0)
       );
 
       var blastInferno = new TextureRegion(
         textImage,
-        new Rectangle(blastInfernoBounds).translate(0, 33)
+        new Rectangle(0, 33, 160, 28),
+        new Vector(80, 0)
       );
 
       var that = this;
       var center = new Vector(this.width / 2, 200);
+      var scale = new Vector(2, 2);
 
       that.setImage(
           productionTeamText,
-          productionTeamTextBounds,
-          new Vector().set(center).add(-115, 0));
+          center,
+          scale);
 
       window.setTimeout(function() {
         that.setImage(
           blastInferno,
-          blastInfernoBounds,
-          new Vector().set(center).add(-80, 0));
+          center,
+          scale);
       }, 1500);
 
       window.setTimeout(function() {
@@ -54,11 +54,14 @@ define([
 
     SplashScreen.prototype = new Scene();
 
-    SplashScreen.prototype.setImage = function(textureRegion, bounds, position, scale) {
+    SplashScreen.prototype.setImage = function(textureRegion, position, scale) {
+
+
+
       this.renderer.erase();
       this.renderer.clear(1);
       this.renderer.defaultImageRenderer.render(textureRegion,
-          bounds, this.renderer, position, scale);
+          this.renderer, position, scale);
       this.renderer.draw(1);
     };
 

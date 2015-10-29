@@ -1,12 +1,17 @@
 "use strict";
 
 define([
-    'd2/utils/rectangle'
-  ], function(Rectangle) {
+    'd2/utils/rectangle',
+    'd2/utils/vector'
+  ], function(Rectangle, Vector) {
 
     var TextureRegion = function(image, imageBox, center) {
       this.image = image;
-      this.center = center;
+      this.center = new Vector();
+
+      if (center) {
+        this.center.set(center);
+      }
 
       this.x = imageBox.x;
       this.y = imageBox.y;

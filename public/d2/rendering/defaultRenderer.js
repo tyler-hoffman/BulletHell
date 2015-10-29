@@ -3,20 +3,22 @@
 define([
     'd2/rendering/renderer',
     'd2/rendering/webglBindings/uniform2d',
+    'd2/utils/rectangle',
     'd2/utils/vector',
     'd2/utils/float32Rectangle',
     'd2/utils/float32plane'
-  ], function(Renderer, Uniform2d, Vector, Float32Rectangle, Float32Plane) {
+  ], function(Renderer, Uniform2d, Rectangle, Vector,
+        Float32Rectangle, Float32Plane) {
 
     var vectorBuffer = new Vector();
     var rectangleBuffer = new Float32Rectangle();
     var planeBuffer = new Float32Plane();
 
-    var DefaultImageRenderer = function() {
+    var TextureRegionRenderer = function() {
 
     };
 
-    DefaultImageRenderer.prototype.render = function(
+    TextureRegionRenderer.prototype.render = function(
         textureRegion,
         bounds,
         webglBridge,
@@ -51,7 +53,7 @@ define([
     };
 
     DefaultActorRenderer.prototype.render = function(actor, webglBridge, text) {
-      DefaultImageRenderer.prototype.render(
+      TextureRegionRenderer.prototype.render(
           actor.getTextureRegion(),
           actor.bounds,
           webglBridge,
@@ -60,10 +62,30 @@ define([
           actor.depth);
     };
 
+    var ImageRenderer = function() {
+
+    };
+
+    ImageRenderer.prototype.render = function(textureRegion, webglBridge, position, scale, depth) {
+      var bounds = new Rectangle()
+          .set(textureRegion)
+          .translate(-textureRegion.x, -textureRegion.y)
+          .translate(-textureRegion.center.x, -textureRegion.center.y);
+
+      TextureRegionRenderer.prototype.render(
+        textureRegion,
+        bounds,
+        webglBridge,
+        position,
+        scale,
+        depth || 0.5
+      );
+    };
+
     var DefaultRenderer = function(gl, shaderProgram, width, height) {
       Renderer.call(this, gl, shaderProgram);
 
-      this.defaultImageRenderer = new DefaultImageRenderer();
+      this.defaultImageRenderer = new ImageRenderer();
       this.defaultActorRenderer = new DefaultActorRenderer();
 
       this.a_vertex = this.createArrayAttribute(gl, 'a_vertex', 3);
