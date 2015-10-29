@@ -3,43 +3,65 @@
 define([
     'd2/rendering/renderer',
     'd2/rendering/webglBindings/uniform2d',
+    'd2/utils/vector',
     'd2/utils/float32Rectangle',
     'd2/utils/float32plane'
-  ], function(Renderer, Uniform2d, Float32Rectangle, Float32Plane) {
+  ], function(Renderer, Uniform2d, Vector, Float32Rectangle, Float32Plane) {
 
+    var vectorBuffer = new Vector();
     var rectangleBuffer = new Float32Rectangle();
     var planeBuffer = new Float32Plane();
+
+    var DefaultImageRenderer = function() {
+
+    };
+
+    DefaultImageRenderer.prototype.render = function(
+        textureRegion,
+        bounds,
+        webglBridge,
+        position,
+        scale,
+        depth) {
+
+      var position = position.toArray(),
+          scale = scale.toArray();
+
+      webglBridge.setImage(textureRegion.image);
+
+      // set image bounds
+      planeBuffer.setRectangle(bounds, depth);
+      webglBridge.a_vertex.addData(planeBuffer.points);
+
+      // set position and scaling
+      for (var i = 0; i < 6; i++) {
+        webglBridge.a_position.addData(position);
+        webglBridge.a_scale.addData(scale);
+      }
+
+      // set texture coordinates
+      rectangleBuffer.set(textureRegion.textureCoordinates);
+      webglBridge.a_texCoord.addData(rectangleBuffer.points);
+    };
 
     var DefaultActorRenderer = function() {
 
     };
 
     DefaultActorRenderer.prototype.render = function(actor, webglBridge, text) {
-      var textureRegion = actor.getTextureRegion();
-
-      var bounds = actor.bounds;
-
-      var position = actor.position.toArray(),
-          scale = actor.scale.toArray();
-
-      webglBridge.setImage(textureRegion.image);
-
-      // set player bounds
-      planeBuffer.setRectangle(bounds, actor.depth);
-      webglBridge.a_vertex.addData(planeBuffer.points);
-
-      for (var i = 0; i < 6; i++) {
-        webglBridge.a_position.addData(position);
-        webglBridge.a_scale.addData(scale);
-      }
-
-      rectangleBuffer.set(textureRegion.textureCoordinates, actor.depth);
-      webglBridge.a_texCoord.addData(rectangleBuffer.points);
+      DefaultImageRenderer.prototype.render(
+          actor.getTextureRegion(),
+          actor.bounds,
+          webglBridge,
+          actor.position,
+          actor.scale,
+          actor.depth);
     };
 
     var DefaultRenderer = function(gl, shaderProgram, width, height) {
       Renderer.call(this, gl, shaderProgram);
 
+      this.DefaultImageRenderer = new DefaultImageRenderer();
       this.defaultActorRenderer = new DefaultActorRenderer();
 
       this.a_vertex = this.createArrayAttribute(gl, 'a_vertex', 3);
