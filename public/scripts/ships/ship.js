@@ -5,7 +5,7 @@ define([
     'd2/actors/actorEvent',
     'd2/utils/vector',
     'constants/collisionConstants'
-  ], function(Actor, ActorEvent, Vector, CollionConstants) {
+  ], function(Actor, ActorEvent, Vector, CollisionConstants) {
 
     var tempVector = new Vector();
 
@@ -57,14 +57,24 @@ define([
         this.notifyObservers(ActorEvent.createDestroyEvent(this));
     };
 
+    Ship.prototype.setBufferBitAsPlayer = function(isPlayer) {
+      this.collisionBits = (isPlayer)?
+          CollisionConstants.PLAYER_COLLISION_BIT
+          : CollisionConstants.ENEMY_COLLISION_BIT;
+
+      this.bulletCollisionBits = (isPlayer)?
+          CollisionConstants.ENEMY_COLLISION_BIT
+          : CollisionConstants.PLAYER_COLLISION_BIT;
+    };
+
     Ship.prototype.resetHealth = function() {
       this.hp = this.maxHp;
     };
 
     Ship.prototype.notify = function(emitEvent) {
       emitEvent.emitter = this;
-
-
+      emitEvent.emitted.collisionBits = this.bulletCollisionBits;
+      
       this.notifyObservers(emitEvent);
     };
 

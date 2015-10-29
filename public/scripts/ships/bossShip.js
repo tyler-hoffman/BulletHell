@@ -9,7 +9,7 @@ define([
     'image!images/bullets.png'
 ], function(Ship, Vector, Rectangle, TextureRegion, GunFactory, image) {
 
-    const MAX_HP = 200;
+    const MAX_HP = 20;
 
     var shipWidth = 23,
         shipHeight = 13;

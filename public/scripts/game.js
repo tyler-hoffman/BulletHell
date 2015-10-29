@@ -126,6 +126,9 @@ define([
           if (event.actor === this.player) {
             console.log('you died!')
             this.player = null;
+          } else {
+            var index = this.enemyShips.indexOf(event.actor);
+            this.enemyShips.splice(index, 1);
           }
           break;
 
@@ -137,11 +140,13 @@ define([
     };
 
     Game.prototype.setPlayer = function(ship) {
+      ship.setBufferBitAsPlayer(true);
       this.addShip(ship);
       this.player = ship;
     };
 
     Game.prototype.addEnemyShip = function(enemy) {
+      enemy.setBufferBitAsPlayer(false);
       this.addShip(enemy);
 
       enemy.rotation = Math.PI;
@@ -168,7 +173,6 @@ define([
 
     Game.prototype.handleCollisions = function() {
       var quadTree = this.quadTree;
-      var ship = this.player;
 
       this.actorManager.forEach(function(actor) {
         quadTree.insert(actor);
@@ -176,16 +180,26 @@ define([
 
 
       if (this.player) {
-        var collisions = quadTree.getCollisions(this.player);
-        for (var i = 0; i < collisions.length; i++) {
-          if (collisions[i] !== ship) {
-            if (this.detector) {
-              var intersection = this.detector.getIntersection(ship, collisions[i]);
-              if (!intersection.isEmpty()) {
-                // remove bullet and kill ship
-                collisions[i].isAlive = false;
-                ship.takeDamage(collisions[i].damage || 0);
-              }
+        this.handleCollisionsForShip(this.player);
+      }
+
+      for (var i = 0; i < this.enemyShips.length; i++) {
+        this.handleCollisionsForShip(this.enemyShips[i]);
+      }
+    };
+
+    Game.prototype.handleCollisionsForShip = function(ship) {
+      var quadTree = this.quadTree,
+          collisions = quadTree.getCollisions(ship);
+
+      for (var i = 0; i < collisions.length; i++) {
+        if (collisions[i] !== ship) {
+          if (this.detector) {
+            var intersection = this.detector.getIntersection(ship, collisions[i]);
+            if (!intersection.isEmpty()) {
+              // remove bullet and kill ship
+              collisions[i].isAlive = false;
+              ship.takeDamage(collisions[i].damage || 0);
             }
           }
         }
@@ -199,9 +213,10 @@ define([
     };
 
     Game.prototype.handleInput = function(deltaTime) {
-      this.player.controller.setVelocity(this.keyboard.getVelocity())
-          .scale(SHIP_SPEED);
-
+      if (this.player && this.player.isAlive) {
+        this.player.controller.setVelocity(this.keyboard.getVelocity())
+            .scale(SHIP_SPEED);
+      }
     };
 
     Game.prototype.removeDeadActors = function() {
