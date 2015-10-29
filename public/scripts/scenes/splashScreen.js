@@ -61,7 +61,7 @@ define([
       this.renderer.erase();
       this.renderer.clear(1);
       this.renderer.defaultImageRenderer.render(textureRegion,
-          this.renderer, position, scale);
+          position, scale);
       this.renderer.draw(1);
     };
 

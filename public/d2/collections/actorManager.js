@@ -69,7 +69,7 @@ define([
 
         this.forEachInList(function(actor) {
           var actorRenderer = actor.renderer || renderer.defaultActorRenderer;
-          actorRenderer.render(actor, renderer);
+          actorRenderer.render(actor);
         }, key);
 
         renderer.draw(size);

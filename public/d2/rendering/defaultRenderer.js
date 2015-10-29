@@ -10,15 +10,11 @@ define([
   ], function(Renderer, Uniform2d, Rectangle, Vector,
         Float32Rectangle, Float32Plane) {
 
-    var vectorBuffer = new Vector();
-    var rectangleBuffer = new Float32Rectangle();
-    var planeBuffer = new Float32Plane();
+    var vectorBuffer = new Vector(),
+        rectangleBuffer = new Float32Rectangle(),
+        planeBuffer = new Float32Plane();
 
-    var TextureRegionRenderer = function() {
-
-    };
-
-    TextureRegionRenderer.prototype.render = function(
+    var renderTextureRegion = function(
         textureRegion,
         bounds,
         webglBridge,
@@ -48,34 +44,34 @@ define([
       webglBridge.a_texCoord.addData(rectangleBuffer.points);
     };
 
-    var DefaultActorRenderer = function() {
-
+    var DefaultActorRenderer = function(webglBridge) {
+      this.webglBridge = webglBridge;
     };
 
-    DefaultActorRenderer.prototype.render = function(actor, webglBridge, text) {
-      TextureRegionRenderer.prototype.render(
+    DefaultActorRenderer.prototype.render = function(actor) {
+      renderTextureRegion(
           actor.getTextureRegion(),
           actor.bounds,
-          webglBridge,
+          this.webglBridge,
           actor.position,
           actor.scale,
           actor.depth);
     };
 
-    var ImageRenderer = function() {
-
+    var ImageRenderer = function(webglBridge) {
+      this.webglBridge = webglBridge;
     };
 
-    ImageRenderer.prototype.render = function(textureRegion, webglBridge, position, scale, depth) {
+    ImageRenderer.prototype.render = function(textureRegion, position, scale, depth) {
       var bounds = new Rectangle()
           .set(textureRegion)
           .translate(-textureRegion.x, -textureRegion.y)
           .translate(-textureRegion.center.x, -textureRegion.center.y);
 
-      TextureRegionRenderer.prototype.render(
+      renderTextureRegion(
         textureRegion,
         bounds,
-        webglBridge,
+        this.webglBridge,
         position,
         scale,
         depth || 0.5
@@ -85,8 +81,8 @@ define([
     var DefaultRenderer = function(gl, shaderProgram, width, height) {
       Renderer.call(this, gl, shaderProgram);
 
-      this.defaultImageRenderer = new ImageRenderer();
-      this.defaultActorRenderer = new DefaultActorRenderer();
+      this.defaultImageRenderer = new ImageRenderer(this);
+      this.defaultActorRenderer = new DefaultActorRenderer(this);
 
       this.a_vertex = this.createArrayAttribute(gl, 'a_vertex', 3);
       this.a_texCoord = this.createArrayAttribute(gl, 'a_texCoord', 2);
