@@ -18,13 +18,14 @@ define([
     'emitters/emitEvent',
     'controls/controller',
     'utils/renderInfo',
-    'shaders/defaultShader'
+    'shaders/defaultShader',
+    'd2/scenes/sceneManager'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
         Script, LinearMove, Repeat, IfElse, Animator,
         SimpleRectangle, Vector, Detector,
         DragonWing, BossShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
-        KeyboardController, RenderInfo, DefaultShader) {
+        KeyboardController, RenderInfo, DefaultShader, SceneManager) {
 
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
@@ -34,6 +35,8 @@ define([
       this.canvas = canvas;
       this.width = canvas.width;
       this.height = canvas.height;
+
+
 
       this.gl = canvas.getContext('webgl');
       this.actorManager = new ImageBasedActorManager();

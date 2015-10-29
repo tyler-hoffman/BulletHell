@@ -13,7 +13,7 @@ config({
   }
 });
 
-require(['game'], function(Game) {
+require(['bulletHell'], function(BulletHell) {
   var canvas = document.getElementById('canvas');
-  var game = new Game(canvas);
+  var game = new BulletHell(canvas);
 });
