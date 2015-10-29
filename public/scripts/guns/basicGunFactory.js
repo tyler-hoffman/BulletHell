@@ -16,7 +16,6 @@ define([
 
       bullet.update(fromTime);
       bullet.depth = 0.45;
-      bullet.collisionBits = 2;
       this.notifyObservers(new EmitEvent(bullet));
     };
 

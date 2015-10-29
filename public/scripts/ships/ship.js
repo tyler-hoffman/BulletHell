@@ -3,17 +3,17 @@
 define([
     'd2/actors/actor',
     'd2/actors/actorEvent',
-    'd2/utils/vector'
-  ], function(Actor, ActorEvent, Vector) {
+    'd2/utils/vector',
+    'constants/collisionConstants'
+  ], function(Actor, ActorEvent, Vector, CollionConstants) {
 
     var tempVector = new Vector();
 
-    var Ship = function(view, position, mountPoints, gunSet, maxHp, controller) {
+    var Ship = function(view, position, mountPoints, gunSet, maxHp) {
       this.isShip = true;
-      Actor.call(this, view, position, controller);
+      Actor.call(this, view, position);
       this.mountPoints = mountPoints || {};
       this.setGunSet(gunSet || {});
-      this.controller = controller;
       this.maxHp = maxHp || 1;
 
       this.resetHealth();
