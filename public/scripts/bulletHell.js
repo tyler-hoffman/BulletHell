@@ -2,7 +2,7 @@
 
 define([
     'd2/scenes/sceneManager',
-    'scenes/splashScreen',
+    'scenes/textSplashScreen',
     'controls/keyboardController',
     'game'
   ], function(SceneManager, SplashScreen, KeyboardController, Game) {

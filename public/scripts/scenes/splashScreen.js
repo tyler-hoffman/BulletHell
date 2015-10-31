@@ -41,10 +41,9 @@ define([
       var that = this;
       var center = new Vector(this.width / 2, 200);
       var scale = new Vector(2, 2);
-      
+
       this.addSlide(new ImageRenderer(productionTeamText, center, scale), 1);
       this.addSlide(new ImageRenderer(blastInferno, center, scale), 1);
-
 
       keyboard.registerAction(keyboard.ENTER, this.nextSlide.bind(this));
 
@@ -55,7 +54,7 @@ define([
 
     SplashScreen.prototype.triggerNextScene = function() {
       this.nextScene(this.nextScreenId);
-    }
+    };
 
     return SplashScreen;
 });
