@@ -3,12 +3,14 @@
 define([
     'd2/scenes/sceneManager',
     'scenes/textSplashScreen',
+    'scenes/menuScreen',
     'controls/keyboardController',
     'game'
-  ], function(SceneManager, SplashScreen, KeyboardController, Game) {
+  ], function(SceneManager, SplashScreen, MenuScreen, KeyboardController, Game) {
 
     const LEVEL = 'LEVEL',
-          SPLASH = 'SPLASH';
+          SPLASH = 'SPLASH',
+          MENU = 'MENU';
 
     var BulletHell = function(canvas) {
       SceneManager.call(this, canvas);
@@ -32,7 +34,14 @@ define([
             canvas,
             animator,
             keyboardController,
-            LEVEL);
+            MENU);
+      });
+
+      this.registerScene(MENU, function(canvas, animator) {
+        return new MenuScreen(
+            canvas,
+            animator,
+            keyboardController);
       });
 
     };
