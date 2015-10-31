@@ -8,7 +8,8 @@ define([
     'image!images/splash_text.png'
   ], function(SlideShowScene, Rectangle, Vector, TextureRegion, textImage) {
 
-    var SplashScreen = function(canvas, animator, nextScreenId) {
+    var SplashScreen = function(canvas, animator, keyboard, nextScreenId) {
+      this.keyboard = keyboard;
       this.nextScreenId = nextScreenId;
       SlideShowScene.call(this, canvas, animator);
 

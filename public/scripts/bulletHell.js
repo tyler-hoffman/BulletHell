@@ -3,16 +3,18 @@
 define([
     'd2/scenes/sceneManager',
     'scenes/splashScreen',
+    'controls/keyboardController',
     'game'
-  ], function(SceneManager, SplashScreen, Game) {
+  ], function(SceneManager, SplashScreen, KeyboardController, Game) {
 
     const LEVEL = 'LEVEL',
           SPLASH = 'SPLASH';
 
     var BulletHell = function(canvas) {
       SceneManager.call(this, canvas);
-      this.registerSceneGenerators();
 
+      this.keyboardController = new KeyboardController();
+      this.registerSceneGenerators();
       this.setScene(SPLASH);
     };
 
@@ -20,15 +22,17 @@ define([
 
     BulletHell.prototype.registerSceneGenerators = function() {
 
-      var that = this;
+      var keyboardController = this.keyboardController;
       this.registerScene(LEVEL, function(canvas, animator) {
-        var scene = new Game(canvas, animator);
-        return scene;
+        return new Game(canvas, animator, keyboardController);
       });
 
       this.registerScene(SPLASH, function(canvas, animator) {
-        var scene = new SplashScreen(canvas, animator, LEVEL);
-        return scene;
+        return new SplashScreen(
+            canvas,
+            animator,
+            keyboardController,
+            LEVEL);
       });
 
     };

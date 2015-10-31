@@ -15,7 +15,6 @@ define([
     'd2/utils/quadTree',
     'd2/rendering/defaultRenderer',
     'emitters/emitEvent',
-    'controls/keyboardController',
     'utils/renderInfo',
     'shaders/defaultShader',
     'd2/scenes/scene'
@@ -24,15 +23,15 @@ define([
         SimpleRectangle, Vector, Detector,
         DragonWing, BossShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
-        KeyboardController, RenderInfo, DefaultShader, Scene) {
+        RenderInfo, DefaultShader, Scene) {
 
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
     const MAGNIFICATION = 4;
 
-    var Game = function(canvas, animator) {
+    var Game = function(canvas, animator, keyboard) {
       Scene.call(this, canvas, animator);
-
+      this.keyboard = keyboard;
 
       this.actorManager = new ImageBasedActorManager();
       this.shaderProgram = new DefaultShader(this.gl).getProgram();
@@ -85,7 +84,6 @@ define([
       this.renderer.setResolution(this.width, this.height);
 
       var that = this;
-      var keyboard = this.keyboard = new KeyboardController();
       keyboard.registerAction(keyboard.ENTER, function() {
         that.togglePlaying();
       });
