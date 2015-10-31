@@ -8,7 +8,6 @@ define([
     var Scene = function(canvas, animator) {
       Observable.call(this);
 
-
       this.animator = animator;
 
       if (canvas) {
