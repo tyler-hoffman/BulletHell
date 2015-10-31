@@ -23,13 +23,11 @@ define([
       var that = this;
       this.registerScene(LEVEL, function(canvas, animator) {
         var scene = new Game(canvas, animator);
-        scene.addObserver(that);
         return scene;
       });
 
       this.registerScene(SPLASH, function(canvas, animator) {
         var scene = new SplashScreen(canvas, animator, LEVEL);
-        scene.addObserver(that);
         return scene;
       });
 
