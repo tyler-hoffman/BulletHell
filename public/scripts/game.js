@@ -72,7 +72,7 @@ define([
       this.addEnemyShip(boss);
 
       var actorManager = this.actorManager;
-      this.textField = new GameText('[60 fps]', 2, function(letters) {
+      this.textField = new GameText('', 2, function(letters) {
         for (var i = 0; i < letters.length; i++) {
           actorManager.addActor(letters[i]);
         }
@@ -85,8 +85,11 @@ define([
       this.renderer.setResolution(this.width, this.height);
 
       var that = this;
-      this.keyboard = new KeyboardController();//function() {
-      this.keyboard.onEnter(function() {
+      var keyboard = this.keyboard = new KeyboardController();
+      keyboard.registerAction(keyboard.ENTER, function() {
+        that.togglePlaying();
+      });
+      keyboard.registerAction(keyboard.SPACE, function() {
         that.togglePlaying();
       });
 

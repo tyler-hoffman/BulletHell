@@ -25,12 +25,8 @@ define([
       this.registerAction(UP);
       this.registerAction(RIGHT);
       this.registerAction(DOWN);
-      this.registerAction(ENTER, function() {
-        this.enterListener && this.enterListener();
-      }.bind(this));
-      this.registerAction(SPACE, function() {
-        this.spaceListener && this.spaceListener();
-      }.bind(this));
+      this.registerAction(ENTER);
+      this.registerAction(SPACE);
 
       // register keys to actions
       this.registerKey(LEFT, LEFT);
@@ -42,24 +38,18 @@ define([
       this.registerKey(DOWN, DOWN);
       this.registerKey(S, DOWN);
       this.registerKey(ENTER, ENTER);
+      this.registerKey(SPACE, SPACE);
 
-      this.clearListeners();
     };
 
     KeyboardController.prototype = new KeyManager();
 
-    KeyboardController.prototype.clearListeners = function() {
-      this.enterListener = null;
-      this.spaceListener = null;
-    };
-
-    KeyboardController.prototype.onEnter = function(callback) {
-      this.enterListener = callback;
-    };
-
-    KeyboardController.prototype.onSpace = function(callback) {
-      this.spaceListener = callback;
-    };
+    KeyboardController.prototype.LEFT   = LEFT;
+    KeyboardController.prototype.UP     = UP;
+    KeyboardController.prototype.RIGHT  = RIGHT;
+    KeyboardController.prototype.DOWN   = DOWN;
+    KeyboardController.prototype.SPACE  = SPACE;
+    KeyboardController.prototype.ENTER  = ENTER;
 
     KeyboardController.prototype.getVelocity = function() {
       var x = 0,
