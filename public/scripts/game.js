@@ -15,7 +15,7 @@ define([
     'd2/utils/quadTree',
     'd2/rendering/defaultRenderer',
     'emitters/emitEvent',
-    'controls/controller',
+    'controls/keyboardController',
     'utils/renderInfo',
     'shaders/defaultShader',
     'd2/scenes/scene'
@@ -85,7 +85,8 @@ define([
       this.renderer.setResolution(this.width, this.height);
 
       var that = this;
-      this.keyboard = new KeyboardController(function() {
+      this.keyboard = new KeyboardController();//function() {
+      this.keyboard.onEnter(function() {
         that.togglePlaying();
       });
 
