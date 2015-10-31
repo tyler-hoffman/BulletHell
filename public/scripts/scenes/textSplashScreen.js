@@ -40,7 +40,11 @@ define([
           textField, actorManager, 3
       ), 3);
       this.addSlide(new TextRenderer(
-          'Blast Inferno',
+          'in association with wise dragon studios',
+          textField, actorManager, 3
+      ), 3);
+      this.addSlide(new TextRenderer(
+          'BLAST INFERNO',
           textField, actorManager, 6
       ), 5);
 
