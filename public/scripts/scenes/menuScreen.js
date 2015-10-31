@@ -34,13 +34,18 @@ define([
         keyboard.registerAction(keyboard.DOWN, function() {
           this.cycleChoices(1);
         }.bind(this));
-
+        keyboard.registerAction(keyboard.ENTER, function() {
+          this.currentButton.doAction();
+        }.bind(this));
 
         this.selectButton(this.buttons[0]);
       }
     };
 
     MenuScreen.prototype = new Scene();
+
+    MenuScreen.prototype.PLAY = 'PLAY';
+    MenuScreen.prototype.OPTIONS = 'OPTIONS';
 
     MenuScreen.prototype.generateButtons = function() {
 
@@ -60,18 +65,30 @@ define([
         }
       }
 
+      var that = this;
       var buttons = [
-        new Button(textureRegions[0], textureRegions[1], textureRegions[2]),
-        new Button(textureRegions[3], textureRegions[4], textureRegions[5])
+        new Button(
+          textureRegions[0],
+          textureRegions[1],
+          textureRegions[2],
+          function() {
+            that.nextScene(that.PLAY);
+          }
+        ),
+        new Button(
+          textureRegions[3],
+          textureRegions[4],
+          textureRegions[5],
+          function() {
+            that.nextScene(that.OPTIONS);
+          }
+        )
       ];
 
       for (var i = 0; i < buttons.length; i++) {
-        buttons[i].setPosition(600, 400 + 80);
+        buttons[i].setPosition(600, 360 + 80 * i);
         buttons[i].setScale(4, 4);
       }
-
-      buttons[0].setPosition(600, 400);
-      buttons[1].setPosition(600, 480);
 
       return buttons;
     };

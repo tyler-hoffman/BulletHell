@@ -8,9 +8,10 @@ define([
     'game'
   ], function(SceneManager, SplashScreen, MenuScreen, KeyboardController, Game) {
 
-    const LEVEL = 'LEVEL',
+    const PLAY = 'PLAY',
           SPLASH = 'SPLASH',
-          MENU = 'MENU';
+          MENU = 'MENU',
+          OPTIONS = 'OPTIONS';
 
     var BulletHell = function(canvas) {
       SceneManager.call(this, canvas);
@@ -25,7 +26,7 @@ define([
     BulletHell.prototype.registerSceneGenerators = function() {
 
       var keyboardController = this.keyboardController;
-      this.registerScene(LEVEL, function(canvas, animator) {
+      this.registerScene(PLAY, function(canvas, animator) {
         return new Game(canvas, animator, keyboardController);
       });
 
@@ -42,6 +43,10 @@ define([
             canvas,
             animator,
             keyboardController);
+      });
+
+      this.registerScene(OPTIONS, function(canvas, animator) {
+        console.log('TODO: Implement options screen')
       });
 
     };
