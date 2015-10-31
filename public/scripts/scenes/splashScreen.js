@@ -9,7 +9,6 @@ define([
   ], function(SlideShowScene, Rectangle, Vector, TextureRegion, textImage) {
 
     var SplashScreen = function(canvas, animator, keyboard, nextScreenId) {
-      this.keyboard = keyboard;
       this.nextScreenId = nextScreenId;
       SlideShowScene.call(this, canvas, animator);
 
@@ -31,6 +30,8 @@ define([
 
       this.addSlide(productionTeamText, center, scale, 1.5);
       this.addSlide(blastInferno, center, scale, 2.0);
+
+      keyboard.registerAction(keyboard.ENTER, this.nextSlide.bind(this));
 
       this.play();
     };
