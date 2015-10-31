@@ -7,7 +7,6 @@ define([
 
     var CharacterField = function(view, position, velocity) {
       Actor.call(this, view, position, velocity);
-      this.depth = 0;
     };
 
     CharacterField.prototype = new Actor();
@@ -17,6 +16,8 @@ define([
       this.font = font;
       this.onChange = onChange;
       this.scale = new Vector(magnification, magnification);
+
+      this.depth = 0;
 
       if (text) {
         this.setText(text);
@@ -45,6 +46,7 @@ define([
           character.collisionBits = 0;
           character.setScale(this.scale);
           character.setPosition(x, y);
+          character.depth = this.depth;
           x += character.boundingBox.width;
           this.children.push(character);
         }

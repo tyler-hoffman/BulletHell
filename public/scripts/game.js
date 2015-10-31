@@ -76,6 +76,7 @@ define([
           actorManager.addActor(letters[i]);
         }
       });
+      this.textField.depth = .9;
 
       this.emitters = [];
       var gameState = this.gameState;

@@ -6,10 +6,8 @@ define([
     'shaders/defaultShader'
   ], function(Scene, DefaultRenderer, DefaultShader) {
 
-    var Slide = function(image, position, scale, duration) {
-      this.image = image;
-      this.position = position;
-      this.scale = scale;
+    var Slide = function(content, duration) {
+      this.content = content;
       this.duration = duration;
     };
 
@@ -51,12 +49,10 @@ define([
     };
 
     SlideShowScene.prototype.addSlide = function(
-        image,
-        position,
-        scale,
+        content,
         duration) {
 
-      this.slides.push(new Slide(image, position, scale, duration));
+      this.slides.push(new Slide(content, duration));
     };
 
     SlideShowScene.prototype.nextSlide = function(currentSlideTime) {
@@ -65,24 +61,8 @@ define([
 
       var currentSlide = this.currentSlide();
       if (currentSlide) {
-        this.renderImage(
-          currentSlide.image,
-          currentSlide.position,
-          currentSlide.scale
-        );
+        currentSlide.content.render(this.renderer);
       }
-  };
-
-  SlideShowScene.prototype.renderImage = function(
-      textureRegion,
-      position,
-      scale) {
-
-    this.renderer.erase();
-    this.renderer.clear(1);
-    this.renderer.defaultImageRenderer.render(textureRegion, position, scale);
-    this.renderer.draw(1);
-
   };
 
   SlideShowScene.prototype.currentSlide = function() {

@@ -8,6 +8,20 @@ define([
     'image!images/splash_text.png'
   ], function(SlideShowScene, Rectangle, Vector, TextureRegion, textImage) {
 
+    var ImageRenderer = function(image, position, scale) {
+      this.image = image;
+      this.position = position;
+      this.scale = scale;
+    };
+
+    ImageRenderer.prototype.render = function(renderer) {
+      renderer.erase();
+      renderer.clear(1);
+      renderer.defaultImageRenderer.render(
+          this.image, this.position, this.scale);
+      renderer.draw(1);
+    };
+
     var SplashScreen = function(canvas, animator, keyboard, nextScreenId) {
       this.nextScreenId = nextScreenId;
       SlideShowScene.call(this, canvas, animator);
@@ -27,9 +41,10 @@ define([
       var that = this;
       var center = new Vector(this.width / 2, 200);
       var scale = new Vector(2, 2);
+      
+      this.addSlide(new ImageRenderer(productionTeamText, center, scale), 1);
+      this.addSlide(new ImageRenderer(blastInferno, center, scale), 1);
 
-      this.addSlide(productionTeamText, center, scale, 1.5);
-      this.addSlide(blastInferno, center, scale, 2.0);
 
       keyboard.registerAction(keyboard.ENTER, this.nextSlide.bind(this));
 
