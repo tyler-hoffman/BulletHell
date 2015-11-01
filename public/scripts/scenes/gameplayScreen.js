@@ -29,7 +29,7 @@ define([
     const BULLET_SPEED  = 200;
     const MAGNIFICATION = 4;
 
-    var Game = function(canvas, animator, keyboard) {
+    var GameplayScreen = function(canvas, animator, keyboard) {
       Scene.call(this, canvas, animator);
       this.keyboard = keyboard;
 
@@ -100,9 +100,9 @@ define([
       this.play();
     };
 
-    Game.prototype = new Scene();
+    GameplayScreen.prototype = new Scene();
 
-    Game.prototype.onFrame = function(deltaTime) {
+    GameplayScreen.prototype.onFrame = function(deltaTime) {
       this.renderInfo.update(deltaTime)
       this.quadTree.clear();
       this.handleInput(deltaTime);
@@ -113,7 +113,7 @@ define([
       this.renderAll();
     };
 
-    Game.prototype.notify = function(event) {
+    GameplayScreen.prototype.notify = function(event) {
 
       switch (event.type) {
 
@@ -135,13 +135,13 @@ define([
       }
     };
 
-    Game.prototype.setPlayer = function(ship) {
+    GameplayScreen.prototype.setPlayer = function(ship) {
       ship.setBufferBitAsPlayer(true);
       this.addShip(ship);
       this.player = ship;
     };
 
-    Game.prototype.addEnemyShip = function(enemy) {
+    GameplayScreen.prototype.addEnemyShip = function(enemy) {
       enemy.setBufferBitAsPlayer(false);
       this.addShip(enemy);
 
@@ -149,7 +149,7 @@ define([
       this.enemyShips.push(enemy);
     };
 
-    Game.prototype.addShip = function(ship) {
+    GameplayScreen.prototype.addShip = function(ship) {
       ship.addObserver(this);
       ship.setScale(MAGNIFICATION);
       ship.updateBounds();
@@ -157,17 +157,17 @@ define([
       this.actorManager.addActor(ship);
     };
 
-    Game.prototype.unregisterShip = function(ship) {
+    GameplayScreen.prototype.unregisterShip = function(ship) {
       ship.removeObserver(this);
     };
 
-    Game.prototype.updateActors = function(deltaTime, gameState) {
+    GameplayScreen.prototype.updateActors = function(deltaTime, gameState) {
       this.actorManager.forEach(function(actor) {
         actor.update(deltaTime, gameState);
       });
     };
 
-    Game.prototype.handleCollisions = function() {
+    GameplayScreen.prototype.handleCollisions = function() {
       var quadTree = this.quadTree;
 
       this.actorManager.forEach(function(actor) {
@@ -184,7 +184,7 @@ define([
       }
     };
 
-    Game.prototype.handleCollisionsForShip = function(ship) {
+    GameplayScreen.prototype.handleCollisionsForShip = function(ship) {
       var quadTree = this.quadTree,
           collisions = quadTree.getCollisions(ship);
 
@@ -202,29 +202,29 @@ define([
       }
     };
 
-    Game.prototype.updateEmitters = function(deltaTime) {
+    GameplayScreen.prototype.updateEmitters = function(deltaTime) {
       for (var i = 0; i < this.emitters.length; i++) {
         this.emitters[i].update(deltaTime);
       }
     };
 
-    Game.prototype.handleInput = function(deltaTime) {
+    GameplayScreen.prototype.handleInput = function(deltaTime) {
       if (this.player && this.player.isAlive) {
         this.player.controller.setVelocity(this.keyboard.getVelocity())
             .scale(SHIP_SPEED);
       }
     };
 
-    Game.prototype.removeDeadActors = function() {
+    GameplayScreen.prototype.removeDeadActors = function() {
       this.actorManager.removeIf(function(actor) {
         return !actor.isAlive;
       });
     };
 
-    Game.prototype.renderAll = function() {
+    GameplayScreen.prototype.renderAll = function() {
       this.actorManager.renderAll(this.renderer);
     };
 
-    return Game;
+    return GameplayScreen;
 
 });

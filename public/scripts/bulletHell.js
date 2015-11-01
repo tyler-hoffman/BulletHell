@@ -2,11 +2,11 @@
 
 define([
     'd2/scenes/sceneManager',
+    'controls/keyboardController',
     'scenes/textSplashScreen',
     'scenes/menuScreen',
-    'controls/keyboardController',
-    'game'
-  ], function(SceneManager, SplashScreen, MenuScreen, KeyboardController, Game) {
+    'scenes/gameplayScreen'
+  ], function(SceneManager, KeyboardController, SplashScreen, MenuScreen, GameplayScreen) {
 
     const PLAY = 'PLAY',
           SPLASH = 'SPLASH',
@@ -28,7 +28,7 @@ define([
 
       var keyboardController = this.keyboardController;
       this.registerScene(PLAY, function(canvas, animator) {
-        return new Game(canvas, animator, keyboardController);
+        return new GameplayScreen(canvas, animator, keyboardController);
       });
 
       this.registerScene(SPLASH, function(canvas, animator) {
