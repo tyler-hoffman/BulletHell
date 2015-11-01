@@ -51,5 +51,10 @@ define([
 
     };
 
+    BulletHell.prototype.setScene = function(id) {
+      this.keyboardController.unregisterAllActions();
+      SceneManager.prototype.setScene.call(this, id);
+    };
+
     return BulletHell;
 });
