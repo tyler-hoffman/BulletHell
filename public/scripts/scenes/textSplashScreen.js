@@ -36,11 +36,11 @@ define([
       textField.setPosition(100, 400);
 
       this.addSlide(new TextRenderer(
-          'power-cosmic presents',
+          'Power Cosmic presents',
           textField, actorManager, 3
       ), 3);
       this.addSlide(new TextRenderer(
-          'in association with wise dragon studios',
+          'in association with Blast Force Entertainment',
           textField, actorManager, 3
       ), 3);
       this.addSlide(new TextRenderer(

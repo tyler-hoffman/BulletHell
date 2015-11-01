@@ -46,16 +46,17 @@ define([
 
     MenuScreen.prototype.PLAY = 'PLAY';
     MenuScreen.prototype.OPTIONS = 'OPTIONS';
+    MenuScreen.prototype.SPLASH = 'SPLASH';
 
     MenuScreen.prototype.generateButtons = function() {
 
       var xStart = 5,
-          yStart = 67,
+          yStart = 60,
           buttonWidth = 78,
           buttonHeight = 21;
 
       var textureRegions = [];
-      for (var row = 0; row < 2; row++) {
+      for (var row = 0; row < 3; row++) {
         for (var col = 0; col < 3; col++) {
           textureRegions.push(new TextureRegion(textImage, new Rectangle(
             xStart + col * buttonWidth,
@@ -82,11 +83,19 @@ define([
           function() {
             that.nextScene(that.OPTIONS);
           }
+        ),
+        new Button(
+          textureRegions[6],
+          textureRegions[7],
+          textureRegions[8],
+          function() {
+            that.nextScene(that.SPLASH);
+          }
         )
       ];
 
       for (var i = 0; i < buttons.length; i++) {
-        buttons[i].setPosition(600, 360 + 80 * i);
+        buttons[i].setPosition(600, 280 + 80 * i);
         buttons[i].setScale(4, 4);
       }
 

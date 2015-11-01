@@ -11,7 +11,8 @@ define([
     const PLAY = 'PLAY',
           SPLASH = 'SPLASH',
           MENU = 'MENU',
-          OPTIONS = 'OPTIONS';
+          OPTIONS = 'OPTIONS',
+          BACK = 'BACK';
 
     var BulletHell = function(canvas) {
       SceneManager.call(this, canvas);
@@ -44,6 +45,7 @@ define([
             animator,
             keyboardController);
       });
+
 
       this.registerScene(OPTIONS, function(canvas, animator) {
         console.log('TODO: Implement options screen')
