@@ -9,7 +9,7 @@ define([
     'image!images/bullets.png'
 ], function(Ship, Vector, Rectangle, TextureRegion, GunFactory, image) {
 
-    const MAX_HP = 20;
+    const MAX_HP = 2000;
 
     var shipWidth = 17,
         shipHeight = 14;
@@ -35,7 +35,7 @@ define([
           view,
           position,
           mountPoints,
-          gunFactory.generateGunSet(),
+          null,//gunFactory.generateGunSet(),
           MAX_HP
           );
     };

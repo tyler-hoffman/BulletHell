@@ -5,10 +5,11 @@ define([
     'd2/actors/controllers/physics/velocityController'
   ], function(Actor, VelocityController) {
 
-    var Bullet = function(view, position, velocity, damage) {
+    var Bullet = function(view, position, velocity, damage, radius) {
       Actor.call(this, view, position);
       this.controller = new VelocityController(this.position, velocity);
       this.damage = damage || 1;
+      this.radius = radius || 1;
     };
 
     Bullet.prototype = new Actor();

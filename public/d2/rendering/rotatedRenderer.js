@@ -3,11 +3,47 @@
 define([
     'd2/rendering/renderer',
     'd2/rendering/webglBindings/arrayAttribute',
-    'd2/rendering/webglBindings/uniform2d'
-  ], function(Renderer, ArrayAttribute, Uniform2d) {
+    'd2/rendering/webglBindings/uniform2d',
+    'd2/utils/float32Plane',
+    'd2/utils/float32Rectangle'
+  ], function(Renderer, ArrayAttribute, Uniform2d, Float32Plane, Float32Rectangle) {
+
+    var rectangleBuffer = new Float32Rectangle(),
+        planeBuffer = new Float32Plane();
+
+    var RotatedActorRenderer = function(webglBridge) {
+      this.webglBridge = webglBridge;
+    };
+
+    RotatedActorRenderer.prototype.render = function(actor) {
+      var textureRegion = actor.getTextureRegion(),
+          webglBridge = this.webglBridge,
+          bounds = actor.bounds;
+
+      planeBuffer.setRectangle(bounds, actor.depth);
+
+      var position = actor.position.toArray(),
+          scale = actor.scale.toArray(),
+          rotation = [Math.cos(actor.rotation), Math.sin(actor.rotation)];
+
+      webglBridge.setImage(textureRegion.image);
+      webglBridge.a_vertex.addData(planeBuffer.points);
+
+      for (var i = 0; i < 6; i++) {
+        webglBridge.a_position.addData(position);
+        webglBridge.a_scale.addData(scale);
+        webglBridge.a_rotation.addData(rotation);
+      }
+      
+      // set texture coordinates
+      rectangleBuffer.set(textureRegion.textureCoordinates);
+      webglBridge.a_texCoord.addData(rectangleBuffer.points);
+    };
 
     var RotatedRenderer = function(gl, shaderProgram, width, height) {
       Renderer.call(this, gl, shaderProgram);
+
+      this.defaultActorRenderer = new RotatedActorRenderer(this);
 
       var vertexLocation = gl.getAttribLocation(shaderProgram, 'a_vertex');
       var texCoordLocation = gl.getAttribLocation(shaderProgram, 'a_texCoord');

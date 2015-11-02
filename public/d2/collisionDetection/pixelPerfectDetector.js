@@ -1,3 +1,7 @@
+/**
+ * Per pixel collision detection.
+ * This only works on non-rotated actors
+ */
 define([
     'd2/utils/rectangle'
   ], function(Rectangle) {

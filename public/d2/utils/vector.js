@@ -86,7 +86,7 @@ define(function() {
   };
 
   Vector.prototype.theta = function() {
-    return Math.atan2(-this.y, this.x);
+    return Math.atan2(this.y, this.x);
   };
 
   Vector.prototype.toArray = function() {

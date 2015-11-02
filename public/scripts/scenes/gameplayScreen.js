@@ -8,15 +8,15 @@ define([
     'd2/actors/controllers/paths/ifElse',
     'd2/utils/rectangle',
     'd2/utils/vector',
-    'd2/collisionDetection/PixelPerfectDetector',
+    'd2/collisionDetection/RectangleToCircleDetector',
     'ships/dragonWing',
     'ships/bossShip',
     'text/gameText',
     'd2/utils/quadTree',
-    'd2/rendering/defaultRenderer',
+    'd2/rendering/rotatedRenderer',
     'emitters/emitEvent',
     'utils/renderInfo',
-    'shaders/defaultShader',
+    'shaders/rotatedShader',
     'd2/scenes/scene'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
         Script, LinearMove, Repeat, IfElse,
@@ -45,12 +45,13 @@ define([
 
       var player = new DragonWing(
           new Vector(this.width / 2, this.height * 0.75));
+      //player.rotation = Math.PI / 2;
       player.controller = new VelocityController(player.position, 100);
       this.setPlayer(player);
 
 
       this.enemyShips = [];
-      var bossVelocity = 200;
+      var bossVelocity = 20;
       var boss = new BossShip(new Vector(this.width / 2, this.height * 0.25));
       boss.controller = new Script(boss.position)
           .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
