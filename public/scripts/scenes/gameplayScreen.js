@@ -6,6 +6,8 @@ define([
     'd2/actors/controllers/paths/linearMove',
     'd2/actors/controllers/paths/repeat',
     'd2/actors/controllers/paths/ifElse',
+    'd2/actors/controllers/paths/wait',
+    'waves/wave',
     'd2/utils/rectangle',
     'd2/utils/vector',
     'd2/collisionDetection/rectangleToCircleDetector',
@@ -19,7 +21,7 @@ define([
     'shaders/rotatedShader',
     'd2/scenes/scene'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
-        Script, LinearMove, Repeat, IfElse,
+        Script, LinearMove, Repeat, IfElse, Wait, Wave,
         Rectangle, Vector, Detector,
         DragonWing, BossShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
@@ -53,6 +55,7 @@ define([
       var bossVelocity = 20;
       var boss = new BossShip(new Vector(this.width / 2, this.height * 0.25));
       boss.controller = new Script(boss.position)
+          .addStep(new Wait(5))
           .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
           .addStep(new Repeat(5)
               .addStep(new IfElse(function() {
