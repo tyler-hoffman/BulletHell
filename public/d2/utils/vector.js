@@ -77,8 +77,8 @@ define(function() {
     var cosTheta = Math.cos(theta);
     var sinTheta = Math.sin(theta);
 
-    var xTemp = this.x * cosTheta + this.y * sinTheta;
-    this.y = - this.x * sinTheta + this.y * cosTheta;
+    var xTemp = this.x * cosTheta - this.y * sinTheta;
+    this.y = this.x * sinTheta + this.y * cosTheta;
 
     this.x = xTemp;
 
