@@ -74,6 +74,7 @@ define([
       if (this.view) {
         this.boundingBox.set(this.bounds)
             .scale(this.scale.x, this.scale.y)
+            .getBounds(this.rotation)
             .translate(this.position.x, this.position.y);
       }
     };

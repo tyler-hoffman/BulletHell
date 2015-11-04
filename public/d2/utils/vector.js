@@ -112,11 +112,13 @@ define(function() {
   Vector.prototype.floor = function() {
     this.x = Math.floor(this.x);
     this.y = Math.floor(this.y);
+    return this;
   };
 
   Vector.prototype.ceil = function() {
     this.x = Math.ceil(this.x);
     this.y = Math.ceil(this.y);
+    return this;
   };
 
   return Vector;

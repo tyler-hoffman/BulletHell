@@ -1,4 +1,6 @@
-define(function() {
+define(['d2/utils/vector'], function(Vector) {
+
+  var tempVec = new Vector();
 
   var SimpleRectangle = function(x, y, width, height) {
     this.set(x, y, width, height);
@@ -83,6 +85,24 @@ define(function() {
     return this.y + this.height;
   };
 
+  SimpleRectangle.prototype.getCorner = function(index, dest) {
+    dest = dest || new Vector();
+    switch(index) {
+      case 0:
+        return dest.set(this.x1(), this.y1());
+        break;
+      case 1:
+        return dest.set(this.x2(), this.y1());
+        break;
+      case 2:
+        return dest.set(this.x2(), this.y2());
+        break;
+      case 3:
+        return dest.set(this.x1(), this.y2());
+        break;
+    }
+  };
+
   SimpleRectangle.prototype.getIntersection = function(other, dest) {
     dest = dest || new SimpleRectangle;
 
@@ -98,6 +118,51 @@ define(function() {
     }
 
     return dest;
+  };
+
+  /**
+   * Set rectangle to the bounding box of the rectangle,
+   * given a rotation. Note: This does change the size,
+   * and does not retain any rotation info, so repeated calls
+   * will likely result in a huge meaningless rectangle.
+   *
+   * Pro-tip: use a secondary rectnagle, set it equal to
+   * the one you want a bounding box for, then call bounds
+   *
+   * @param {Rectangle} rotation Rotation of the rectangle
+   */
+  SimpleRectangle.prototype.getBounds = function(rotation) {
+    if (rotation) {
+      var xMin = Number.MAX_VALUE,
+          xMax = Number.MIN_VALUE,
+          yMin = Number.MAX_VALUE,
+          yMax = Number.MIN_VALUE;
+
+      for (var i = 0; i < 4; i++) {
+        this.getCorner(i, tempVec).rotate(rotation);
+        if (tempVec.x < xMin) {
+          xMin = tempVec.x;
+        }
+        if (tempVec.x > xMax) {
+          xMax = tempVec.x;
+        }
+        if (tempVec.y < yMin) {
+          yMin = tempVec.y;
+        }
+        if (tempVec.y > yMax) {
+          yMax = tempVec.y;
+        }
+      }
+
+      this.set(
+        xMin,
+        yMin,
+        xMax - xMin,
+        yMax - yMin
+      );
+    }
+
+    return this;
   };
 
   SimpleRectangle.prototype.snap = function() {

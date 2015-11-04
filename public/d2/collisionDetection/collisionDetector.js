@@ -25,7 +25,6 @@ define([
         }
       }
       this.images[image] = grid;
-      console.log(grid)
     }
     return this.images[image];
   };

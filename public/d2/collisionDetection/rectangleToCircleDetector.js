@@ -47,13 +47,15 @@ define([
        * Convert vector from actor-space to actor's image-space
        * and make sure we check the largest rectangle needed
        */
-      start.set(tempVector.x - radius, tempVector.y - radius)
+      start.set(tempVector)
+          .subtract(radius, radius)
           .add(rectTexture.center)
           .clamp(0, 0, rectActor.view.width, rectActor.view.height)
           .add(rectTexture.x, rectTexture.y)
           .floor();
 
-      end.set(tempVector.x + radius, tempVector.y + radius)
+      end.set(tempVector)
+          .add(radius, radius)
           .add(rectTexture.center)
           .clamp(0, 0, rectActor.view.width, rectActor.view.height)
           .add(rectTexture.x, rectTexture.y)

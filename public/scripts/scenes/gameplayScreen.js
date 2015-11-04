@@ -138,7 +138,7 @@ define([
     GameplayScreen.prototype.setPlayer = function(ship) {
       ship.setBufferBitAsPlayer(true);
       this.addShip(ship);
-      ship.rotation = Math.PI / 2;
+      ship.rotation = Math.PI / 3;
       this.player = ship;
     };
 
