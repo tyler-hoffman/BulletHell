@@ -23,7 +23,7 @@ define([
     );
 
     var BlueBullet = function(position, velocity) {
-      Bullet.call(this, view, position, velocity);
+      Bullet.call(this, view, position, velocity, 1, 2);
     };
 
     BlueBullet.prototype = new Bullet();

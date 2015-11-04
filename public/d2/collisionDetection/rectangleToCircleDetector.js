@@ -26,42 +26,44 @@ define([
 
       dest = dest || new Rectangle();
 
+      // get shorthand for a few things
       var rectTexture = rectActor.getTextureRegion(),
-          circleTexture = circleActor.getTextureRegion(),
-          rectImage = rectTexture.image,
-          rectRotation = rectActor.rotation,
           rectPosition = rectActor.position,
-          circlePosition = circleActor.position;
+          circlePosition = circleActor.position,
+          radius = circleActor.radius * circleActor.scale.x / rectActor.scale.x,
+          image = this.registerImage(rectTexture.image);
 
-      var image = this.registerImage(rectImage);
-
+      // get vector for circle position relative to rectangle
       tempVector.set(circlePosition)
-          .subtract(rectPosition);
+          .subtract(rectPosition)
+          .scale(1 / rectActor.scale.x)
+          .rotate(-rectActor.rotation);
+
 
       /*
-       * TODO: DRAW IMAGES FACING RIGHT SO I DON'T HAVE TO SUBTRACT HERE
-       * Otherwise, this might come back to haunt me
+       * Create start/end points for loop for the intersection
+       * we want to check.
+       *
+       * Convert vector from actor-space to actor's image-space
+       * and make sure we check the largest rectangle needed
        */
-      var theta = tempVector.theta() - rectActor.rotation,
-          dist = tempVector.length() / rectActor.scale.x,
-          xPos = dist * Math.cos(theta) + rectTexture.center.x,
-          yPos = dist * Math.sin(theta) + rectTexture.center.y,
-          radius = circleActor.radius * circleActor.scale.x / rectActor.scale.x;
+      start.set(tempVector.x - radius, tempVector.y - radius)
+          .add(rectTexture.center)
+          .clamp(0, 0, rectActor.view.width, rectActor.view.height)
+          .add(rectTexture.x, rectTexture.y)
+          .floor();
 
-      //console.log(xPos, yPos)
+      end.set(tempVector.x + radius, tempVector.y + radius)
+          .add(rectTexture.center)
+          .clamp(0, 0, rectActor.view.width, rectActor.view.height)
+          .add(rectTexture.x, rectTexture.y)
+          .ceil();
 
-      start.set(Math.floor(xPos) - radius, Math.floor(yPos) - radius)
-          .clamp(0, 0, rectActor.view.width, rectActor.view.height);
-      end.set(Math.ceil(xPos) + radius, Math.ceil(yPos) + radius)
-          .clamp(0, 0, rectActor.view.width, rectActor.view.height);
-
+      // set pessimistic min/max x/y
       var xMin = end.x,
           xMax = start.x,
           yMin = end.y,
           yMax = start.y;
-
-      //console.log(start, end)
-
 
       for (var row = start.y; row < end.y; row++) {
         for (var col = start.x; col < end.x; col++) {
@@ -75,11 +77,16 @@ define([
       }
 
       if (xMax >= xMin && yMax >= yMin) {
-        dest.set(xMin, yMin, xMax - xMin + 1, yMax - yMin + 1);
-        console.log(rectPosition, circlePosition, start, end)
-        console.log(xPos, yPos, dest)
-        //console.log(dest)
+
+        /*
+         * set the data and then translate back from
+         * actor's image-space to actor-space
+         */
+        dest.set(xMin, yMin, xMax - xMin + 1, yMax - yMin + 1)
+            .translate(-rectTexture.x - rectTexture.center.x,
+                -rectTexture.y - rectTexture.center.y);
       } else {
+        // no intersection
         dest.set(0, 0, 0, 0);
       }
 

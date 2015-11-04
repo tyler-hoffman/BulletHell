@@ -8,7 +8,7 @@ define([
     'd2/actors/controllers/paths/ifElse',
     'd2/utils/rectangle',
     'd2/utils/vector',
-    'd2/collisionDetection/RectangleToCircleDetector',
+    'd2/collisionDetection/rectangleToCircleDetector',
     'ships/dragonWing',
     'ships/bossShip',
     'text/gameText',
@@ -27,12 +27,11 @@ define([
 
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
-    const MAGNIFICATION = 4;
+    const MAGNIFICATION = 8;
 
     var GameplayScreen = function(canvas, animator, keyboard) {
       Scene.call(this, canvas, animator);
       this.keyboard = keyboard;
-
       this.actorManager = new ImageBasedActorManager();
       this.shaderProgram = new DefaultShader(this.gl).getProgram();
       this.detector = new Detector();
@@ -139,6 +138,7 @@ define([
     GameplayScreen.prototype.setPlayer = function(ship) {
       ship.setBufferBitAsPlayer(true);
       this.addShip(ship);
+      ship.rotation = Math.PI / 2;
       this.player = ship;
     };
 
