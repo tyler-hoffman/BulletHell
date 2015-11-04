@@ -20,14 +20,14 @@ define([
     'd2/scenes/scene'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
         Script, LinearMove, Repeat, IfElse,
-        SimpleRectangle, Vector, Detector,
+        Rectangle, Vector, Detector,
         DragonWing, BossShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
         RenderInfo, DefaultShader, Scene) {
 
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
-    const MAGNIFICATION = 8;
+    const MAGNIFICATION = 4;
 
     var GameplayScreen = function(canvas, animator, keyboard) {
       Scene.call(this, canvas, animator);
@@ -35,7 +35,7 @@ define([
       this.actorManager = new ImageBasedActorManager();
       this.shaderProgram = new DefaultShader(this.gl).getProgram();
       this.detector = new Detector();
-      var worldBounds = new SimpleRectangle(0, 0, this.width, this.height);
+      var worldBounds = new Rectangle(0, 0, this.width, this.height);
       this.quadTree = new QuadTree(worldBounds, 10, 10);
 
       this.gameState = {
