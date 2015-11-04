@@ -79,7 +79,7 @@ define([
           actorManager.addActor(letters[i]);
         }
       });
-      this.textField.depth = .9;
+      this.textField.depth = .2;
 
       this.emitters = [];
       var gameState = this.gameState;
@@ -142,6 +142,7 @@ define([
       ship.setBufferBitAsPlayer(true);
       this.addShip(ship);
       ship.rotation = Math.PI / 3;
+      ship.setScale(8);
       this.player = ship;
     };
 
