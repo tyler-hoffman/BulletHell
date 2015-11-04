@@ -109,5 +109,15 @@ define(function() {
     return this;
   };
 
+  Vector.prototype.floor = function() {
+    this.x = Math.floor(this.x);
+    this.y = Math.floor(this.y);
+  };
+
+  Vector.prototype.ceil = function() {
+    this.x = Math.ceil(this.x);
+    this.y = Math.ceil(this.y);
+  };
+
   return Vector;
 });
