@@ -16,7 +16,8 @@ define([
     }
   };
 
-  var Wave = function() {
+  var Wave = function(level) {
+    this.level = level;
     Script.call(this);
     this.ships = [];
   };
@@ -26,11 +27,17 @@ define([
   Wave.prototype.afterTime = function(time, ship, controller) {
     this.addStep(new Wait(time));
     this.addStep(new SpawnShip(ship, controller));
+    return this;
   };
 
   Wave.prototype.whenShipsLeft = function(remaining, ship, controller) {
     this.addStep(new ShipsRemaining(remaining || 0));
     this.addStep(new SpawnShip(ship, controller));
+    return this;
+  };
+
+  Wave.prototype.end = function() {
+    return this.level;
   };
 
   Wave.prototype.getNumShips = function() {
