@@ -34,6 +34,7 @@ define([
               .set(mountPoint)
               .add(this.bounds.x, this.bounds.y)
               .scale(this.scale.x)
+              .rotate(this.rotation)
               .add(this.position));
 
           emitter.update(deltaTime);
@@ -74,7 +75,7 @@ define([
     Ship.prototype.notify = function(emitEvent) {
       emitEvent.emitter = this;
       emitEvent.emitted.collisionBits = this.bulletCollisionBits;
-      
+
       this.notifyObservers(emitEvent);
     };
 

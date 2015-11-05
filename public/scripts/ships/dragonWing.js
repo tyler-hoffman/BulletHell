@@ -35,7 +35,7 @@ define([
           view,
           position,
           mountPoints,
-          null,//gunFactory.generateGunSet(),
+          gunFactory.generateGunSet(),
           MAX_HP
           );
     };
