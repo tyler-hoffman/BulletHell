@@ -9,8 +9,8 @@ define([
     'bullets/blueBullet'
   ], function(Emitter, Splitter, Rotator, EmitEvent, Ship, BlueBullet) {
 
-    const EMIT_RATE     = 0.1;
-    const BULLET_SPEED  = 20;
+    const EMIT_RATE     = 1.0;
+    const BULLET_SPEED  = 60;
 
     var bulletFactory = function(position, velocity, fromTime) {
       var bullet = new BlueBullet(
@@ -28,7 +28,7 @@ define([
 
     DualSprayGunFactory.prototype.generateEmitter = function() {
       var emitter = new Emitter(EMIT_RATE, bulletFactory);
-      emitter.addDecorator(new Splitter(40));//, Math.PI * 0.4));
+      emitter.addDecorator(new Splitter(6));
       return emitter;
     };
 
