@@ -10,7 +10,7 @@ define([
     Level.prototype = new Script();
 
     Level.prototype.newWave = function() {
-      var wave = new Wave();
+      var wave = new Wave(this);
       this.addStep(wave);
       return wave;
     };

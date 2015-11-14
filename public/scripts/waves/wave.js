@@ -18,7 +18,7 @@ define([
 
   var Wave = function(level) {
     this.level = level;
-    Script.call(this);
+    Script.call(this, level);
     this.ships = [];
   };
 
@@ -54,7 +54,8 @@ define([
   };
 
   Wave.prototype.addShip = function(ship) {
-    this.ships.push(ship)
+    console.log('ADD SHIP')
+    this.ships.push(ship);
     this.notifyObservers(new ActorEvent('actorEvent.spawn', ship));
   }
 
