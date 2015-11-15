@@ -10,7 +10,7 @@ define(['d2/utils/vector'], function(Vector) {
     this.reset();
   };
 
-  IfElse.prototype.update = function(subject, deltaTime) {
+  IfElse.prototype.update = function(deltaTime, subject) {
 
     if (!this.evaluatedCondition) {
       this.evaluateCondition(subject);

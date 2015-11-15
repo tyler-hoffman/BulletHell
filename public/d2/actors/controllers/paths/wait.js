@@ -11,7 +11,7 @@ define(function() {
     this.time = this.initialTime;
   };
 
-  Wait.prototype.update = function(subject, deltaTime) {
+  Wait.prototype.update = function(deltaTime, subject) {
     if (deltaTime <= this.time) {
       this.time -= deltaTime;
       deltaTime = 0;

@@ -1,22 +1,29 @@
 "use strict"
 
 define([
+    'd2/actors/observable',
     'd2/actors/actorEvent'
-  ], function(ActorEvent) {
+  ], function(Observable, ActorEvent) {
 
   var SpawnShip = function(ship, controller) {
+    Observable.call(this);
     this.ship = ship;
     this.shipController = controller;
   };
 
-  SpawnShip.prototype.update = function(subject, deltaTime) {
+  SpawnShip.prototype = Object.create(Observable.prototype);
+
+  SpawnShip.prototype.update = function(deltaTime, subject) {
     var ship = (typeof this.ship === 'function')?
         this.ship()
         : this.ship;
     ship.controller = (typeof this.controller === 'function')?
         this.controller(ship.position)
         : this.controller;
-    subject.addShip(ship);
+
+    // dispatch event to spawn ship
+    this.notifyObservers(new ActorEvent('actorEvent.spawn', ship));
+
     return deltaTime;
   };
 

@@ -28,7 +28,7 @@ define([
      * @return {Number} Returns the amount of time that was not used by the script.
      *    This should be zero, unless all steps are completed.
      */
-    Repeat.prototype.update = function(subject, deltaTime) {
+    Repeat.prototype.update = function(deltaTime, subject) {
 
       // as long as there's time and repetitions left, do the substeps
       while (deltaTime > 0 && this.repetitionsLeft > 0) {

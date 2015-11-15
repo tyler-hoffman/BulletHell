@@ -30,7 +30,7 @@ define([
      * @return {Number} Returns the amount of time unused by the step.
      *    This will be zero unless the step completes.
      */
-    LinearMove.prototype.update = function(position, deltaTime) {
+    LinearMove.prototype.update = function(deltaTime, position) {
       var destination = this.destination,
           maxDistance = deltaTime * this.velocity,
           distance = temp.set(destination)

@@ -8,17 +8,17 @@ define([
     this.maxShips = maxShips;
   };
 
-  ShipsRemaining.prototype.update = function(wave, deltaTime) {
+  ShipsRemaining.prototype.update = function(deltaTime, wave) {
     if (wave.getNumShps() > this.maxShips) {
-      return 0;
+      deltaTime = 0;
     } else {
-      return deltaTime;
     }
+    return deltaTime;
   };
 
   var Wave = function(level) {
-    this.level = level;
     Script.call(this, level);
+    this.level = level;
     this.ships = [];
   };
 
@@ -52,12 +52,6 @@ define([
     }
     return numShips;
   };
-
-  Wave.prototype.addShip = function(ship) {
-    console.log('ADD SHIP')
-    this.ships.push(ship);
-    this.notifyObservers(new ActorEvent('actorEvent.spawn', ship));
-  }
 
   return Wave;
 });

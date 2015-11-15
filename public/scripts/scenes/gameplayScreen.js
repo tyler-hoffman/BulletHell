@@ -18,6 +18,7 @@ define([
     'd2/rendering/rotatedRenderer',
     'emitters/emitEvent',
     'utils/renderInfo',
+    'waves/level',
     'shaders/rotatedShader',
     'd2/scenes/scene'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
@@ -25,7 +26,7 @@ define([
         Rectangle, Vector, Detector,
         DragonWing, BossShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
-        RenderInfo, DefaultShader, Scene) {
+        RenderInfo, Level, DefaultShader, Scene) {
 
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
@@ -39,6 +40,16 @@ define([
       this.detector = new Detector();
       var worldBounds = new Rectangle(0, 0, this.width, this.height);
       this.quadTree = new QuadTree(worldBounds, 10, 10);
+
+      this.level = new Level()
+          .newWave()
+              .afterTime(1, new BossShip())
+              .end();
+      this.level.addObserver(this);
+
+      // what is this???
+      this.addObserver(this);
+
 
       this.gameState = {
         worldBounds: worldBounds
@@ -106,6 +117,7 @@ define([
     GameplayScreen.prototype = new Scene();
 
     GameplayScreen.prototype.onFrame = function(deltaTime) {
+      this.level.update(deltaTime);
       this.renderInfo.update(deltaTime)
       this.quadTree.clear();
       this.handleInput(deltaTime);
@@ -134,6 +146,15 @@ define([
         case EmitEvent.EMIT:
           event.emitted.setScale(MAGNIFICATION);
           this.actorManager.addActor(event.emitted);
+          break;
+
+        case 'actorEvent.spawn':
+          console.log('-- spawned SHIP');
+          this.addEnemyShip(event.actor);
+          break;
+
+        default:
+          console.log('-- OTHER');
           break;
       }
     };

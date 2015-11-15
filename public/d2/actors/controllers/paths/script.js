@@ -10,17 +10,20 @@
  * The role of the script is primarily to determine which
  *  step control should be passed to.
  */
-define(function() {
+define(['d2/actors/observable'], function(Observable) {
 
   /**
    * Create a new Script
    * @param {Object} subject The thing this is a script for
    */
   var Script = function(subject) {
+    Observable.call(this);
     this.steps = [];
     this.currentStepIndex = 0;
     this.subject = subject;
   };
+
+  Script.prototype = Object.create(Observable.prototype);
 
   /**
    * Add a step to the script.
@@ -29,8 +32,15 @@ define(function() {
    * @return Returns reference to this for chaining
    */
   Script.prototype.addStep = function(step) {
+    if (step.addObserver) {
+      step.addObserver(this);
+    }
     this.steps.push(step);
     return this;
+  };
+
+  Script.prototype.notify = function(event) {
+    this.notifyObservers(event);
   };
 
   /**
@@ -43,10 +53,13 @@ define(function() {
    */
   Script.prototype.update = function(deltaTime, subject) {
     subject = subject || this.subject;
+    if (typeof deltaTime != 'number') {
+      throw new Error('non-number passed as deltaTime');
+    }
     while (deltaTime > 0 && this.currentStepIndex < this.steps.length) {
       var step = this.steps[this.currentStepIndex];
 
-      deltaTime = step.update(subject, deltaTime);
+      deltaTime = step.update(deltaTime, subject);
 
       if (deltaTime > 0) {
         this.currentStepIndex++;
