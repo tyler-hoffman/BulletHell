@@ -54,6 +54,7 @@ define([
 
       var player = new DragonWing(
           new Vector(this.width / 2, this.height * 0.75));
+
       player.controller = new VelocityController(player.position, 100);
       this.setPlayer(player);
 
@@ -61,7 +62,7 @@ define([
       this.enemyShips = [];
       var bossVelocity = 20;
       var boss = new BossShip(new Vector(this.width / 2, this.height * 0.25));
-      boss.controller = new Script(boss.position)
+      var enemyController = new Script(boss.position)
           .addStep(new Wait(5))
           .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
           .addStep(new Repeat(5)
@@ -78,6 +79,7 @@ define([
                   .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
               )
             );
+      boss.setController(enemyController);
       this.addEnemyShip(boss);
 
       var actorManager = this.actorManager;

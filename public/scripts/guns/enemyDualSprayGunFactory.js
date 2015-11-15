@@ -28,7 +28,7 @@ define([
 
     DualSprayGunFactory.prototype.generateEmitter = function() {
       var emitter = new Emitter(EMIT_RATE, bulletFactory);
-      emitter.addDecorator(new Splitter(40));//, Math.PI * 0.4));
+      emitter.addDecorator(new Splitter(6));//, Math.PI * 0.4));
       return emitter;
     };
 
