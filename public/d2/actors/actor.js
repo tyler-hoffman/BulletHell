@@ -47,7 +47,7 @@ define([
       deltaTime = deltaTime || 0;
 
       if (this.controller) {
-        this.controller.update(deltaTime);//, this.position);
+        this.controller.update(deltaTime, this.position);//, this.position);
       }
 
       this.updateBounds();

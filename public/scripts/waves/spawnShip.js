@@ -8,7 +8,7 @@ define([
   var SpawnShip = function(ship, controller) {
     Observable.call(this);
     this.ship = ship;
-    this.shipController = controller;
+    this.controller = controller;
   };
 
   SpawnShip.prototype = Object.create(Observable.prototype);
@@ -17,11 +17,12 @@ define([
     var ship = (typeof this.ship === 'function')?
         this.ship()
         : this.ship;
-    ship.controller = (typeof this.controller === 'function')?
+    ship.setController((typeof this.controller === 'function')?
         this.controller(ship.position)
-        : this.controller;
+        : this.controller);
 
     // dispatch event to spawn ship
+    console.log(this.controller)
     this.notifyObservers(new ActorEvent('actorEvent.spawn', ship));
 
     return deltaTime;

@@ -41,11 +41,7 @@ define([
       var worldBounds = new Rectangle(0, 0, this.width, this.height);
       this.quadTree = new QuadTree(worldBounds, 10, 10);
 
-      this.level = new Level()
-          .newWave()
-              .afterTime(1, new BossShip())
-              .end();
-      this.level.addObserver(this);
+
 
 
       this.gameState = {
@@ -60,27 +56,43 @@ define([
 
 
       this.enemyShips = [];
-      var bossVelocity = 20;
+      var bossVelocity = 200;
       var boss = new BossShip(new Vector(this.width / 2, this.height * 0.25));
-      var enemyController = new Script(boss.position)
-          .addStep(new Wait(5))
-          .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
-          .addStep(new Repeat(5)
-              .addStep(new IfElse(function() {
-                  return player.position.y < boss.position.y;
-                },
-                new LinearMove(new Vector(100, 600), bossVelocity),
-                new LinearMove(new Vector(100, 100), bossVelocity)
-              ))
-              .addStep(new LinearMove(new Vector(100, 100), bossVelocity))
-              .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
-              .addStep(new Repeat(2)
-                  .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
-                  .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
-              )
-            );
-      boss.setController(enemyController);
+      var createEnemyController = function() {
+        return new Script()
+            .addStep(new Wait(0.2))
+            .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
+            .addStep(new Repeat(5)
+                .addStep(new IfElse(function() {
+                    return player.position.y < boss.position.y;
+                  },
+                  new LinearMove(new Vector(100, 600), bossVelocity),
+                  new LinearMove(new Vector(100, 100), bossVelocity)
+                ))
+                .addStep(new LinearMove(new Vector(100, 100), bossVelocity))
+                .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
+                .addStep(new Repeat(2)
+                    .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
+                    .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
+                )
+              );
+      };
+      boss.setController(createEnemyController());
       this.addEnemyShip(boss);
+      var xCenter = this.width / 2;
+      this.level = new Level()
+          .newWave()
+              .afterTime(1, new function() {
+                return new BossShip(new Vector(xCenter, 0));
+              }, createEnemyController)
+              .afterTime(1, new function() {
+                return new BossShip(new Vector(xCenter, 0));
+              }, createEnemyController)
+              .afterTime(1, new function() {
+                return new BossShip(new Vector(xCenter, 0));
+              }, createEnemyController)
+              .end();
+      this.level.addObserver(this);
 
       var actorManager = this.actorManager;
       this.textField = new GameText('', 2, function(letters) {

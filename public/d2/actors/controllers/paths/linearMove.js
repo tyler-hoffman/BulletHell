@@ -36,7 +36,7 @@ define([
           distance = temp.set(destination)
               .subtract(position)
               .length();
-      console.log('test');
+
       if (distance <  maxDistance) {
         var timeUsed = distance / maxDistance;
 

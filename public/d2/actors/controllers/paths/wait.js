@@ -12,7 +12,6 @@ define(function() {
   };
 
   Wait.prototype.update = function(deltaTime, subject) {
-    console.log('wait')
     if (deltaTime <= this.time) {
       this.time -= deltaTime;
       deltaTime = 0;
