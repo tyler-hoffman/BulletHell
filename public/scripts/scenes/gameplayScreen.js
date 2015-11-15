@@ -47,9 +47,6 @@ define([
               .end();
       this.level.addObserver(this);
 
-      // what is this???
-      this.addObserver(this);
-
 
       this.gameState = {
         worldBounds: worldBounds
@@ -57,7 +54,6 @@ define([
 
       var player = new DragonWing(
           new Vector(this.width / 2, this.height * 0.75));
-      //player.rotation = Math.PI / 2;
       player.controller = new VelocityController(player.position, 100);
       this.setPlayer(player);
 
@@ -149,12 +145,11 @@ define([
           break;
 
         case 'actorEvent.spawn':
-          console.log('-- spawned SHIP');
           this.addEnemyShip(event.actor);
           break;
 
         default:
-          console.log('-- OTHER');
+          console.log('Unknown Event Dispatched');
           break;
       }
     };
@@ -162,8 +157,6 @@ define([
     GameplayScreen.prototype.setPlayer = function(ship) {
       ship.setBufferBitAsPlayer(true);
       this.addShip(ship);
-      ship.rotation = Math.PI / 3;
-      ship.setScale(8);
       this.player = ship;
     };
 
