@@ -41,9 +41,6 @@ define([
       var worldBounds = new Rectangle(0, 0, this.width, this.height);
       this.quadTree = new QuadTree(worldBounds, 10, 10);
 
-
-
-
       this.gameState = {
         worldBounds: worldBounds
       };
@@ -57,14 +54,13 @@ define([
 
       this.enemyShips = [];
       var bossVelocity = 200;
-      var boss = new BossShip(new Vector(this.width / 2, this.height * 0.25));
-      var createEnemyController = function() {
-        return new Script()
+      var createEnemyController = function(subject) {
+        return new Script(subject)
             .addStep(new Wait(0.2))
             .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
             .addStep(new Repeat(5)
                 .addStep(new IfElse(function() {
-                    return player.position.y < boss.position.y;
+                    return player.position.y < subject.position.y;
                   },
                   new LinearMove(new Vector(100, 600), bossVelocity),
                   new LinearMove(new Vector(100, 100), bossVelocity)
@@ -77,20 +73,29 @@ define([
                 )
               );
       };
-      boss.setController(createEnemyController());
-      this.addEnemyShip(boss);
       var xCenter = this.width / 2;
       this.level = new Level()
           .newWave()
               .afterTime(1, new function() {
-                return new BossShip(new Vector(xCenter, 0));
-              }, createEnemyController)
+                var ship = new BossShip(new Vector(xCenter, 0));
+                ship.setController(createEnemyController(ship));
+                return ship;
+              })
               .afterTime(1, new function() {
-                return new BossShip(new Vector(xCenter, 0));
-              }, createEnemyController)
+                var ship = new BossShip(new Vector(xCenter, 0));
+                ship.setController(createEnemyController(ship));
+                return ship;
+              })
               .afterTime(1, new function() {
-                return new BossShip(new Vector(xCenter, 0));
-              }, createEnemyController)
+                var ship = new BossShip(new Vector(xCenter, 0));
+                ship.setController(createEnemyController(ship));
+                return ship;
+              })
+              .afterTime(1, new function() {
+                var ship = new BossShip(new Vector(xCenter, 0));
+                ship.setController(createEnemyController(ship));
+                return ship;
+              })
               .end();
       this.level.addObserver(this);
 

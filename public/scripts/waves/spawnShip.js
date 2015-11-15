@@ -17,9 +17,12 @@ define([
     var ship = (typeof this.ship === 'function')?
         this.ship()
         : this.ship;
-    ship.setController((typeof this.controller === 'function')?
-        this.controller(ship.position)
-        : this.controller);
+
+    if (this.controller) {
+      ship.setController((typeof this.controller === 'function')?
+          this.controller(ship.position)
+          : this.controller);
+    }
 
     // dispatch event to spawn ship
     console.log(this.controller)
