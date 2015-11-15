@@ -10,7 +10,7 @@ define(['d2/utils/vector'], function(Vector) {
     this.reset();
   };
 
-  IfElse.prototype.update = function(subject, deltaTime) {
+  IfElse.prototype.update = function(deltaTime, subject) {
 
     if (!this.evaluatedCondition) {
       this.evaluateCondition(subject);
@@ -19,9 +19,9 @@ define(['d2/utils/vector'], function(Vector) {
     var action = (this.evaluation)? this.consequent: this.alternative;
 
     if (typeof action === 'function') {
-      deltaTime = action(subject, deltaTime);
+      deltaTime = action(deltaTime, subject);
     } else {
-      deltaTime = action.update(subject, deltaTime);
+      deltaTime = action.update(deltaTime, subject);
     }
 
     // if leftover deltaTime, then the callback finished, so reset this

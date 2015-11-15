@@ -35,6 +35,10 @@ define([
 
     Actor.prototype = new Observable();
 
+    Actor.prototype.setController = function(controller) {
+      this.controller = controller;
+    };
+
     Actor.prototype.setScale = function(x, y) {
       this.scale.set(x, y | x);
     };
@@ -43,7 +47,7 @@ define([
       deltaTime = deltaTime || 0;
 
       if (this.controller) {
-        this.controller.update(deltaTime);
+        this.controller.update(deltaTime, this.position);//, this.position);
       }
 
       this.updateBounds();
