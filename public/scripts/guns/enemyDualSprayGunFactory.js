@@ -9,8 +9,8 @@ define([
     'bullets/blueBullet'
   ], function(Emitter, Splitter, Rotator, EmitEvent, Ship, BlueBullet) {
 
-    const EMIT_RATE     = 1.0;
-    const BULLET_SPEED  = 60;
+    const EMIT_RATE     = 2.0;
+    const BULLET_SPEED  = 200;
 
     var bulletFactory = function(position, velocity, fromTime) {
       var bullet = new BlueBullet(

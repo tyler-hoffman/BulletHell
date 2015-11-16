@@ -12,18 +12,18 @@ define([
     const MAX_HP = 20;
 
     var shipWidth = 23,
-        shipHeight = 13;
+        shipHeight = 14;
 
     var gunFactory = new GunFactory();
 
     var mountPoints = {
-      LEFT_WING_MOUNT: new Vector(20, 12),
-      RIGHT_WING_MOUNT: new Vector(3, 12)
+      LEFT_WING_MOUNT: new Vector(4, 0),
+      RIGHT_WING_MOUNT: new Vector(20, 0)
     };
 
     var view = new TextureRegion(
       image,
-      new Rectangle(9, 19, shipWidth, shipHeight),
+      new Rectangle(9, 18, shipWidth, shipHeight),
       new Vector(shipWidth / 2, shipHeight / 2)
     );
 

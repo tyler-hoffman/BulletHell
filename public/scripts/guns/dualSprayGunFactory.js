@@ -9,8 +9,8 @@ define([
     'bullets/greenBullet'
   ], function(Emitter, Splitter, Rotator, EmitEvent, Ship, GreenBullet) {
 
-    const EMIT_RATE     = 0.1;
-    const BULLET_SPEED  = 600;
+    const EMIT_RATE     = 0.4;
+    const BULLET_SPEED  = 200;
 
     var bulletFactory = function(position, velocity, fromTime) {
       var bullet = new GreenBullet(

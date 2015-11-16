@@ -53,7 +53,7 @@ define([
 
 
       this.enemyShips = [];
-      var bossVelocity = 200;
+      var bossVelocity = 80;
       var createEnemyController = function(subject) {
         return new Script(subject)
             .addStep(new Wait(0.2))
@@ -81,17 +81,17 @@ define([
                 ship.setController(createEnemyController(ship));
                 return ship;
               })
-              .afterTime(1, new function() {
+              .afterTime(10, new function() {
                 var ship = new BossShip(new Vector(xCenter, 0));
                 ship.setController(createEnemyController(ship));
                 return ship;
               })
-              .afterTime(1, new function() {
+              .afterTime(10, new function() {
                 var ship = new BossShip(new Vector(xCenter, 0));
                 ship.setController(createEnemyController(ship));
                 return ship;
               })
-              .afterTime(1, new function() {
+              .afterTime(10, new function() {
                 var ship = new BossShip(new Vector(xCenter, 0));
                 ship.setController(createEnemyController(ship));
                 return ship;
