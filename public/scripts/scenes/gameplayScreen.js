@@ -5,9 +5,6 @@ define([
     'd2/scripts/script',
     'd2/actors/controllers/paths/linearMove',
     'd2/scripts/repeat',
-    'd2/scripts/ifElse',
-    'd2/scripts/action',
-    'd2/scripts/wait',
     'waves/wave',
     'd2/utils/rectangle',
     'd2/utils/vector',
@@ -24,7 +21,7 @@ define([
     'shaders/rotatedShader',
     'd2/scenes/scene'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
-        Script, LinearMove, Repeat, IfElse, Action, Wait, Wave,
+        Script, LinearMove, Repeat, Wave,
         Rectangle, Vector, Detector,
         DragonWing, BossShip, SpinShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
@@ -58,15 +55,15 @@ define([
       var bossVelocity = 80;
       var createEnemyController = function(subject) {
         return new Script(subject)
-            .addStep(new Wait(0.2))
+            .wait(0.2)
             .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
             .addStep(new Repeat(5)
-                .addStep(new IfElse(function() {
+                .ifElse(function() {
                     return player.position.y < subject.position.y;
                   },
                   new LinearMove(new Vector(100, 600), bossVelocity),
                   new LinearMove(new Vector(100, 100), bossVelocity)
-                ))
+                )
                 .addStep(new LinearMove(new Vector(100, 100), bossVelocity))
                 .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
                 .addStep(new Repeat(2)
