@@ -2,16 +2,14 @@
 
 define(function() {
 
-  var ArbitraryAction = function(callback) {
+  var Action = function(callback) {
     this.callback = callback;
   };
 
-  ArbitraryAction.prototype.update = function(deltaTime, subject) {
-
+  Action.prototype.update = function(deltaTime, subject) {
     this.callback(deltaTime, subject);
-
     return deltaTime;
   };
 
-  return ArbitraryAction;
+  return Action;
 });

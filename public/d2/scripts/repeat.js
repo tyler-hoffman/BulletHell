@@ -4,7 +4,7 @@
  * A Script Step to execute a subscript a given number of times
  */
 define([
-    'd2/actors/controllers/paths/script'
+    'd2/scripts/script'
 
   ], function(Script) {
 

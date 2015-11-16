@@ -1,6 +1,6 @@
 define([
-    'd2/actors/controllers/paths/script',
-    'd2/actors/controllers/paths/wait',
+    'd2/scripts/script',
+    'd2/scripts/wait',
     'waves/spawnShip'
   ], function(Script, Wait, SpawnShip) {
 

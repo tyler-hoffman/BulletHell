@@ -51,7 +51,6 @@ define([
 
         deltaTime = 0;
       }
-      console.log(destination)
       return deltaTime;
     };
 

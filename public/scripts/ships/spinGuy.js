@@ -10,13 +10,13 @@ define([
 ], function(Ship, Vector, Rectangle, TextureRegion, GunFactory, image) {
 
     const MAX_HP = 20,
-        FAST_SPIN = Math.PI / 4,
+        FAST_SPIN = Math.PI / 1.5,
         NORMAL_SPIN = Math.PI / 8,
-        FAST_EMIT = 0.1,
+        FAST_EMIT = 0.14,
         NORMAL_EMIT = 0.4;
 
-    var shipWidth = 12,
-        shipHeight = 12;
+    var shipWidth = 13,
+        shipHeight = 13;
 
     var gunFactory = new GunFactory();
 

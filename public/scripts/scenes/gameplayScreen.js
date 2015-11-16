@@ -2,12 +2,12 @@ define([
     'd2/collections/imageBasedActorManager',
     'd2/actors/actorEvent',
     'd2/actors/controllers/physics/velocityController',
-    'd2/actors/controllers/paths/script',
+    'd2/scripts/script',
     'd2/actors/controllers/paths/linearMove',
-    'd2/actors/controllers/paths/repeat',
-    'd2/actors/controllers/paths/ifElse',
-    'd2/actors/controllers/paths/arbitraryAction',
-    'd2/actors/controllers/paths/wait',
+    'd2/scripts/repeat',
+    'd2/scripts/ifElse',
+    'd2/scripts/action',
+    'd2/scripts/wait',
     'waves/wave',
     'd2/utils/rectangle',
     'd2/utils/vector',
@@ -75,29 +75,36 @@ define([
                 )
               );
       };
+      var width = this.width;
       var createSpinnerController = function(spinner) {
-        var spinnerVelocity = 120;
+        var spinnerVelocity = 200,
+            left = width / 4,
+            right = left * 3,
+            y = 100;
         return new Script(spinner)
-            .addStep(new Action(function() {
+            .action(function() {
               spinner.passiveMode();
-            }))
+            })
             .addStep(new Repeat()
-              .addStep(new LinearMove(new Vector(200, 300), spinnerVelocity))
-              .addStep(new Action(function() {
-                spinner.chaosMode();
-              }))
-              .addStep(new Wait(2))
-              .addStep(new Action(function() {
-                spinner.passiveMode();
-              }))
-              .addStep(new LinearMove(new Vector(800, 300), spinnerVelocity))
-              .addStep(new Action(function() {
-                spinner.chaosMode();
-              }))
-              .addStep(new Wait(2))
-              .addStep(new Action(function() {
-                spinner.passiveMode();
-              })));
+                  .addStep(new LinearMove(new Vector(left, y), spinnerVelocity))
+                  .action(function() {
+                    spinner.chaosMode();
+                  })
+                  .wait(3)
+                  .action(function() {
+                    spinner.passiveMode();
+                  })
+                  .wait(0.2)
+                  .addStep(new LinearMove(new Vector(right, y), spinnerVelocity))
+                  .action(function() {
+                    spinner.chaosMode();
+                  })
+                  .wait(3)
+                  .action(function() {
+                    spinner.passiveMode();
+                  })
+                  .wait(0.2)
+            );
       };
 
       var xCenter = this.width / 2;

@@ -25,7 +25,6 @@ define([
     }
 
     // dispatch event to spawn ship
-    console.log(this.controller)
     this.notifyObservers(new ActorEvent('actorEvent.spawn', ship));
 
     return deltaTime;

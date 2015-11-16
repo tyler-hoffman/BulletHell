@@ -1,5 +1,5 @@
 define([
-    'd2/actors/controllers/paths/script',
+    'd2/scripts/script',
     'waves/wave'
   ], function(Script, Wave) {
 
