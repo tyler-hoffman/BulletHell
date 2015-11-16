@@ -6,6 +6,7 @@ define([
     'd2/actors/controllers/paths/linearMove',
     'd2/actors/controllers/paths/repeat',
     'd2/actors/controllers/paths/ifElse',
+    'd2/actors/controllers/paths/arbitraryAction',
     'd2/actors/controllers/paths/wait',
     'waves/wave',
     'd2/utils/rectangle',
@@ -13,6 +14,7 @@ define([
     'd2/collisionDetection/rectangleToCircleDetector',
     'ships/dragonWing',
     'ships/bossShip',
+    'ships/spinGuy',
     'text/gameText',
     'd2/utils/quadTree',
     'd2/rendering/rotatedRenderer',
@@ -22,9 +24,9 @@ define([
     'shaders/rotatedShader',
     'd2/scenes/scene'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
-        Script, LinearMove, Repeat, IfElse, Wait, Wave,
+        Script, LinearMove, Repeat, IfElse, Action, Wait, Wave,
         Rectangle, Vector, Detector,
-        DragonWing, BossShip, GameText, QuadTree,
+        DragonWing, BossShip, SpinShip, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
         RenderInfo, Level, DefaultShader, Scene) {
 
@@ -73,17 +75,42 @@ define([
                 )
               );
       };
+      var createSpinnerController = function(spinner) {
+        var spinnerVelocity = 120;
+        return new Script(spinner)
+            .addStep(new Action(function() {
+              spinner.passiveMode();
+            }))
+            .addStep(new Repeat()
+              .addStep(new LinearMove(new Vector(200, 300), spinnerVelocity))
+              .addStep(new Action(function() {
+                spinner.chaosMode();
+              }))
+              .addStep(new Wait(2))
+              .addStep(new Action(function() {
+                spinner.passiveMode();
+              }))
+              .addStep(new LinearMove(new Vector(800, 300), spinnerVelocity))
+              .addStep(new Action(function() {
+                spinner.chaosMode();
+              }))
+              .addStep(new Wait(2))
+              .addStep(new Action(function() {
+                spinner.passiveMode();
+              })));
+      };
+
       var xCenter = this.width / 2;
       this.level = new Level()
           .newWave()
+              // .afterTime(1, new function() {
+              //   var ship = new BossShip(new Vector(xCenter, 0));
+              //   ship.setController(createEnemyController(ship));
+              //   return ship;
+              // })
               .afterTime(1, new function() {
-                var ship = new BossShip(new Vector(xCenter, 0));
-                ship.setController(createEnemyController(ship));
-                return ship;
-              })
-              .afterTime(10, new function() {
-                var ship = new BossShip(new Vector(xCenter, 0));
-                ship.setController(createEnemyController(ship));
+                var ship = new SpinShip(new Vector(xCenter, 0));
+                ship.setController(createSpinnerController(ship));
                 return ship;
               })
               .afterTime(10, new function() {

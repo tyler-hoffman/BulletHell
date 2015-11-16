@@ -80,11 +80,28 @@ define([
     };
 
     Ship.prototype.setGunSet = function(gunSet) {
+
+      if (this.gunSet) {
+        this.removeGunSet();
+      }
+
       this.gunSet = gunSet;
 
       if (this.gunSet) {
         for (var gun in this.gunSet) {
           this.gunSet[gun].addObserver(this);
+        }
+      }
+    };
+
+    Ship.prototype.getGunSet = function() {
+      return this.gunSet;
+    };
+
+    Ship.prototype.removeGunSet = function() {
+      if (this.gunSet) {
+        for (var gun in this.gunSet) {
+          this.gunSet[gun].removeObserver(this);
         }
       }
     };

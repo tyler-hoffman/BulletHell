@@ -19,6 +19,7 @@ define([
       this.emitRate = emitRate || 0;
       this.angle = 0;
       this.factory = factory;
+      this.isEnabled = true;
 
       if (decorators) {
         var that = this;
@@ -30,26 +31,35 @@ define([
 
     Emitter.prototype = new Observable();
 
+    Emitter.prototype.enable = function(enabled) {
+      this.isEnabled = enabled;
+    };
+
+    Emitter.prototype.setEmitRate = function(emitRate) {
+      this.emitRate = emitRate;
+    };
+
     Emitter.prototype.update = function(deltaTime) {
-      var emitRate = this.emitRate;
-      this.time += deltaTime;
+      if (this.isEnabled) {
+        var emitRate = this.emitRate;
+        this.time += deltaTime;
 
-      while (this.time >= this.emitRate) {
+        while (this.time >= this.emitRate) {
 
-        var emission = new Emission(this.angle);
-        this.time -= this.emitRate;
+          var emission = new Emission(this.angle);
+          this.time -= this.emitRate;
 
-        this.decorateAll(emission);
-        this.emitAll(emission, this.time);
+          this.decorateAll(emission);
+          this.emitAll(emission, this.time);
 
-        // update decorators and decorate the emission
-        this.emissionDecorators.forEach(function(decorator) {
+          // update decorators and decorate the emission
+          this.emissionDecorators.forEach(function(decorator) {
 
-          // I like this, but you probably don't
-          decorator.update && decorator.update(emitRate);
-        });
+            // I like this, but you probably don't
+            decorator.update && decorator.update(emitRate);
+          });
+        }
       }
-
     };
 
     Emitter.prototype.decorateAll = function(emissionGroup) {

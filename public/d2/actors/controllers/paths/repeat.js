@@ -13,6 +13,9 @@ define([
      * @param {Number} repetitions The number of repetitions of the subscript
      */
     var Repeat = function(repetitions) {
+      if (repetitions === 'undefined') {
+        repetitions = -1;
+      }
       Script.call(this);
       this.maxRepetitions = repetitions;
       this.reset();
@@ -31,7 +34,7 @@ define([
     Repeat.prototype.update = function(deltaTime, subject) {
 
       // as long as there's time and repetitions left, do the substeps
-      while (deltaTime > 0 && this.repetitionsLeft > 0) {
+      while (deltaTime > 0 && this.repetitionsLeft != 0) {
         deltaTime = Script.prototype.update.call(this, deltaTime, subject);
 
         // if time left over from substep, move to next step
