@@ -103,5 +103,9 @@ define([
       return deltaTime;
     };
 
+    Script.prototype.getCurrentStep = function() {
+      return this.steps[this.currentStepIndex];
+    };
+
     return Script;
 });

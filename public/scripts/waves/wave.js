@@ -9,7 +9,7 @@ define([
   };
 
   ShipsRemaining.prototype.update = function(deltaTime, wave) {
-    if (wave.getNumShps() > this.maxShips) {
+    if (wave.getNumShips() > this.maxShips) {
       deltaTime = 0;
     } else {
     }
@@ -30,8 +30,9 @@ define([
     return this;
   };
 
-  Wave.prototype.whenShipsLeft = function(remaining, ship, controller) {
+  Wave.prototype.whenShipsLeft = function(remaining, time, ship, controller) {
     this.addStep(new ShipsRemaining(remaining || 0));
+    this.addStep(new Wait(time));
     this.addStep(new SpawnShip(ship, controller));
     return this;
   };

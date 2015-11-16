@@ -83,51 +83,48 @@ define([
               spinner.passiveMode();
             })
             .addStep(new Repeat()
-                  .addStep(new LinearMove(new Vector(left, y), spinnerVelocity))
-                  .action(function() {
-                    spinner.chaosMode();
-                  })
-                  .wait(3)
-                  .action(function() {
-                    spinner.passiveMode();
-                  })
-                  .wait(0.2)
-                  .addStep(new LinearMove(new Vector(right, y), spinnerVelocity))
-                  .action(function() {
-                    spinner.chaosMode();
-                  })
-                  .wait(3)
-                  .action(function() {
-                    spinner.passiveMode();
-                  })
-                  .wait(0.2)
+                .addStep(new LinearMove(new Vector(left, y), spinnerVelocity))
+                .action(function() {
+                  spinner.chaosMode();
+                })
+                .wait(3)
+                .action(function() {
+                  spinner.passiveMode();
+                })
+                .wait(0.2)
+                .addStep(new LinearMove(new Vector(right, y), spinnerVelocity))
+                .action(function() {
+                  spinner.chaosMode();
+                })
+                .wait(3)
+                .action(function() {
+                  spinner.passiveMode();
+                })
+                .wait(0.2)
             );
       };
 
       var xCenter = this.width / 2;
-      this.level = new Level()
-          .newWave()
-              // .afterTime(1, new function() {
-              //   var ship = new BossShip(new Vector(xCenter, 0));
-              //   ship.setController(createEnemyController(ship));
-              //   return ship;
-              // })
-              .afterTime(1, new function() {
-                var ship = new SpinShip(new Vector(xCenter, 0));
-                ship.setController(createSpinnerController(ship));
-                return ship;
-              })
-              .afterTime(10, new function() {
-                var ship = new BossShip(new Vector(xCenter, 0));
-                ship.setController(createEnemyController(ship));
-                return ship;
-              })
-              .afterTime(10, new function() {
-                var ship = new BossShip(new Vector(xCenter, 0));
-                ship.setController(createEnemyController(ship));
-                return ship;
-              })
-              .end();
+      var enemyShips = this.enemyShips;
+      this.level = new Level(function() {
+        return enemyShips.length;
+      }).newWave()
+          .afterTime(1, new function() {
+            var ship = new SpinShip(new Vector(xCenter, -100));
+            ship.setController(createSpinnerController(ship));
+            return ship;
+          })
+          .whenShipsLeft(0, 1, new function() {
+            var ship = new BossShip(new Vector(xCenter, 0));
+            ship.setController(createEnemyController(ship));
+            return ship;
+          })
+          .whenShipsLeft(0, 1, new function() {
+            var ship = new BossShip(new Vector(xCenter, 0));
+            ship.setController(createEnemyController(ship));
+            return ship;
+          })
+          .end();
       this.level.addObserver(this);
 
       var actorManager = this.actorManager;
