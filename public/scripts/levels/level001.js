@@ -30,7 +30,7 @@ define([
         // closure to handle i
         (function(i) {
           wave.whenShipsLeft(0, 1, function() {
-            var x = 100 + i * (worldBounds.width - 200) / 5;
+            var x = 100 + i * (worldBounds.width - 200) / 4;
             return createDownwardEnemy(new Vector(x, top), new Vector(x, bottom));
           });
         })(i);
