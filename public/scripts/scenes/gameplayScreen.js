@@ -231,6 +231,25 @@ define([
       this.actorManager.forEach(function(actor) {
         actor.update(deltaTime, gameState);
       });
+
+      if (this.player) {
+        var bounds = this.gameState.worldBounds,
+            textureRegion = this.player.view.getTextureRegion(),
+            scale = this.player.scale,
+            topLeft = new Vector()
+              .set(textureRegion.center)
+              .multiply(scale),
+            bottomRight = new Vector(textureRegion.width, textureRegion.height)
+              .multiply(scale)
+              .subtract(topLeft);
+              
+        this.player.position.clamp(
+          bounds.x + topLeft.x,
+          bounds.y + topLeft.y,
+          bounds.width - bottomRight.x,
+          bounds.height - bottomRight.y
+        );
+      }
     };
 
     GameplayScreen.prototype.handleCollisions = function() {
@@ -239,7 +258,7 @@ define([
       this.actorManager.forEach(function(actor) {
         quadTree.insert(actor);
       });
-      
+
       if (this.player) {
         this.handleCollisionsForShip(this.player);
       }
