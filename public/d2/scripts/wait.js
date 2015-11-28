@@ -12,12 +12,16 @@ define(function() {
   };
 
   Wait.prototype.update = function(deltaTime, subject) {
-    if (deltaTime <= this.time) {
-      this.time -= deltaTime;
-      deltaTime = 0;
+    if (this.time) {
+      if (deltaTime <= this.time) {
+        this.time -= deltaTime;
+        deltaTime = 0;
+      } else {
+        deltaTime - this.time;
+        this.reset();
+      }
     } else {
-      deltaTime - this.time;
-      this.reset();
+      deltaTime = 0;
     }
     return deltaTime;
   };

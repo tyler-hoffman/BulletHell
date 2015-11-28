@@ -12,6 +12,7 @@ define([
     'ships/dragonWing',
     'ships/bossShip',
     'ships/spinGuy',
+    'ships/behaviors/spinAndMove',
     'text/gameText',
     'd2/utils/quadTree',
     'd2/rendering/rotatedRenderer',
@@ -23,7 +24,7 @@ define([
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
         Script, LinearMove, Repeat, Wave,
         Rectangle, Vector, Detector,
-        DragonWing, BossShip, SpinShip, GameText, QuadTree,
+        DragonWing, BossShip, SpinShip, SpinAndMove, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
         RenderInfo, Level, DefaultShader, Scene) {
 
@@ -73,36 +74,8 @@ define([
               );
       };
       var width = this.width;
-      var createSpinnerController = function(spinner) {
-        var spinnerVelocity = 200,
-            left = width / 4,
-            right = left * 3,
-            y = 100;
-        return new Script(spinner)
-            .action(function() {
-              spinner.passiveMode();
-            })
-            .addStep(new Repeat()
-                .addStep(new LinearMove(new Vector(left, y), spinnerVelocity))
-                .action(function() {
-                  spinner.chaosMode();
-                })
-                .wait(3)
-                .action(function() {
-                  spinner.passiveMode();
-                })
-                .wait(0.2)
-                .addStep(new LinearMove(new Vector(right, y), spinnerVelocity))
-                .action(function() {
-                  spinner.chaosMode();
-                })
-                .wait(3)
-                .action(function() {
-                  spinner.passiveMode();
-                })
-                .wait(0.2)
-            );
-      };
+      var left = new Vector(width / 4, 100),
+          right = new Vector(left.x * 3, 100);
 
       var xCenter = this.width / 2;
       var enemyShips = this.enemyShips;
@@ -111,7 +84,8 @@ define([
       }).newWave()
           .afterTime(1, new function() {
             var ship = new SpinShip(new Vector(xCenter, -100));
-            ship.setController(createSpinnerController(ship));
+            ship.setController(new SpinAndMove(ship, 200, [left, right], 3));
+            //ship.setController(createSpinnerController(ship));
             return ship;
           })
           .whenShipsLeft(0, 1, new function() {
@@ -242,7 +216,7 @@ define([
             bottomRight = new Vector(textureRegion.width, textureRegion.height)
               .multiply(scale)
               .subtract(topLeft);
-              
+
         this.player.position.clamp(
           bounds.x + topLeft.x,
           bounds.y + topLeft.y,
