@@ -6,34 +6,31 @@ define([
     'd2/utils/vector',
     'd2/collisionDetection/rectangleToCircleDetector',
     'ships/dragonWing',
-    'text/gameText',
     'd2/utils/quadTree',
     'd2/rendering/rotatedRenderer',
     'emitters/emitEvent',
     'utils/renderInfo',
     'levels/level001',
     'shaders/rotatedShader',
-    'd2/scenes/scene'
+    'scenes/gameScene'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
         Rectangle, Vector, Detector,
-        DragonWing, GameText, QuadTree,
+        DragonWing, QuadTree,
         DefaultRenderer, EmitEvent,
-        RenderInfo, Level001, DefaultShader, Scene) {
+        RenderInfo, Level001, DefaultShader, GameScene) {
 
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
     const MAGNIFICATION = 4;
 
     var GameplayScreen = function(canvas, animator, keyboard) {
-      Scene.call(this, canvas, animator);
+      GameScene.call(this, canvas, animator, new ImageBasedActorManager);
       this.keyboard = keyboard;
-      this.actorManager = new ImageBasedActorManager();
       this.shaderProgram = new DefaultShader(this.gl).getProgram();
       this.detector = new Detector();
       var worldBounds = new Rectangle(0, 0, this.width, this.height);
       this.quadTree = new QuadTree(worldBounds, 10, 10);
 
-      this.textFields = [];
       this.gameState = {
         worldBounds: worldBounds
       };
@@ -96,7 +93,7 @@ define([
       }, worldBounds);
       this.level.addObserver(this);
 
-      var actorManager = this.actorManager;
+      var actorManager = this.getActorManager();
 
       this.emitters = [];
       var gameState = this.gameState;
@@ -120,7 +117,7 @@ define([
       this.play();
     };
 
-    GameplayScreen.prototype = new Scene();
+    GameplayScreen.prototype = Object.create(GameScene.prototype);
 
     GameplayScreen.prototype.onFrame = function(deltaTime) {
       this.level.update(deltaTime);
@@ -158,7 +155,7 @@ define([
 
         case EmitEvent.EMIT:
           event.emitted.setScale(MAGNIFICATION);
-          this.actorManager.addActor(event.emitted);
+          this.getActorManager().addActor(event.emitted);
           break;
 
         case 'textEvent.display':
@@ -173,23 +170,6 @@ define([
           console.log('Unknown Event Dispatched: ' + event.type);
           break;
       }
-    };
-
-    GameplayScreen.prototype.addText = function(text, magnification, position, duration) {
-      var actorManager = this.actorManager;
-      var newText = new GameText(text, magnification, function(letters) {
-        letters.forEach(function(letter) {
-          actorManager.addActor(letter);
-        })
-      }, position, duration);
-
-      var textFields = this.textFields;
-      textFields.push(newText);
-      newText.addObserver(function() {
-        textFields.splice(textFields.indexOf(newText), 1);
-      });
-      newText.depth = 0.2;
-      return newText;
     };
 
     GameplayScreen.prototype.setPlayer = function(ship) {
@@ -211,7 +191,7 @@ define([
       ship.setScale(MAGNIFICATION);
       ship.updateBounds();
 
-      this.actorManager.addActor(ship);
+      this.getActorManager().addActor(ship);
     };
 
     GameplayScreen.prototype.unregisterShip = function(ship) {
@@ -219,7 +199,7 @@ define([
     };
 
     GameplayScreen.prototype.updateActors = function(deltaTime, gameState) {
-      this.actorManager.forEach(function(actor) {
+      this.getActorManager().forEach(function(actor) {
         actor.update(deltaTime, gameState);
       });
 
@@ -246,7 +226,7 @@ define([
     GameplayScreen.prototype.handleCollisions = function() {
       var quadTree = this.quadTree;
 
-      this.actorManager.forEach(function(actor) {
+      this.getActorManager().forEach(function(actor) {
         quadTree.insert(actor);
       });
 
@@ -291,13 +271,13 @@ define([
     };
 
     GameplayScreen.prototype.removeDeadActors = function() {
-      this.actorManager.removeIf(function(actor) {
+      this.getActorManager().removeIf(function(actor) {
         return !actor.isAlive;
       });
     };
 
     GameplayScreen.prototype.renderAll = function() {
-      this.actorManager.renderAll(this.renderer);
+      this.getActorManager().renderAll(this.renderer);
     };
 
     return GameplayScreen;
