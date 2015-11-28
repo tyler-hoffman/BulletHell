@@ -239,8 +239,7 @@ define([
       this.actorManager.forEach(function(actor) {
         quadTree.insert(actor);
       });
-
-
+      
       if (this.player) {
         this.handleCollisionsForShip(this.player);
       }

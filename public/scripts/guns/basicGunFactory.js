@@ -4,14 +4,14 @@ define([
     'emitters/emitter',
     'emitters/emitEvent',
     'ships/ship',
-    'bullets/greenBullet'
-  ], function(Emitter, EmitEvent, Ship, GreenBullet) {
+    'bullets/purpleBullet'
+  ], function(Emitter, EmitEvent, Ship, PurpleBullet) {
 
-    const EMIT_RATE     = 0.1;
-    const BULLET_SPEED  = 600;
+    const EMIT_RATE     = 0.4;
+    const BULLET_SPEED  = 400;
 
     var bulletFactory = function(position, velocity, fromTime) {
-      var bullet = new GreenBullet(
+      var bullet = new PurpleBullet(
           position, velocity.scale(BULLET_SPEED));
 
       bullet.update(fromTime);

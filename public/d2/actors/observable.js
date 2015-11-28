@@ -26,7 +26,11 @@ define(function() {
 
   Observable.prototype.notifyObservers = function(event) {
     for (var observer in this.observers) {
-      this.observers[observer].notify(event);
+      if (typeof this.observers[observer] === 'function') {
+        this.observers[observer](event);
+      } else {
+        this.observers[observer].notify(event);
+      }
     }
   };
 

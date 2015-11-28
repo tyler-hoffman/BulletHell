@@ -5,9 +5,12 @@ define([
     'd2/utils/vector',
     'd2/utils/rectangle',
     'd2/rendering/textureRegion',
-    'guns/dualSprayGunFactory',
+    'guns/basicGunFactory',
+    'd2/animations/animation',
+    'd2/animations/textureRegionSplitter',
     'image!images/bullets.png'
-], function(Ship, Vector, Rectangle, TextureRegion, GunFactory, image) {
+], function(Ship, Vector, Rectangle, TextureRegion,
+      GunFactory, Animation, TextureRegionSplitter, image) {
 
     const MAX_HP = 2000;
 
@@ -30,17 +33,42 @@ define([
       new Vector(shipWidth / 2, shipHeight / 2)
     );
 
+    var damageFrames = new TextureRegionSplitter().split(
+      image,
+      new Vector(0, 33),
+      new Vector(shipWidth, shipHeight),
+      1, 3,
+      new Vector(shipWidth / 2, shipHeight / 2)
+    );
+
     var DragonWing = function(position) {
       Ship.call(this,
           view,
           position,
           mountPoints,
           gunFactory.generateGunSet(),
-          MAX_HP
-          );
+          MAX_HP);
+
+      this.damageView = new Animation(damageFrames,
+          new Vector(shipWidth, shipHeight),
+          new Vector(shipWidth / 2, shipHeight / 2),
+          0.06, false);
     };
 
     DragonWing.prototype = new Ship();
+
+    DragonWing.prototype.takeDamage = function(damage) {
+      Ship.prototype.takeDamage.call(this, damage);
+
+      this.view = this.damageView;
+      this.damageView.reset();
+      this.damageView.removeObservers();
+
+      var that = this;
+      this.damageView.addObserver(function() {
+        that.view = view;
+      });
+    };
 
     return DragonWing;
 });

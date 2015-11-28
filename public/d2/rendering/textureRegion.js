@@ -24,6 +24,7 @@ define([
         imageBox.width / image.width,
         imageBox.height / image.height
       );
+
     };
 
     TextureRegion.prototype.getTextureRegion = function() {
