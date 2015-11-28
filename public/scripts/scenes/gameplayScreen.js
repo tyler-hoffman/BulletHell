@@ -13,6 +13,7 @@ define([
     'ships/bossShip',
     'ships/spinGuy',
     'ships/behaviors/spinAndMove',
+    'ships/behaviors/moveLoop',
     'text/gameText',
     'd2/utils/quadTree',
     'd2/rendering/rotatedRenderer',
@@ -24,7 +25,7 @@ define([
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
         Script, LinearMove, Repeat, Wave,
         Rectangle, Vector, Detector,
-        DragonWing, BossShip, SpinShip, SpinAndMove, GameText, QuadTree,
+        DragonWing, BossShip, SpinShip, SpinAndMove, MoveLoop, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
         RenderInfo, Level, DefaultShader, Scene) {
 
@@ -84,13 +85,12 @@ define([
       }).newWave()
           .afterTime(1, new function() {
             var ship = new SpinShip(new Vector(xCenter, -100));
-            ship.setController(new SpinAndMove(ship, 200, [left, right], 3));
-            //ship.setController(createSpinnerController(ship));
+            ship.setController(new SpinAndMove(ship, 200, [left, right]));
             return ship;
           })
           .whenShipsLeft(0, 1, new function() {
             var ship = new BossShip(new Vector(xCenter, 0));
-            ship.setController(createEnemyController(ship));
+            ship.setController(new MoveLoop(ship, 100, [left, right]));
             return ship;
           })
           .whenShipsLeft(0, 1, new function() {

@@ -3,7 +3,7 @@
 define(function() {
 
   var Wait = function(time) {
-    this.initialTime = time;
+    this.initialTime = time || 0;
     this.reset();
   };
 
@@ -12,16 +12,12 @@ define(function() {
   };
 
   Wait.prototype.update = function(deltaTime, subject) {
-    if (this.time) {
-      if (deltaTime <= this.time) {
-        this.time -= deltaTime;
-        deltaTime = 0;
-      } else {
-        deltaTime - this.time;
-        this.reset();
-      }
-    } else {
+    if (deltaTime <= this.time) {
+      this.time -= deltaTime;
       deltaTime = 0;
+    } else {
+      deltaTime - this.time;
+      this.reset();
     }
     return deltaTime;
   };
