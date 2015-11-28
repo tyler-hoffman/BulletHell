@@ -3,14 +3,10 @@ define([
   'd2/actors/observable'
 ], function(TextureRegion, Observable) {
 
-    var Animation = function(textureRegions, size, center, timePerFrame, repeat) {
+    var Animation = function(textureRegions, timePerFrame, repeat) {
       Observable.call(this);
 
-      this.width = size.x;
-      this.height = size.y;
-
       this.textureRegions = textureRegions;
-      this.center = center;
       this.timePerFrame = timePerFrame;
       this.repeat = repeat || false;
 

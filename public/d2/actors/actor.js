@@ -61,13 +61,13 @@ define([
 
     Actor.prototype.updateBounds = function() {
       if (this.view) {
-
+        var textureRegion = this.view.getTextureRegion();
         // set bounding rectangle
         this.bounds.set(
-          - this.view.center.x,
-          - this.view.center.y,
-          this.view.width,
-          this.view.height
+          - textureRegion.center.x,
+          - textureRegion.center.y,
+          textureRegion.width,
+          textureRegion.height
         );
 
         this.updateBoundingBox();

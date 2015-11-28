@@ -7,7 +7,6 @@ define([
 
   var Button = function(defaultImage, hoverImage, downImage, action) {
     this.center = new Vector();
-    Actor.call(this, this);
 
     this.defaultImage = defaultImage;
     this.hoverImage = hoverImage;
@@ -15,6 +14,8 @@ define([
     this.action = action;
 
     this.setState(this.DEFAULT);
+
+    Actor.call(this, this);
   };
 
   Button.prototype = new Actor();

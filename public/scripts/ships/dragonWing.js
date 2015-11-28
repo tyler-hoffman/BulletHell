@@ -49,10 +49,7 @@ define([
           gunFactory.generateGunSet(),
           MAX_HP);
 
-      this.damageView = new Animation(damageFrames,
-          new Vector(shipWidth, shipHeight),
-          new Vector(shipWidth / 2, shipHeight / 2),
-          0.06, false);
+      this.damageView = new Animation(damageFrames, 0.06, false);
     };
 
     DragonWing.prototype = new Ship();
