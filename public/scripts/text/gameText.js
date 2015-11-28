@@ -10,8 +10,8 @@ define([
     var font = new MonoFont();
     font.addLetters(6, 8, 10, 10, 32, fontImage);
 
-    var GameText = function(text, magnification, letterHandler) {
-      TextField.call(this, font, text, magnification, letterHandler);
+    var GameText = function(text, magnification, letterHandler, position, duration) {
+      TextField.call(this, font, text, magnification, letterHandler, position, duration);
       this.letterHandler = letterHandler;
     };
 

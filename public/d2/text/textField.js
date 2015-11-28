@@ -2,8 +2,9 @@
 
 define([
     'd2/actors/actor',
-    'd2/utils/vector'
-  ], function(Actor, Vector) {
+    'd2/utils/vector',
+    'd2/text/textEvent'
+  ], function(Actor, Vector, TextEvent) {
 
     var CharacterField = function(view, position, velocity) {
       Actor.call(this, view, position, velocity);
@@ -11,8 +12,8 @@ define([
 
     CharacterField.prototype = new Actor();
 
-    var TextField = function(font, text, magnification, onChange) {
-      Actor.call(this);
+    var TextField = function(font, text, magnification, onChange, position, duration) {
+      Actor.call(this, undefined, position);
       this.font = font;
       this.onChange = onChange;
       this.scale = new Vector(magnification, magnification);
@@ -23,11 +24,15 @@ define([
         this.setText(text);
         this.update(0);
       }
+
+      this.duration = duration;
     };
 
     TextField.prototype = new Actor();
 
     TextField.prototype.setText = function(text) {
+      text = text || '';
+
       // mark old characters as dead as dead
       if (this.text) {
         for (var i = 0; i < this.children.length; i++) {
@@ -56,8 +61,17 @@ define([
     };
 
     TextField.prototype.update = function(deltaTime, gameState) {
-      this.view = this.children[0].view;
+      //this.view = this.children[0].view;
       Actor.prototype.update.call(this, deltaTime, gameState);
+
+      if (deltaTime && this.duration) {
+        this.duration -= deltaTime;
+        if (this.duration <= 0) {
+          this.setText();
+          this.duration = 0;
+          this.notifyObservers(TextEvent.generateRemoveEvent(), this);
+        }
+      }
     };
 
     return TextField;

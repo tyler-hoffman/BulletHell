@@ -7,6 +7,8 @@ define([
     'ships/behaviors/spinAndMove'
   ], function(Level, Vector, BossShip, SpinShip, MoveAndDie, SpinAndMove) {
 
+    const LEVEL_NAME = 'level_001: prelude';
+
     var createDownwardEnemy = function(startPosition, endPosition) {
       var enemy = new BossShip(startPosition);
       enemy.setController(new MoveAndDie(enemy, 600, endPosition));
@@ -14,7 +16,7 @@ define([
     };
 
     var Level001 = function(shipCounter, worldBounds) {
-      Level.call(this, shipCounter);
+      Level.call(this, shipCounter, LEVEL_NAME);
 
       var padding = new Vector(30, 20),
           top = worldBounds.y - padding.y,

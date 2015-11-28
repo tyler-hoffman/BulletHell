@@ -33,6 +33,7 @@ define([
       var worldBounds = new Rectangle(0, 0, this.width, this.height);
       this.quadTree = new QuadTree(worldBounds, 10, 10);
 
+      this.textFields = [];
       this.gameState = {
         worldBounds: worldBounds
       };
@@ -96,12 +97,6 @@ define([
       this.level.addObserver(this);
 
       var actorManager = this.actorManager;
-      this.textField = new GameText('', 2, function(letters) {
-        for (var i = 0; i < letters.length; i++) {
-          actorManager.addActor(letters[i]);
-        }
-      });
-      this.textField.depth = .2;
 
       this.emitters = [];
       var gameState = this.gameState;
@@ -117,9 +112,9 @@ define([
         that.togglePlaying();
       });
 
-      var that = this;
+      var fpsText = this.addText('', 2);
       this.renderInfo = new RenderInfo(1, function(fps) {
-        that.textField.setText('[' + Math.floor(that.renderInfo.fps) + ' fps]');
+        fpsText.setText('[' + Math.floor(fps) + ' fps]');
       });
 
       this.play();
@@ -134,9 +129,16 @@ define([
       this.handleInput(deltaTime);
       this.updateActors(deltaTime, this.gameState);
       this.updateEmitters(deltaTime);
+      this.updateTextFields(deltaTime);
       this.handleCollisions();
       this.removeDeadActors();
       this.renderAll();
+    };
+
+    GameplayScreen.prototype.updateTextFields = function(deltaTime) {
+      this.textFields.forEach(function(textField) {
+        textField.update(deltaTime);
+      });
     };
 
     GameplayScreen.prototype.notify = function(event) {
@@ -159,14 +161,35 @@ define([
           this.actorManager.addActor(event.emitted);
           break;
 
+        case 'textEvent.display':
+          this.addText(event.text, 3, event.position, event.duration);
+          break;
+
         case 'actorEvent.spawn':
           this.addEnemyShip(event.actor);
           break;
 
         default:
-          console.log('Unknown Event Dispatched');
+          console.log('Unknown Event Dispatched: ' + event.type);
           break;
       }
+    };
+
+    GameplayScreen.prototype.addText = function(text, magnification, position, duration) {
+      var actorManager = this.actorManager;
+      var newText = new GameText(text, magnification, function(letters) {
+        letters.forEach(function(letter) {
+          actorManager.addActor(letter);
+        })
+      }, position, duration);
+
+      var textFields = this.textFields;
+      textFields.push(newText);
+      newText.addObserver(function() {
+        textFields.splice(textFields.indexOf(newText), 1);
+      });
+      newText.depth = 0.2;
+      return newText;
     };
 
     GameplayScreen.prototype.setPlayer = function(ship) {
