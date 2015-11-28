@@ -26,7 +26,6 @@ define([
               center));
         }
       }
-      console.log(output)
       return output;
     };
 
