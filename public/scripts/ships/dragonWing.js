@@ -10,7 +10,7 @@ define([
 ], function(Ship, Vector, ShipViewGenerator,
       GunFactory, TextureRegionSplitter, image) {
 
-    const MAX_HP = 2000;
+    const MAX_HP = 10;
 
     var shipSize = new Vector(17, 14),
         shipCenter = new Vector(shipSize.x / 2, shipSize.y / 2),

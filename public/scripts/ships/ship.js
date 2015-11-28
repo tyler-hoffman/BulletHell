@@ -23,7 +23,7 @@ define([
       this.resetHealth();
     };
 
-    Ship.prototype = new Actor();
+    Ship.prototype = Object.create(Actor.prototype);
 
     Ship.prototype.update = function(deltaTime) {
       deltaTime = deltaTime || 0;
@@ -48,6 +48,7 @@ define([
 
     Ship.prototype.takeDamage = function(damage) {
       this.hp -= damage;
+
       if (this.hp < 0) {
         this.die();
       }

@@ -5,14 +5,18 @@ define([
     'controls/keyboardController',
     'scenes/textSplashScreen',
     'scenes/menuScreen',
-    'scenes/gameplayScreen'
-  ], function(SceneManager, KeyboardController, SplashScreen, MenuScreen, GameplayScreen) {
+    'scenes/gameplayScreen',
+    'scenes/loseScene'
+  ], function(SceneManager, KeyboardController, SplashScreen,
+        MenuScreen, GameplayScreen, LoseScreen) {
 
     const PLAY = 'PLAY',
           SPLASH = 'SPLASH',
           MENU = 'MENU',
           OPTIONS = 'OPTIONS',
-          BACK = 'BACK';
+          BACK = 'BACK',
+          WIN = 'WIN',
+          LOSE = 'LOSE';
 
     var BulletHell = function(canvas) {
       SceneManager.call(this, canvas);
@@ -28,7 +32,10 @@ define([
 
       var keyboardController = this.keyboardController;
       this.registerScene(PLAY, function(canvas, animator) {
-        return new GameplayScreen(canvas, animator, keyboardController);
+        return new GameplayScreen(
+          canvas, animator, keyboardController,
+          WIN, LOSE
+        );
       });
 
       this.registerScene(SPLASH, function(canvas, animator) {
@@ -49,6 +56,10 @@ define([
 
       this.registerScene(OPTIONS, function(canvas, animator) {
         console.log('TODO: Implement options screen')
+      });
+
+      this.registerScene(LOSE, function(canvas, animator) {
+        return new LoseScreen(canvas, animator, keyboardController, MENU);
       });
 
     };

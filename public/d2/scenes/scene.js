@@ -8,6 +8,7 @@ define([
     var Scene = function(canvas, animator) {
       Observable.call(this);
 
+      this.isRendering = true;
       this.animator = animator;
 
       if (canvas) {
@@ -30,6 +31,10 @@ define([
 
     Scene.prototype.togglePlaying = function() {
       this.animator.toggle();
+    };
+
+    Scene.prototype.stopRendering = function() {
+      this.isRendering = false;
     };
 
     Scene.prototype.nextScene = function(sceneId) {

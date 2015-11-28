@@ -12,12 +12,12 @@ define([
 
       var position = new Vector(100, 400);
       this.addTextSlide('you died...', 3, position, 3);
-      this.addTextSlide('which means you lose.', 3, position, 3);
+      this.addTextSlide('which means you lose.', 3, position, 6);
 
       this.play();
     };
 
     LoseScreen.prototype = Object.create(SlideShowScene.prototype);
 
-    return TextSplashScreen;
+    return LoseScreen;
 });

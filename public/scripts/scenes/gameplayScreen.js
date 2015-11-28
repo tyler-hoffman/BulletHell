@@ -23,8 +23,10 @@ define([
     const BULLET_SPEED  = 200;
     const MAGNIFICATION = 4;
 
-    var GameplayScreen = function(canvas, animator, keyboard) {
+    var GameplayScreen = function(canvas, animator, keyboard, winId, loseId) {
       GameScene.call(this, canvas, animator, new ImageBasedActorManager);
+      this.winId = winId;
+      this.loseId = loseId;
       this.keyboard = keyboard;
       this.shaderProgram = new DefaultShader(this.gl).getProgram();
       this.detector = new Detector();
@@ -130,12 +132,30 @@ define([
       this.handleCollisions();
       this.removeDeadActors();
       this.renderAll();
+      this.maybeEnd(deltaTime);
     };
 
     GameplayScreen.prototype.updateTextFields = function(deltaTime) {
       this.textFields.forEach(function(textField) {
         textField.update(deltaTime);
       });
+    };
+
+    GameplayScreen.prototype.lose = function() {
+      this.keyboard.unregisterAllActions();
+      this.player = null;
+
+      // countdown used by maybeEnd
+      this.endIn = 2;
+    };
+
+    GameplayScreen.prototype.maybeEnd = function(deltaTime) {
+      if (this.endIn) {
+        this.endIn -= deltaTime;
+        if (this.endIn <= 0) {
+          this.nextScene(this.loseId);
+        }
+      }
     };
 
     GameplayScreen.prototype.notify = function(event) {
@@ -145,8 +165,7 @@ define([
         case ActorEvent.DESTROY:
           this.unregisterShip(event.actor);
           if (event.actor === this.player) {
-            console.log('you died!')
-            this.player = null;
+            this.lose();
           } else {
             var index = this.enemyShips.indexOf(event.actor);
             this.enemyShips.splice(index, 1);
@@ -277,7 +296,9 @@ define([
     };
 
     GameplayScreen.prototype.renderAll = function() {
-      this.getActorManager().renderAll(this.renderer);
+      if (this.isRendering) {
+        this.getActorManager().renderAll(this.renderer);
+      }
     };
 
     return GameplayScreen;

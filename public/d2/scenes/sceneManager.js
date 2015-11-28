@@ -33,6 +33,9 @@ define([
   };
 
   SceneManager.prototype.setScene = function(id) {
+    if (this.currentScene) {
+      this.currentScene.stopRendering();
+    }
     this.currentScene = this.sceneGenerators[id](this.canvas, this.animator);
     this.currentScene.addObserver(this);
   };
