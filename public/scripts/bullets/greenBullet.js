@@ -11,7 +11,7 @@ define([
   ],
   function(Bullet, Vector, Rectangle, TextureRegion, image) {
 
-    var imageX = 0,
+    var imageX = 116,
         imageY = 10,
         imageWidth = 7,
         imageHeight = 7;

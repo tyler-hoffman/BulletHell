@@ -9,9 +9,13 @@ define([
 
     var tempVector = new Vector();
 
-    var Ship = function(view, position, mountPoints, gunSet, maxHp) {
+    var Ship = function(normalView, damageView,
+        position, mountPoints, gunSet, maxHp) {
+
       this.isShip = true;
-      Actor.call(this, view, position);
+      this.normalView = normalView;
+      this.damageView = damageView;
+      Actor.call(this, normalView, position);
       this.mountPoints = mountPoints || {};
       this.setGunSet(gunSet || {});
       this.maxHp = maxHp || 1;
@@ -44,9 +48,19 @@ define([
 
     Ship.prototype.takeDamage = function(damage) {
       this.hp -= damage;
-
       if (this.hp < 0) {
         this.die();
+      }
+
+      if (this.damageView) {
+        this.view = this.damageView;
+        this.damageView.reset();
+        this.damageView.removeObservers();
+
+        var that = this;
+        this.damageView.addObserver(function() {
+          that.view = that.normalView;
+        });
       }
     };
 

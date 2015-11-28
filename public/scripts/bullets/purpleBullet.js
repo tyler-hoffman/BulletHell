@@ -9,8 +9,8 @@ define([
   ],
   function(Bullet, Vector, Rectangle, TextureRegion, image) {
 
-    var imageX = 0,
-        imageY = 26,
+    var imageX = 123,
+        imageY = 19,
         imageWidth = 5,
         imageHeight = 7;
 

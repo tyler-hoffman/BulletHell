@@ -3,7 +3,7 @@
 define([
     'ships/ship',
     'd2/utils/vector',
-    'utils/ShipViewGenerator',
+    'utils/shipViewGenerator',
     'guns/basicGunFactory',
     'd2/animations/textureRegionSplitter',
     'image!images/bullets.png'
@@ -14,8 +14,8 @@ define([
 
     var shipSize = new Vector(17, 14),
         shipCenter = new Vector(shipSize.x / 2, shipSize.y / 2),
-        normalImagePosition = new Vector(10, 0),
-        firstDamageFrame = new Vector(0, 33),
+        normalImagePosition = new Vector(0, 0),
+        firstDamageFrame = new Vector(0, 14),
         viewGenerator = new ShipViewGenerator(image, shipSize, shipCenter),
         normalView = viewGenerator.generateNormalView(normalImagePosition);
 
@@ -32,29 +32,16 @@ define([
     var DragonWing = function(position) {
       Ship.call(this,
           normalView,
+          viewGenerator.generateDamageAnimation(
+            firstDamageFrame, 3, 1, 0.06
+          ),
           position,
           mountPoints,
           gunFactory.generateGunSet(),
           MAX_HP);
-
-      this.damageView = viewGenerator.generateDamageAnimation(
-        firstDamageFrame, 1, 3, 0.06);
     };
 
     DragonWing.prototype = new Ship();
-
-    DragonWing.prototype.takeDamage = function(damage) {
-      Ship.prototype.takeDamage.call(this, damage);
-
-      this.view = this.damageView;
-      this.damageView.reset();
-      this.damageView.removeObservers();
-
-      var that = this;
-      this.damageView.addObserver(function() {
-        that.view = normalView;
-      });
-    };
 
     return DragonWing;
 });

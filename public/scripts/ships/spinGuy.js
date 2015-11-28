@@ -3,11 +3,10 @@
 define([
     'ships/ship',
     'd2/utils/vector',
-    'd2/utils/rectangle',
-    'd2/rendering/textureRegion',
+    'utils/shipViewGenerator',
     'guns/quadFire',
     'image!images/bullets.png'
-], function(Ship, Vector, Rectangle, TextureRegion, GunFactory, image) {
+], function(Ship, Vector, ShipViewGenerator, GunFactory, image) {
 
     const MAX_HP = 20,
         FAST_SPIN = Math.PI / 1.5,
@@ -15,8 +14,12 @@ define([
         FAST_EMIT = 0.14,
         NORMAL_EMIT = 0.4;
 
-    var shipWidth = 13,
-        shipHeight = 13;
+    var shipSize = new Vector(13, 13),
+        shipCenter = new Vector().set(shipSize).scale(0.5),
+        normalImagePosition = new Vector(17, 0),
+        firstDamageFrame = new Vector(17, 13),
+        viewGenerator = new ShipViewGenerator(image, shipSize, shipCenter),
+        normalView = viewGenerator.generateNormalView(normalImagePosition);
 
     var gunFactory = new GunFactory();
 
@@ -27,20 +30,18 @@ define([
       LEFT_WING_MOUNT: new Vector(-2, 6)
     };
 
-    var view = new TextureRegion(
-      image,
-      new Rectangle(27, 0, shipWidth, shipHeight),
-      new Vector(shipWidth / 2, shipHeight / 2)
-    );
-
     var SpinGuy = function(position) {
       Ship.call(this,
-          view,
+          normalView,
+          viewGenerator.generateDamageAnimation(
+            firstDamageFrame, 3, 1, 0.06
+          ),
           position,
           mountPoints,
           gunFactory.generateGunSet(),
           MAX_HP
           );
+
       this.setState(NORMAL_SPIN, NORMAL_EMIT);
     };
 
