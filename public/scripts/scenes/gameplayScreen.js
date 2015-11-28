@@ -2,32 +2,23 @@ define([
     'd2/collections/imageBasedActorManager',
     'd2/actors/actorEvent',
     'd2/actors/controllers/physics/velocityController',
-    'd2/scripts/script',
-    'd2/actors/controllers/paths/linearMove',
-    'd2/scripts/repeat',
-    'waves/wave',
     'd2/utils/rectangle',
     'd2/utils/vector',
     'd2/collisionDetection/rectangleToCircleDetector',
     'ships/dragonWing',
-    'ships/bossShip',
-    'ships/spinGuy',
-    'ships/behaviors/spinAndMove',
-    'ships/behaviors/moveLoop',
     'text/gameText',
     'd2/utils/quadTree',
     'd2/rendering/rotatedRenderer',
     'emitters/emitEvent',
     'utils/renderInfo',
-    'waves/level',
+    'levels/level001',
     'shaders/rotatedShader',
     'd2/scenes/scene'
   ], function(ImageBasedActorManager, ActorEvent, VelocityController,
-        Script, LinearMove, Repeat, Wave,
         Rectangle, Vector, Detector,
-        DragonWing, BossShip, SpinShip, SpinAndMove, MoveLoop, GameText, QuadTree,
+        DragonWing, GameText, QuadTree,
         DefaultRenderer, EmitEvent,
-        RenderInfo, Level, DefaultShader, Scene) {
+        RenderInfo, Level001, DefaultShader, Scene) {
 
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
@@ -53,52 +44,55 @@ define([
       this.setPlayer(player);
 
 
-      this.enemyShips = [];
-      var bossVelocity = 80;
-      var createEnemyController = function(subject) {
-        return new Script(subject)
-            .wait(0.2)
-            .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
-            .addStep(new Repeat(5)
-                .ifElse(function() {
-                    return player.position.y < subject.position.y;
-                  },
-                  new LinearMove(new Vector(100, 600), bossVelocity),
-                  new LinearMove(new Vector(100, 100), bossVelocity)
-                )
-                .addStep(new LinearMove(new Vector(100, 100), bossVelocity))
-                .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
-                .addStep(new Repeat(2)
-                    .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
-                    .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
-                )
-              );
-      };
-      var width = this.width;
-      var left = new Vector(width / 4, 100),
-          right = new Vector(left.x * 3, 100);
-
-      var xCenter = this.width / 2;
-      var enemyShips = this.enemyShips;
-      this.level = new Level(function() {
-        return enemyShips.length;
-      }).newWave()
-          .afterTime(1, new function() {
-            var ship = new SpinShip(new Vector(xCenter, -100));
-            ship.setController(new SpinAndMove(ship, 200, [left, right]));
-            return ship;
-          })
-          .whenShipsLeft(0, 1, new function() {
-            var ship = new BossShip(new Vector(xCenter, 0));
-            ship.setController(new MoveLoop(ship, 100, [left, right]));
-            return ship;
-          })
-          .whenShipsLeft(0, 1, new function() {
-            var ship = new BossShip(new Vector(xCenter, 0));
-            ship.setController(createEnemyController(ship));
-            return ship;
-          })
-          .end();
+      var enemyShips = this.enemyShips = [];
+      // var bossVelocity = 80;
+      // var createEnemyController = function(subject) {
+      //   return new Script(subject)
+      //       .wait(0.2)
+      //       .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
+      //       .addStep(new Repeat(5)
+      //           .ifElse(function() {
+      //               return player.position.y < subject.position.y;
+      //             },
+      //             new LinearMove(new Vector(100, 600), bossVelocity),
+      //             new LinearMove(new Vector(100, 100), bossVelocity)
+      //           )
+      //           .addStep(new LinearMove(new Vector(100, 100), bossVelocity))
+      //           .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
+      //           .addStep(new Repeat(2)
+      //               .addStep(new LinearMove(new Vector(300, 300), bossVelocity))
+      //               .addStep(new LinearMove(new Vector(100, 300), bossVelocity))
+      //           )
+      //         );
+      // };
+      // var width = this.width;
+      // var left = new Vector(width / 4, 100),
+      //     right = new Vector(left.x * 3, 100);
+      //
+      // var xCenter = this.width / 2;
+      // var enemyShips = this.enemyShips;
+      // this.level = new Level(function() {
+      //   return enemyShips.length;
+      // }).newWave()
+      //     .afterTime(1, new function() {
+      //       var ship = new SpinShip(new Vector(xCenter, -100));
+      //       ship.setController(new SpinAndMove(ship, 200, [left, right], 3));
+      //       return ship;
+      //     })
+      //     .whenShipsLeft(0, 1, new function() {
+      //       var ship = new BossShip(new Vector(xCenter, 0));
+      //       ship.setController(new MoveAndDie(ship, 300, new Vector(100, 2000)));
+      //       return ship;
+      //     })
+      //     .whenShipsLeft(0, 1, new function() {
+      //       var ship = new BossShip(new Vector(xCenter, 0));
+      //       ship.setController(createEnemyController(ship));
+      //       return ship;
+      //     })
+      //     .end();
+      this.level = new Level001(function() {
+        return enemyShips.length
+      }, worldBounds);
       this.level.addObserver(this);
 
       var actorManager = this.actorManager;

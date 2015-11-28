@@ -8,7 +8,7 @@ define([
     'image!images/bullets.png'
 ], function(Ship, Vector, ShipViewGenerator, GunFactory, image) {
 
-    const MAX_HP = 20,
+    const MAX_HP = 10,
         FAST_SPIN = Math.PI / 1.5,
         NORMAL_SPIN = Math.PI / 8,
         FAST_EMIT = 0.14,
