@@ -60,17 +60,19 @@ define([
         this.elements.push(element);
         return true;
       } else {
-        if (!this.children) {
-          this.subdivide();
-        }
-        this.hasChildren = true;
+        if (this.maxDepth) {
+          if (!this.children) {
+            this.subdivide();
+          }
+          this.hasChildren = true;
 
-        for (var i = 0; i < 4; i++) {
-          if (this.children[i].insert(element, bounds)) {
-            return true;
+          for (var i = 0; i < 4; i++) {
+            if (this.children[i].insert(element, bounds)) {
+              return true;
+            }
           }
         }
-
+        
         // if it didn't fit in children, insert it in elements
         this.elements.push(element);
         return true;

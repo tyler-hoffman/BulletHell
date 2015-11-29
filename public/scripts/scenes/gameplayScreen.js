@@ -10,6 +10,7 @@ define([
     'd2/rendering/rotatedRenderer',
     'emitters/emitEvent',
     'utils/renderInfo',
+    'stars/starManager',
     'levels/level001',
     'shaders/rotatedShader',
     'scenes/gameScene'
@@ -17,14 +18,14 @@ define([
         Rectangle, Vector, Detector,
         DragonWing, QuadTree,
         DefaultRenderer, EmitEvent,
-        RenderInfo, Level001, DefaultShader, GameScene) {
+        RenderInfo, StarManager, Level001, DefaultShader, GameScene) {
 
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
     const MAGNIFICATION = 4;
 
     var GameplayScreen = function(canvas, animator, keyboard, winId, loseId) {
-      GameScene.call(this, canvas, animator, new ImageBasedActorManager);
+      GameScene.call(this, canvas, animator, new ImageBasedActorManager());
       this.winId = winId;
       this.loseId = loseId;
       this.keyboard = keyboard;
@@ -32,7 +33,7 @@ define([
       this.detector = new Detector();
       var worldBounds = new Rectangle(0, 0, this.width, this.height);
       this.quadTree = new QuadTree(worldBounds, 10, 10);
-
+      this.starManager = new StarManager(worldBounds, this.getActorManager());
       this.gameState = {
         worldBounds: worldBounds
       };
@@ -129,6 +130,7 @@ define([
       this.updateActors(deltaTime, this.gameState);
       this.updateEmitters(deltaTime);
       this.updateTextFields(deltaTime);
+      this.starManager.update(deltaTime);
       this.handleCollisions();
       this.removeDeadActors();
       this.renderAll();
@@ -246,7 +248,9 @@ define([
       var quadTree = this.quadTree;
 
       this.getActorManager().forEach(function(actor) {
-        quadTree.insert(actor);
+        if (actor.collisionBits) {
+          quadTree.insert(actor);
+        }
       });
 
       if (this.player) {
@@ -296,9 +300,12 @@ define([
     };
 
     GameplayScreen.prototype.renderAll = function() {
+      // from actor manager
       if (this.isRendering) {
         this.getActorManager().renderAll(this.renderer);
       }
+
+      //
     };
 
     return GameplayScreen;
