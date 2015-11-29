@@ -46,10 +46,11 @@ define([
       this.setPlayer(player);
 
       this.healthBar = new HealthBar()
-          .setSize(40, 8)
-          .setScale(4)
+          .setSize(80, 6)
+          .setScale(2)
           .setDepth(0.1)
-          .setPosition(10, 10);
+          .setPosition(4, 4)
+          .setPercentage(1);
 
       var enemyShips = this.enemyShips = [];
       // var bossVelocity = 80;
@@ -119,6 +120,7 @@ define([
       });
 
       var fpsText = this.addText('', 2);
+      fpsText.setPosition(1100, 0);
       this.renderInfo = new RenderInfo(1, function(fps) {
         fpsText.setText('[' + Math.floor(fps) + ' fps]');
       });
@@ -178,6 +180,12 @@ define([
           } else {
             var index = this.enemyShips.indexOf(event.actor);
             this.enemyShips.splice(index, 1);
+          }
+          break;
+
+        case 'actorEvent.damage':
+          if (event.actor == this.player) {
+            this.healthBar.setPercentage(this.player.getPercentHealth());
           }
           break;
 
@@ -314,9 +322,9 @@ define([
 
     GameplayScreen.prototype.renderUI = function() {
       var renderer = this.renderer;
-      renderer.clear(9);
+      renderer.clear(18);
       renderer.defaultActorRenderer.render(this.healthBar);
-      renderer.draw(9);
+      renderer.draw(18);
     };
 
     return GameplayScreen;

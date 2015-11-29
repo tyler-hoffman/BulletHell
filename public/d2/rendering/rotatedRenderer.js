@@ -19,6 +19,7 @@ define([
 
       if (actor.childViews) {
         var that = this;
+        var v = actor.childViews;
         actor.childViews.forEach(function(childView) {
           that.render(childView);
         });
@@ -37,7 +38,7 @@ define([
 
         webglBridge.setImage(textureRegion.image);
         webglBridge.a_vertex.addData(planeBuffer.points);
-        
+
         for (var i = 0; i < 6; i++) {
           webglBridge.a_position.addData(position);
           webglBridge.a_scale.addData(scale);

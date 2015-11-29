@@ -48,8 +48,15 @@ define([
 
     Ship.prototype.takeDamage = function(damage) {
       this.hp -= damage;
-
       if (this.hp < 0) {
+        this.hp = 0;
+      }
+
+      if (damage > 0) {
+        this.notifyObservers(ActorEvent.createDamageEvent(this));
+      }
+
+      if (this.hp === 0) {
         this.die();
       }
 
@@ -63,6 +70,10 @@ define([
           that.view = that.normalView;
         });
       }
+    };
+
+    Ship.prototype.getPercentHealth = function() {
+      return this.hp / this.maxHp;
     };
 
     Ship.prototype.die = function() {

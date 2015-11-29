@@ -2,8 +2,9 @@
 
 define(['d2/actors/event'], function(Event) {
 
-  const SPAWN = 'actorEvent.spawn';
-  const DESTROY = 'actorEvent.destroy';
+  const SPAWN = 'actorEvent.spawn',
+        DESTROY = 'actorEvent.destroy',
+        DAMAGE = 'actorEvent.damage';
 
   var ActorEvent = function(type, actor) {
     Event.call(this, type);
@@ -18,6 +19,10 @@ define(['d2/actors/event'], function(Event) {
 
   ActorEvent.createDestroyEvent = function(actor) {
     return new ActorEvent(DESTROY, actor);
+  };
+
+  ActorEvent.createDamageEvent = function(actor) {
+    return new ActorEvent(DAMAGE, actor);
   };
 
   ActorEvent.SPAWN = SPAWN;
