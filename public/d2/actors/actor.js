@@ -22,7 +22,7 @@ define([
       this.depth = 0.5;
       this.isAlive = true;
 
-      this.collisionBits = 1;
+      this.collisionBits = 0;
       this.controller = controller;
 
       if (position) {

@@ -16,28 +16,39 @@ define([
     };
 
     RotatedActorRenderer.prototype.render = function(actor) {
-      var textureRegion = actor.getTextureRegion(),
-          webglBridge = this.webglBridge,
-          bounds = actor.bounds;
 
-      planeBuffer.setRectangle(bounds, actor.depth);
+      if (actor.childViews) {
+        var that = this;
+        actor.childViews.forEach(function(childView) {
+          that.render(childView);
+        });
 
-      var position = actor.position.toArray(),
-          scale = actor.scale.toArray(),
-          rotation = [Math.cos(actor.rotation), Math.sin(actor.rotation)];
+      } else {
 
-      webglBridge.setImage(textureRegion.image);
-      webglBridge.a_vertex.addData(planeBuffer.points);
+        var textureRegion = actor.getTextureRegion(),
+            webglBridge = this.webglBridge,
+            bounds = actor.bounds;
 
-      for (var i = 0; i < 6; i++) {
-        webglBridge.a_position.addData(position);
-        webglBridge.a_scale.addData(scale);
-        webglBridge.a_rotation.addData(rotation);
+        planeBuffer.setRectangle(bounds, actor.depth);
+
+        var position = actor.position.toArray(),
+            scale = actor.scale.toArray(),
+            rotation = [Math.cos(actor.rotation), Math.sin(actor.rotation)];
+
+        webglBridge.setImage(textureRegion.image);
+        webglBridge.a_vertex.addData(planeBuffer.points);
+        
+        for (var i = 0; i < 6; i++) {
+          webglBridge.a_position.addData(position);
+          webglBridge.a_scale.addData(scale);
+          webglBridge.a_rotation.addData(rotation);
+        }
+
+        // set texture coordinates
+        rectangleBuffer.set(textureRegion.textureCoordinates);
+        webglBridge.a_texCoord.addData(rectangleBuffer.points);
       }
-      
-      // set texture coordinates
-      rectangleBuffer.set(textureRegion.textureCoordinates);
-      webglBridge.a_texCoord.addData(rectangleBuffer.points);
+
     };
 
     var RotatedRenderer = function(gl, shaderProgram, width, height) {

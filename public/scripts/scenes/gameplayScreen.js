@@ -11,6 +11,7 @@ define([
     'emitters/emitEvent',
     'utils/renderInfo',
     'stars/starManager',
+    'ui/healthBar',
     'levels/level001',
     'shaders/rotatedShader',
     'scenes/gameScene'
@@ -18,7 +19,7 @@ define([
         Rectangle, Vector, Detector,
         DragonWing, QuadTree,
         DefaultRenderer, EmitEvent,
-        RenderInfo, StarManager, Level001, DefaultShader, GameScene) {
+        RenderInfo, StarManager, HealthBar, Level001, DefaultShader, GameScene) {
 
     const SHIP_SPEED    = 300;
     const BULLET_SPEED  = 200;
@@ -44,6 +45,11 @@ define([
       player.controller = new VelocityController(player.position, 100);
       this.setPlayer(player);
 
+      this.healthBar = new HealthBar()
+          .setSize(40, 8)
+          .setScale(4)
+          .setDepth(0.1)
+          .setPosition(10, 10);
 
       var enemyShips = this.enemyShips = [];
       // var bossVelocity = 80;
@@ -134,6 +140,7 @@ define([
       this.handleCollisions();
       this.removeDeadActors();
       this.renderAll();
+      this.renderUI();
       this.maybeEnd(deltaTime);
     };
 
@@ -300,12 +307,16 @@ define([
     };
 
     GameplayScreen.prototype.renderAll = function() {
-      // from actor manager
       if (this.isRendering) {
         this.getActorManager().renderAll(this.renderer);
       }
+    };
 
-      //
+    GameplayScreen.prototype.renderUI = function() {
+      var renderer = this.renderer;
+      renderer.clear(9);
+      renderer.defaultActorRenderer.render(this.healthBar);
+      renderer.draw(9);
     };
 
     return GameplayScreen;

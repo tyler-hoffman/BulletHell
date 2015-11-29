@@ -54,6 +54,12 @@ define(function() {
     return this;
   };
 
+  Vector.prototype.divide = function(other) {
+    this.x /= other.x;
+    this.y /= other.y;
+    return this;
+  }
+
   Vector.prototype.scale = function(amount) {
     this.x *= amount;
     this.y *= amount;

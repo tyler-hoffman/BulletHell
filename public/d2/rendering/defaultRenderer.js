@@ -63,19 +63,29 @@ define([
     };
 
     ImageRenderer.prototype.render = function(textureRegion, position, scale, depth) {
-      var bounds = new Rectangle()
-          .set(textureRegion)
-          .translate(-textureRegion.x, -textureRegion.y)
-          .translate(-textureRegion.center.x, -textureRegion.center.y);
+      if (textureRegion.childViews) {
 
-      renderTextureRegion(
-        textureRegion,
-        bounds,
-        this.webglBridge,
-        position,
-        scale,
-        depth || 0.5
-      );
+        var that = this;
+        textureRegion.childViews.forEach(function(child) {
+          that.render(child, position, scale, depth);
+        });
+
+      } else {
+
+        var bounds = new Rectangle()
+            .set(textureRegion)
+            .translate(-textureRegion.x, -textureRegion.y)
+            .translate(-textureRegion.center.x, -textureRegion.center.y);
+
+        renderTextureRegion(
+          textureRegion,
+          bounds,
+          this.webglBridge,
+          position,
+          scale,
+          depth || 0.5
+        );
+      }
     };
 
     var DefaultRenderer = function(gl, shaderProgram, width, height) {
