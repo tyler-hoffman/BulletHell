@@ -11,7 +11,7 @@ define([
 
     var createDownwardEnemy = function(startPosition, endPosition) {
       var enemy = new BossShip(startPosition);
-      enemy.setController(new MoveAndDie(enemy, 600, endPosition));
+      enemy.setController(new MoveAndDie(enemy, 1000, endPosition));
       return enemy;
     };
 

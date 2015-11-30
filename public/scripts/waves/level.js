@@ -2,11 +2,16 @@ define([
     'd2/scripts/script',
     'waves/wave',
     'd2/utils/vector',
-    'd2/text/textEvent'
-  ], function(Script, Wave, Vector, TextEvent) {
+    'd2/text/textEvent',
+    'd2/actors/event'
+  ], function(Script, Wave, Vector, TextEvent, Event) {
 
     const TITLE_DURATION = 3,
           TITLE_POSITION = new Vector(600, 200);
+
+    var makeEndEvent = function() {
+      return new Event('levelEvent.end');
+    };
 
     var Level = function(shipCounter, title) {
       Script.call(this, this);
@@ -20,10 +25,15 @@ define([
 
     Level.prototype = new Script();
 
-    // Level.prototype.update = function(deltaTime, subject) {
-    //   var output = Script.prototype.update.call(this, deltaTime, this);
-    //   return output;
-    // };
+    Level.prototype.update = function(deltaTime, subject) {
+      var output = Script.prototype.update.call(this, deltaTime, subject);
+
+      if (this.isOver() && this.getNumShips() === 0) {
+        this.notify(makeEndEvent());
+      }
+
+      return output;
+    };
 
     Level.prototype.newWave = function() {
       var wave = new Wave(this);

@@ -103,6 +103,10 @@ define([
       return deltaTime;
     };
 
+    Script.prototype.isOver = function() {
+      return this.currentStepIndex === this.steps.length;
+    };
+
     Script.prototype.getCurrentStep = function() {
       return this.steps[this.currentStepIndex];
     };

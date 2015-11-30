@@ -6,9 +6,10 @@ define([
     'scenes/textSplashScreen',
     'scenes/menuScreen',
     'scenes/gameplayScreen',
-    'scenes/loseScene'
+    'scenes/loseScene',
+    'scenes/winScene'
   ], function(SceneManager, KeyboardController, SplashScreen,
-        MenuScreen, GameplayScreen, LoseScreen) {
+        MenuScreen, GameplayScreen, LoseScreen, WinScreen) {
 
     const PLAY = 'PLAY',
           SPLASH = 'SPLASH',
@@ -60,6 +61,10 @@ define([
 
       this.registerScene(LOSE, function(canvas, animator) {
         return new LoseScreen(canvas, animator, keyboardController, MENU);
+      });
+
+      this.registerScene(WIN, function(canvas, animator) {
+        return new WinScreen(canvas, animator, keyboardController, MENU);
       });
 
     };

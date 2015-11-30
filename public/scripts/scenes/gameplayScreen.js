@@ -160,11 +160,22 @@ define([
       this.endIn = 2;
     };
 
+    GameScene.prototype.win = function() {
+      if (!this.won) {
+        this.won = true;
+        this.endIn = 2;
+      }
+    };
+
     GameplayScreen.prototype.maybeEnd = function(deltaTime) {
       if (this.endIn) {
         this.endIn -= deltaTime;
         if (this.endIn <= 0) {
-          this.nextScene(this.loseId);
+          if (this.won) {
+              this.nextScene(this.winId);
+          } else {
+            this.nextScene(this.loseId);
+          }
         }
       }
     };
@@ -200,6 +211,10 @@ define([
 
         case 'actorEvent.spawn':
           this.addEnemyShip(event.actor);
+          break;
+
+        case 'levelEvent.end':
+          this.win();
           break;
 
         default:

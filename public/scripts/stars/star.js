@@ -36,6 +36,7 @@ define([
       Actor.call(this, null, position);
       this.collisionBits = 0;
       this.controller = new VelocityController(this.position, new Vector());
+      this.depth = 0.4;
       this.randomize();
     };
 
