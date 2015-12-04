@@ -21,7 +21,6 @@ define([
 
     var BulletHell = function(canvas) {
       SceneManager.call(this, canvas);
-
       this.keyboardController = new KeyboardController();
       this.registerSceneGenerators();
       this.setScene(SPLASH);

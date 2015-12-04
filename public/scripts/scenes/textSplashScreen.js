@@ -18,7 +18,7 @@ define([
       this.play();
     };
 
-    TextSplashScreen.prototype = Object.create(SlideShowScene.prototype);//w SlideShowScene();
+    TextSplashScreen.prototype = Object.create(SlideShowScene.prototype);
 
     return TextSplashScreen;
 });

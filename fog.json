@@ -1,0 +1,11 @@
+{
+  "scripts": [
+    "public/lib/ajaxer/lib/ajaxer.js",
+    "public/lib/requirator/lib/requirator.js",
+    "public/fog.js"
+  ],
+  "styles": [
+    "public/styles/canvas.css"
+  ],
+  "startingPoint": "run"
+}
